@@ -1271,12 +1271,12 @@
 									},
 									"font": "Arial;28;0",
 									"parentStyle": false,
-									"left": 2128,
-									"top": 2383,
+									"left": 1576,
+									"top": 2312,
 									"width": 510.3984375,
 									"height": 28,
-									"alpha": -0.6403563711277148,
-									"distance": 63.60031446463138,
+									"alpha": 0.08500767305916465,
+									"distance": 400.44600135349083,
 									"hostEdge": {
 										"$ref": "AAAAAAGdIA2ezX/MRpY="
 									},
@@ -1293,7 +1293,7 @@
 								"$ref": "AAAAAAGdJgRJbnGPp/I="
 							},
 							"lineStyle": 2,
-							"points": "1984:2360;2680:2360",
+							"points": "1432:1512;1432:2360;2680:2360",
 							"nameLabel": {
 								"$ref": "AAAAAAGdIA2ezX/Nqyw="
 							}
@@ -4340,7 +4340,7 @@
 								"$ref": "AAAAAAGdJgRJbnGPp/I="
 							},
 							"lineStyle": 2,
-							"points": "1872:2424;1872:2880;3576:2880;3576:1736;3648:1736",
+							"points": "1432:1512;1432:2880;3576:2880;3576:1736;3648:1736",
 							"nameLabel": {
 								"$ref": "AAAAAAGdJgPc+3GBOEs="
 							}
@@ -4363,8 +4363,8 @@
 									},
 									"font": "Arial;28;0",
 									"parentStyle": true,
-									"left": 1828,
-									"top": 2256,
+									"left": 1380,
+									"top": 1344,
 									"width": 104,
 									"height": 112,
 									"text": "Kiểm tra người dùng",
@@ -4373,8 +4373,8 @@
 							],
 							"font": "Arial;28;0",
 							"parentStyle": false,
-							"left": 1776,
-							"top": 2200,
+							"left": 1328,
+							"top": 1288,
 							"width": 208,
 							"height": 224,
 							"nameLabel": {
@@ -4403,8 +4403,8 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"parentStyle": false,
-									"left": 1926,
-									"top": 1823,
+									"left": 1687,
+									"top": 1409,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -4423,7 +4423,7 @@
 								"$ref": "AAAAAAGdH8cmdH0QRyA="
 							},
 							"lineStyle": 2,
-							"points": "1911:1460;1911:2200",
+							"points": "1840:1400;1536:1400",
 							"nameLabel": {
 								"$ref": "AAAAAAGdJgS5PnGbhiI="
 							}
