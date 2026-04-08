@@ -18287,7 +18287,7 @@
 											"top": 2784.5,
 											"width": 345,
 											"height": 25,
-											"text": "Khám và tư vấn lâm sàng"
+											"text": "Tư vấn lâm sàng"
 										},
 										{
 											"_type": "LabelView",
@@ -20736,105 +20736,6 @@
 							},
 							"extensionPointCompartment": {
 								"$ref": "AAAAAAGdQvRHkaV8OYA="
-							}
-						},
-						{
-							"_type": "UMLExtendView",
-							"_id": "AAAAAAGdQvfKBRay4qY=",
-							"_parent": {
-								"$ref": "AAAAAAGdP9SUOSz34y4="
-							},
-							"model": {
-								"$ref": "AAAAAAGdQvfKBRawAsI="
-							},
-							"subViews": [
-								{
-									"_type": "EdgeLabelView",
-									"_id": "AAAAAAGdQvfKBRaz39U=",
-									"_parent": {
-										"$ref": "AAAAAAGdQvfKBRay4qY="
-									},
-									"model": {
-										"$ref": "AAAAAAGdQvfKBRawAsI="
-									},
-									"visible": false,
-									"font": "Arial;13;0",
-									"parentStyle": false,
-									"left": 2074,
-									"top": 1186,
-									"height": 13,
-									"alpha": 1.5707963267948966,
-									"distance": 15,
-									"hostEdge": {
-										"$ref": "AAAAAAGdQvfKBRay4qY="
-									},
-									"edgePosition": 1
-								},
-								{
-									"_type": "EdgeLabelView",
-									"_id": "AAAAAAGdQvfKBRa0G74=",
-									"_parent": {
-										"$ref": "AAAAAAGdQvfKBRay4qY="
-									},
-									"model": {
-										"$ref": "AAAAAAGdQvfKBRawAsI="
-									},
-									"font": "Arial;26;0",
-									"parentStyle": false,
-									"left": 2014,
-									"top": 1233,
-									"width": 106.9833984375,
-									"height": 26,
-									"alpha": -1.7650416214594298,
-									"distance": 40.26164427839479,
-									"hostEdge": {
-										"$ref": "AAAAAAGdQvfKBRay4qY="
-									},
-									"edgePosition": 1,
-									"text": "«extend»"
-								},
-								{
-									"_type": "EdgeLabelView",
-									"_id": "AAAAAAGdQvfKBRa1Ru0=",
-									"_parent": {
-										"$ref": "AAAAAAGdQvfKBRay4qY="
-									},
-									"model": {
-										"$ref": "AAAAAAGdQvfKBRawAsI="
-									},
-									"visible": false,
-									"font": "Arial;13;0",
-									"parentStyle": false,
-									"left": 2075,
-									"top": 1215,
-									"height": 13,
-									"alpha": -1.5707963267948966,
-									"distance": 15,
-									"hostEdge": {
-										"$ref": "AAAAAAGdQvfKBRay4qY="
-									},
-									"edgePosition": 1
-								}
-							],
-							"font": "Arial;13;0",
-							"parentStyle": false,
-							"head": {
-								"$ref": "AAAAAAGdQvRHkKVysYo="
-							},
-							"tail": {
-								"$ref": "AAAAAAGdQvPcbpQhT7k="
-							},
-							"lineStyle": 1,
-							"points": "2000:1208;2151:1206",
-							"showVisibility": true,
-							"nameLabel": {
-								"$ref": "AAAAAAGdQvfKBRaz39U="
-							},
-							"stereotypeLabel": {
-								"$ref": "AAAAAAGdQvfKBRa0G74="
-							},
-							"propertyLabel": {
-								"$ref": "AAAAAAGdQvfKBRa1Ru0="
 							}
 						},
 						{
@@ -32806,6 +32707,105 @@
 							"propertyLabel": {
 								"$ref": "AAAAAAGdYwlrEvjW5jY="
 							}
+						},
+						{
+							"_type": "UMLExtendView",
+							"_id": "AAAAAAGda1bMYcJ+BlI=",
+							"_parent": {
+								"$ref": "AAAAAAGdP9SUOSz34y4="
+							},
+							"model": {
+								"$ref": "AAAAAAGda1bMYcJ8o/E="
+							},
+							"subViews": [
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGda1bMYcJ/qls=",
+									"_parent": {
+										"$ref": "AAAAAAGda1bMYcJ+BlI="
+									},
+									"model": {
+										"$ref": "AAAAAAGda1bMYcJ8o/E="
+									},
+									"visible": false,
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 2075,
+									"top": 1215,
+									"height": 13,
+									"alpha": 1.5707963267948966,
+									"distance": 15,
+									"hostEdge": {
+										"$ref": "AAAAAAGda1bMYcJ+BlI="
+									},
+									"edgePosition": 1
+								},
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGda1bMYcKA3LM=",
+									"_parent": {
+										"$ref": "AAAAAAGda1bMYcJ+BlI="
+									},
+									"model": {
+										"$ref": "AAAAAAGda1bMYcJ8o/E="
+									},
+									"font": "Arial;26;0",
+									"parentStyle": false,
+									"left": 2022,
+									"top": 1223,
+									"width": 106.9833984375,
+									"height": 26,
+									"alpha": 1.5707963267948966,
+									"distance": 30,
+									"hostEdge": {
+										"$ref": "AAAAAAGda1bMYcJ+BlI="
+									},
+									"edgePosition": 1,
+									"text": "«extend»"
+								},
+								{
+									"_type": "EdgeLabelView",
+									"_id": "AAAAAAGda1bMYcKBqPY=",
+									"_parent": {
+										"$ref": "AAAAAAGda1bMYcJ+BlI="
+									},
+									"model": {
+										"$ref": "AAAAAAGda1bMYcJ8o/E="
+									},
+									"visible": false,
+									"font": "Arial;13;0",
+									"parentStyle": false,
+									"left": 2074,
+									"top": 1186,
+									"height": 13,
+									"alpha": -1.5707963267948966,
+									"distance": 15,
+									"hostEdge": {
+										"$ref": "AAAAAAGda1bMYcJ+BlI="
+									},
+									"edgePosition": 1
+								}
+							],
+							"font": "Arial;13;0",
+							"parentStyle": false,
+							"head": {
+								"$ref": "AAAAAAGdQvPcbpQhT7k="
+							},
+							"tail": {
+								"$ref": "AAAAAAGdQvRHkKVysYo="
+							},
+							"lineStyle": 1,
+							"points": "2151:1206;2000:1208",
+							"showVisibility": true,
+							"nameLabel": {
+								"$ref": "AAAAAAGda1bMYcJ/qls="
+							},
+							"stereotypeLabel": {
+								"$ref": "AAAAAAGda1bMYcKA3LM="
+							},
+							"propertyLabel": {
+								"$ref": "AAAAAAGda1bMYcKBqPY="
+							}
 						}
 					]
 				},
@@ -33691,7 +33691,7 @@
 					"_parent": {
 						"$ref": "AAAAAAGdP9SUOCz23Dg="
 					},
-					"name": "Khám và tư vấn lâm sàng",
+					"name": "Tư vấn lâm sàng",
 					"ownedElements": [
 						{
 							"_type": "UMLExtend",
@@ -33800,22 +33800,7 @@
 					"_parent": {
 						"$ref": "AAAAAAGdP9SUOCz23Dg="
 					},
-					"name": "Xem đơn đăng ký hiến máu",
-					"ownedElements": [
-						{
-							"_type": "UMLExtend",
-							"_id": "AAAAAAGdQvfKBRawAsI=",
-							"_parent": {
-								"$ref": "AAAAAAGdQvPcbZQfoT0="
-							},
-							"source": {
-								"$ref": "AAAAAAGdQvPcbZQfoT0="
-							},
-							"target": {
-								"$ref": "AAAAAAGdQvRHkKVwO+8="
-							}
-						}
-					]
+					"name": "Xem đơn đăng ký hiến máu"
 				},
 				{
 					"_type": "UMLUseCase",
@@ -33823,7 +33808,22 @@
 					"_parent": {
 						"$ref": "AAAAAAGdP9SUOCz23Dg="
 					},
-					"name": "Cập nhật thông tin hiến máu"
+					"name": "Cập nhật thông tin hiến máu",
+					"ownedElements": [
+						{
+							"_type": "UMLExtend",
+							"_id": "AAAAAAGda1bMYcJ8o/E=",
+							"_parent": {
+								"$ref": "AAAAAAGdQvRHkKVwO+8="
+							},
+							"source": {
+								"$ref": "AAAAAAGdQvRHkKVwO+8="
+							},
+							"target": {
+								"$ref": "AAAAAAGdQvPcbZQfoT0="
+							}
+						}
+					]
 				},
 				{
 					"_type": "UMLUseCase",
