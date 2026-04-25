@@ -1,97 +1,239 @@
 -- =============================================================
 -- ĐỒ ÁN: HỆ THỐNG QUẢN LÝ HIẾN MÁU NHÂN ĐẠO ĐÀ NẴNG 
 -- SINH VIÊN THỰC HIỆN: NHÓM 20 
--- VĂN QUÝ VƯƠNG- PHẠM MINH HUY- LÊ VIỆT HƯNG- LÊ VĂN MẠNH
+-- VĂN QUÝ VƯƠNG - PHẠM MINH HUY - LÊ VIỆT HƯNG - LÊ VĂN MẠNH
 -- =============================================================
 
--- 1. Xóa database cũ nếu đã tồn tại để chạy lại từ đầu
-DROP DATABASE IF EXISTS QuanLyHienMauNhanDaoDN;
+DROP DATABASE IF EXISTS QuanLyHienMauDN;
+CREATE DATABASE QuanLyHienMauDN CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE QuanLyHienMauDN;
 
--- 2. Tạo database mới với bảng mã hỗ trợ tiếng Việt
-CREATE DATABASE QuanLyHienMauNhanDaoDN CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE QuanLyHienMauNhanDaoDN;
+-- -------------------------------------------------------------
+-- BƯỚC 1: TẠO CẤU TRÚC BẢNG
+-- -------------------------------------------------------------
 
--- 3. Bảng Vai trò
 CREATE TABLE VAITRO (
     maVaiTro CHAR(10) PRIMARY KEY,
-    tenVaiTro NVARCHAR(50) NOT NULL
+    tenVaiTro VARCHAR(50) NOT NULL
 );
 
--- 4. Bảng Tài khoản (Hỗ trợ xác thực và phân quyền) 
+CREATE TABLE KHOACONGTAC (
+    maKhoa CHAR(10) PRIMARY KEY,
+    tenKhoa VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE PHUONGXA (
+    maPhuongXa CHAR(10) PRIMARY KEY,
+    tenPhuongXa VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE TAIKHOAN (
     maTaiKhoan CHAR(10) PRIMARY KEY,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    matKhau VARCHAR(255) NOT NULL,
     maVaiTro CHAR(10),
-    trangThai BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (maVaiTro) REFERENCES VAITRO(maVaiTro)
+    email VARCHAR(100) NOT NULL,
+    matKhau VARCHAR(255) NOT NULL,
+    trangThai BOOLEAN DEFAULT TRUE 
 );
 
--- 5. Bảng Tình nguyện viên [cite: 359]
+CREATE TABLE NHANVIEN (
+    maNhanVien CHAR(10) PRIMARY KEY,
+    maTaiKhoan CHAR(10),
+    maKhoa CHAR(10),
+    maPhuongXa CHAR(10),
+    hoTen VARCHAR(100) NOT NULL,
+    CCCD CHAR(12) NOT NULL,
+    gioiTinh VARCHAR(10),
+    soDienThoai VARCHAR(10) NOT NULL,
+    diaChi VARCHAR(255)
+);
+
 CREATE TABLE TINHNGUYENVIEN (
     maTNV CHAR(10) PRIMARY KEY,
     maTaiKhoan CHAR(10),
-    hoTen NVARCHAR(100) NOT NULL,
-    CCCD CHAR(12) UNIQUE NOT NULL,
-    ngaySinh DATE,
-    gioiTinh NVARCHAR(10),
-    soDienThoai VARCHAR(15),
-    nhomMau VARCHAR(5), -- Cập nhật sau khi có kết quả xét nghiệm chính xác [cite: 151, 152]
-    diaChi NVARCHAR(255),
-    FOREIGN KEY (maTaiKhoan) REFERENCES TAIKHOAN(maTaiKhoan)
+    maPhuongXa CHAR(10),
+    hoTen VARCHAR(100) NOT NULL,
+    CCCD CHAR(12) NOT NULL,
+    ngaySinh DATE NOT NULL,
+    gioiTinh VARCHAR(10),
+    soDienThoai VARCHAR(10) NOT NULL,
+    nhomMau VARCHAR(5),
+    diaChi VARCHAR(255)
 );
 
--- 6. Bảng Chiến dịch hiến máu (Phục vụ chức năng Tìm kiếm) [cite: 398, 413]
 CREATE TABLE CHIENDICHHIENMAU (
     maChienDich CHAR(10) PRIMARY KEY,
-    tenChienDich NVARCHAR(255) NOT NULL,
-    thoiGianBD DATETIME,
-    thoiGianKT DATETIME,
-    diaChi NVARCHAR(255),
+    maPhuongXa CHAR(10),
+    maNhanVien CHAR(10),
+    tenChienDich VARCHAR(255) NOT NULL,
+    thoiGianBD DATETIME NOT NULL,
+    thoiGianKT DATETIME NOT NULL,
     soLuongDuKien INT,
-    maQR VARCHAR(255), -- Mã QR để TNV quét khi đến điểm hiến [cite: 145, 146]
-    trangThai NVARCHAR(50) -- Chờ duyệt, Đang diễn ra, Kết thúc
+    trangThai VARCHAR(50) NOT NULL,
+    diaChi VARCHAR(255),
+    maQR VARCHAR(255)
 );
 
--- 7. Bảng Đơn đăng ký (Phân biệt Online và Tại chỗ bằng maNhanVien) [cite: 376, 426]
 CREATE TABLE DONDANGKY (
     maDon CHAR(10) PRIMARY KEY,
     maTNV CHAR(10),
     maChienDich CHAR(10),
-    maNhanVien CHAR(10) DEFAULT NULL, -- NULL nếu TNV đăng ký Online; có ID nếu NVYT nhập tại chỗ
+    maNhanVien CHAR(10) DEFAULT NULL,
+    maQR VARCHAR(255),
     thoiGianDangKy DATETIME DEFAULT CURRENT_TIMESTAMP,
-    trangThai NVARCHAR(50), -- Chờ khám, Đã khám, Đã hiến, Từ chối
-    FOREIGN KEY (maTNV) REFERENCES TINHNGUYENVIEN(maTNV),
-    FOREIGN KEY (maChienDich) REFERENCES CHIENDICHHIENMAU(maChienDich)
+    trangThai VARCHAR(50) NOT NULL
 );
 
--- 8. Bảng Kết quả lâm sàng (Phục vụ chức năng Khám sàng lọc) [cite: 247, 471]
 CREATE TABLE KETQUALAMSANG (
     maKQ CHAR(10) PRIMARY KEY,
     maDon CHAR(10),
+    maNhanVien CHAR(10),
     huyetAp VARCHAR(20),
     nhipTim INT,
     canNang DOUBLE,
     nhietDo DOUBLE,
-    ketQua BOOLEAN, -- TRUE: Đủ điều kiện, FALSE: Từ chối [cite: 474]
-    lyDoTuChoi NVARCHAR(255),
-    FOREIGN KEY (maDon) REFERENCES DONDANGKY(maDon)
+    ketQua BOOLEAN,
+    lyDoTuChoi VARCHAR(255)
 );
 
--- 9. Bảng Túi máu (Phục vụ chức năng Thu nhận đơn vị máu) [cite: 388, 478]
+CREATE TABLE KHOMAU (
+    maKho CHAR(10) PRIMARY KEY,
+    nhomMau VARCHAR(10),
+    soLuongTon INT DEFAULT 0,
+    nguongAnToan INT DEFAULT 10
+);
+
 CREATE TABLE TUIMAU (
     maTuiMau CHAR(15) PRIMARY KEY,
     maDon CHAR(10),
-    theTich INT, -- 250, 350, 450ml [cite: 180, 181, 182]
+    maNhanVien CHAR(10),
+    maKho CHAR(10),
+    theTich INT,
     thoiGianLayMau DATETIME,
-    trangThai NVARCHAR(50), -- Chờ xét nghiệm, Đạt, Hủy, Đã xuất
-    nhietDoVanChuyen DOUBLE, -- Cập nhật cho hiến máu lưu động [cite: 481]
-    FOREIGN KEY (maDon) REFERENCES DONDANGKY(maDon)
+    trangThai VARCHAR(50) NOT NULL,
+    nhietDoVanChuyen DOUBLE
 );
 
--- 10. Bảng Kho máu (Phục vụ chức năng Thống kê tồn kho) [cite: 164, 500]
-CREATE TABLE KHOMAU (
-    nhomMau VARCHAR(10) PRIMARY KEY,
-    soLuongTon INT DEFAULT 0,
-    nguongAnToan INT DEFAULT 20 -- Dùng để trigger cảnh báo thiếu máu [cite: 196, 503]
+CREATE TABLE KETQUAXETNGHIEM (
+    maKQ CHAR(10) PRIMARY KEY,
+    maTuiMau CHAR(15),
+    maNhanVien CHAR(10),
+    nhomMau VARCHAR(5),
+    moTa VARCHAR(255)
 );
+
+CREATE TABLE PHIEUNHAPXUAT (
+    maPhieu CHAR(10) PRIMARY KEY,
+    maNhanVien CHAR(10),
+    loaiPhieu VARCHAR(50) NOT NULL,
+    ngayNhapXuat DATE
+);
+
+CREATE TABLE CHITIETNHAPXUAT (
+    maPhieu CHAR(10),
+    maTuiMau CHAR(15),
+    PRIMARY KEY (maPhieu, maTuiMau)
+);
+
+CREATE TABLE CHUNGNHAN (
+    maChungNhan CHAR(10) PRIMARY KEY,
+    maDon CHAR(10),
+    maNhanVien CHAR(10),
+    filePDF VARCHAR(255),
+    ngayCap DATE
+);
+
+CREATE TABLE TINTUC (
+    maTinTuc CHAR(10) PRIMARY KEY,
+    maNhanVien CHAR(10),
+    tieuDe VARCHAR(255) NOT NULL,
+    noiDung TEXT,
+    hinhAnh VARCHAR(255),
+    ngayDang DATETIME DEFAULT CURRENT_TIMESTAMP,
+    trangThai VARCHAR(50) DEFAULT 'Công khai'
+);
+
+CREATE TABLE THONGBAO (
+    maThongBao CHAR(10) PRIMARY KEY,
+    maTaiKhoanGui CHAR(10),
+    maTaiKhoanNhan CHAR(10),
+    noiDung TEXT,
+    thongGianGui DATETIME DEFAULT CURRENT_TIMESTAMP,
+    trangThai BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE TINNHAN (
+    maTinNhan CHAR(10) PRIMARY KEY,
+    maTaiKhoanGui CHAR(10),
+    maTaiKhoanNhan CHAR(10),
+    noiDung TEXT,
+    thoiGian DATETIME DEFAULT CURRENT_TIMESTAMP,
+    trangThai BOOLEAN DEFAULT FALSE
+);
+
+-- -------------------------------------------------------------
+-- BƯỚC 2: THIẾT LẬP RÀNG BUỘC (ALTER TABLE)
+-- -------------------------------------------------------------
+
+ALTER TABLE NHANVIEN ADD CONSTRAINT chk_cccd_nv CHECK (CCCD REGEXP '^[0-9]{12}$');
+ALTER TABLE TINHNGUYENVIEN ADD CONSTRAINT chk_cccd_tnv CHECK (CCCD REGEXP '^[0-9]{12}$');
+ALTER TABLE NHANVIEN ADD CONSTRAINT chk_sdt_nv CHECK (soDienThoai REGEXP '^0[0-9]{9}$');
+ALTER TABLE TINHNGUYENVIEN ADD CONSTRAINT chk_sdt_tnv CHECK (soDienThoai REGEXP '^0[0-9]{9}$');
+
+ALTER TABLE TAIKHOAN ADD CONSTRAINT chk_email_tk CHECK (email REGEXP '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$');
+ALTER TABLE KETQUALAMSANG ADD CONSTRAINT chk_can_nang CHECK (canNang >= 45);
+ALTER TABLE TUIMAU ADD CONSTRAINT chk_the_tich CHECK (theTich IN (250, 350, 450));
+
+-- Xóa chữ N phía trước để dùng chuẩn utf8mb4 của Database
+ALTER TABLE DONDANGKY ADD CONSTRAINT chk_trang_thai_don 
+CHECK (trangThai IN ('Đã đăng ký', 'Đã hiến', 'Đã nhận chứng nhận', 'Chưa hiến'));
+
+ALTER TABLE TUIMAU ADD CONSTRAINT chk_trang_thai_tui 
+CHECK (trangThai IN ('Chờ xét nghiệm', 'Nhập kho', 'Đã xuất', 'Hủy'));
+
+ALTER TABLE CHIENDICHHIENMAU ADD CONSTRAINT chk_trang_thai_cd 
+CHECK (trangThai IN ('Đang lập kế hoạch', 'Đã phê duyệt', 'Đang diễn ra', 'Đã kết thúc'));
+
+ALTER TABLE PHIEUNHAPXUAT ADD CONSTRAINT chk_loai_phieu 
+CHECK (loaiPhieu IN ('Nhập kho', 'Xuất kho'));
+
+-- -------------------------------------------------------------
+-- BƯỚC 3: THIẾT LẬP KHÓA NGOẠI
+-- -------------------------------------------------------------
+
+ALTER TABLE TAIKHOAN ADD FOREIGN KEY (maVaiTro) REFERENCES VAITRO(maVaiTro);
+ALTER TABLE NHANVIEN ADD FOREIGN KEY (maTaiKhoan) REFERENCES TAIKHOAN(maTaiKhoan);
+ALTER TABLE NHANVIEN ADD FOREIGN KEY (maKhoa) REFERENCES KHOACONGTAC(maKhoa);
+ALTER TABLE NHANVIEN ADD FOREIGN KEY (maPhuongXa) REFERENCES PHUONGXA(maPhuongXa);
+
+ALTER TABLE TINHNGUYENVIEN ADD FOREIGN KEY (maTaiKhoan) REFERENCES TAIKHOAN(maTaiKhoan);
+ALTER TABLE TINHNGUYENVIEN ADD FOREIGN KEY (maPhuongXa) REFERENCES PHUONGXA(maPhuongXa);
+
+ALTER TABLE CHIENDICHHIENMAU ADD FOREIGN KEY (maNhanVien) REFERENCES NHANVIEN(maNhanVien);
+ALTER TABLE CHIENDICHHIENMAU ADD FOREIGN KEY (maPhuongXa) REFERENCES PHUONGXA(maPhuongXa);
+
+ALTER TABLE DONDANGKY ADD FOREIGN KEY (maTNV) REFERENCES TINHNGUYENVIEN(maTNV);
+ALTER TABLE DONDANGKY ADD FOREIGN KEY (maChienDich) REFERENCES CHIENDICHHIENMAU(maChienDich);
+ALTER TABLE DONDANGKY ADD FOREIGN KEY (maNhanVien) REFERENCES NHANVIEN(maNhanVien);
+
+ALTER TABLE TUIMAU ADD FOREIGN KEY (maDon) REFERENCES DONDANGKY(maDon);
+ALTER TABLE TUIMAU ADD FOREIGN KEY (maKho) REFERENCES KHOMAU(maKho);
+ALTER TABLE TUIMAU ADD FOREIGN KEY (maNhanVien) REFERENCES NHANVIEN(maNhanVien);
+
+ALTER TABLE KETQUALAMSANG ADD FOREIGN KEY (maDon) REFERENCES DONDANGKY(maDon);
+ALTER TABLE KETQUALAMSANG ADD FOREIGN KEY (maNhanVien) REFERENCES NHANVIEN(maNhanVien);
+
+ALTER TABLE KETQUAXETNGHIEM ADD FOREIGN KEY (maTuiMau) REFERENCES TUIMAU(maTuiMau);
+ALTER TABLE KETQUAXETNGHIEM ADD FOREIGN KEY (maNhanVien) REFERENCES NHANVIEN(maNhanVien);
+
+ALTER TABLE PHIEUNHAPXUAT ADD FOREIGN KEY (maNhanVien) REFERENCES NHANVIEN(maNhanVien);
+ALTER TABLE CHITIETNHAPXUAT ADD FOREIGN KEY (maPhieu) REFERENCES PHIEUNHAPXUAT(maPhieu);
+ALTER TABLE CHITIETNHAPXUAT ADD FOREIGN KEY (maTuiMau) REFERENCES TUIMAU(maTuiMau);
+
+ALTER TABLE CHUNGNHAN ADD FOREIGN KEY (maDon) REFERENCES DONDANGKY(maDon);
+ALTER TABLE CHUNGNHAN ADD FOREIGN KEY (maNhanVien) REFERENCES NHANVIEN(maNhanVien);
+
+ALTER TABLE TINTUC ADD FOREIGN KEY (maNhanVien) REFERENCES NHANVIEN(maNhanVien);
+ALTER TABLE THONGBAO ADD FOREIGN KEY (maTaiKhoanGui) REFERENCES TAIKHOAN(maTaiKhoan);
+ALTER TABLE THONGBAO ADD FOREIGN KEY (maTaiKhoanNhan) REFERENCES TAIKHOAN(maTaiKhoan);
+ALTER TABLE TINNHAN ADD FOREIGN KEY (maTaiKhoanGui) REFERENCES TAIKHOAN(maTaiKhoan);
+ALTER TABLE TINNHAN ADD FOREIGN KEY (maTaiKhoanNhan) REFERENCES TAIKHOAN(maTaiKhoan);
