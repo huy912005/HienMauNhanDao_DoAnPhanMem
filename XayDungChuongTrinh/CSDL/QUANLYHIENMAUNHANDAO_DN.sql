@@ -1,6 +1,7 @@
 -- =============================================================
--- ĐỒ ÁN: HỆ THỐNG QUẢN LÝ HIẾN MÁU NHÂN ĐẠO ĐÀ NẴNG 2026
--- SINH VIÊN THỰC HIỆN: VĂN QUÝ VƯƠNG
+-- ĐỒ ÁN: HỆ THỐNG QUẢN LÝ HIẾN MÁU NHÂN ĐẠO ĐÀ NẴNG 
+-- SINH VIÊN THỰC HIỆN: NHÓM 20 
+-- VĂN QUÝ VƯƠNG- PHẠM MINH HUY- LÊ VIỆT HƯNG- LÊ VĂN MẠNH
 -- =============================================================
 
 -- 1. Xóa database cũ nếu đã tồn tại để chạy lại từ đầu
