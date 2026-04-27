@@ -910,3 +910,201 @@ SELECT
     IF(tn.trangThai = 1, 'Đã gửi thành công', 'Lỗi hệ thống') AS 'Trạng Thái Gửi'
 FROM TINNHAN tn
 JOIN TAIKHOAN tk ON tn.maTaiKhoanNhan = tk.maTaiKhoan;
+
+
+
+
+-- =============================================================
+-- =============================================================
+-- BƯỚC 4 & 5: HÀM, THỦ TỤC, TRIGGER VÀ TEST (THEO USE CASE)
+-- =============================================================
+
+-- -------------------------------------------------------------
+-- UC1: TÌM KIẾM CHIẾN DỊCH HIẾN MÁU
+-- -------------------------------------------------------------
+
+DELIMITER //
+-- 1. Function: Đếm số người đã đăng ký vào chiến dịch
+CREATE FUNCTION f_DemSoNguoiDangKy(p_maChienDich CHAR(10)) 
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE v_count INT;
+    SELECT COUNT(*) INTO v_count FROM DONDANGKY WHERE maChienDich = p_maChienDich;
+    RETURN v_count;
+END //
+DELIMITER ;
+
+-- [TEST] Kiểm tra hàm đếm số người đăng ký của chiến dịch CD_XH26
+SELECT f_DemSoNguoiDangKy('CD_XH26') AS 'Số người đã đăng ký CD_XH26';
+
+
+DELIMITER //
+-- 2. Procedure: Tìm kiếm chiến dịch
+CREATE PROCEDURE sp_TimKiemChienDich(
+    IN p_TuKhoa VARCHAR(255)
+)
+BEGIN
+    SELECT 
+        c.maChienDich, 
+        c.tenChienDich, 
+        d.tenDiaDiem, 
+        c.thoiGianBD, 
+        c.soLuongDuKien,
+        f_DemSoNguoiDangKy(c.maChienDich) AS soNguoiDaDangKy,
+        c.trangThai
+    FROM CHIENDICHHIENMAU c
+    JOIN DIADIEM d ON c.maDiaDiem = d.maDiaDiem
+    WHERE c.tenChienDich LIKE CONCAT('%', p_TuKhoa, '%') 
+       OR d.tenDiaDiem LIKE CONCAT('%', p_TuKhoa, '%');
+END //
+DELIMITER ;
+
+-- [TEST] Chạy thủ tục tìm kiếm chiến dịch (Tìm từ khóa 'UTE')
+CALL sp_TimKiemChienDich('UTE');
+
+
+-- -------------------------------------------------------------
+-- UC2: ĐĂNG KÝ HIẾN MÁU & KHAI BÁO Y TẾ
+-- -------------------------------------------------------------
+
+DELIMITER //
+-- 3. Trigger: Kiểm tra số lượng dự kiến trước khi đăng ký
+CREATE TRIGGER trg_KiemTraSoLuongDuKien
+BEFORE INSERT ON DONDANGKY
+FOR EACH ROW
+BEGIN
+    DECLARE v_soLuongDuKien INT;
+    DECLARE v_daDangKy INT;
+    
+    SELECT soLuongDuKien INTO v_soLuongDuKien FROM CHIENDICHHIENMAU WHERE maChienDich = NEW.maChienDich;
+    SET v_daDangKy = f_DemSoNguoiDangKy(NEW.maChienDich);
+    
+    IF v_daDangKy >= v_soLuongDuKien THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Chiến dịch đã đạt đủ số lượng dự kiến, không thể đăng ký thêm!';
+    END IF;
+END //
+DELIMITER ;
+
+-- [TEST] Test Trigger trg_KiemTraSoLuongDuKien
+-- (Lưu ý: Comment lại dòng INSERT này vì nếu chạy sẽ ném ra lỗi do chiến dịch đã đầy)
+-- INSERT INTO DONDANGKY (maDon, maTNV, maChienDich, trangThai) VALUES ('D99', 'TNV01', 'CD_XH26', 'Đã đăng ký');
+
+
+-- -------------------------------------------------------------
+-- UC3: KHÁM SÀNG LỌC & THU NHẬN ĐƠN VỊ MÁU
+-- -------------------------------------------------------------
+
+DELIMITER //
+-- 4. Function: Đánh giá chỉ số sinh tồn cơ bản
+CREATE FUNCTION f_DanhGiaChiSoSinhTon(p_huyetAp VARCHAR(20), p_canNang DOUBLE, p_nhietDo DOUBLE) 
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    IF p_canNang < 42 THEN RETURN 0; END IF; -- Không đủ cân nặng
+    IF p_nhietDo > 37.5 THEN RETURN 0; END IF; -- Đang sốt
+    RETURN 1;
+END //
+DELIMITER ;
+
+-- [TEST] Chạy thử Function đánh giá chỉ số sinh tồn (Cân nặng 40kg -> Rớt trả về 0)
+SELECT f_DanhGiaChiSoSinhTon('120/80', 40, 36.5) AS 'Kết quả đánh giá 40kg';
+
+
+DELIMITER //
+-- 5. Trigger: Kiểm tra thể tích lấy máu phải phù hợp cân nặng
+CREATE TRIGGER trg_KiemTraTheTichMau_CanNang
+BEFORE INSERT ON TUIMAU
+FOR EACH ROW
+BEGIN
+    DECLARE v_canNang DOUBLE;
+    
+    -- Lấy cân nặng từ kết quả lâm sàng của đơn đăng ký tương ứng
+    SELECT canNang INTO v_canNang FROM KETQUALAMSANG WHERE maDon = NEW.maDon LIMIT 1;
+    
+    -- Quy định: Dưới 45kg không lấy 350ml hoặc 450ml
+    IF v_canNang < 45 AND NEW.theTich IN (350, 450) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Người hiến dưới 45kg chỉ được phép hiến 250ml máu!';
+    END IF;
+END //
+DELIMITER ;
+
+-- [TEST] Test Trigger trg_KiemTraTheTichMau_CanNang
+-- (Lưu ý: Để dạng comment vì nếu chạy sẽ cố ý ném lỗi và dừng kịch bản)
+-- Để test, MySQL sẽ ném lỗi 45000 khi cố thêm túi máu 350ml cho mã đơn D45 (chỉ nặng 43kg):
+-- INSERT INTO TUIMAU (maTuiMau, maDon, theTich, trangThai) VALUES ('TM99', 'D45', 350, 'Chờ xét nghiệm');
+
+
+-- -------------------------------------------------------------
+-- UC4: THỐNG KÊ LƯỢNG MÁU THU NHẬN VÀ TỒN KHO
+-- -------------------------------------------------------------
+
+DELIMITER //
+-- 6. Trigger: Tự động trừ tồn kho khi xuất máu
+CREATE TRIGGER trg_CapNhatTonKho_XuatMau
+AFTER INSERT ON CHITIETNHAPXUAT
+FOR EACH ROW
+BEGIN
+    DECLARE v_loaiPhieu VARCHAR(50);
+    DECLARE v_maKho CHAR(10);
+    
+    SELECT loaiPhieu INTO v_loaiPhieu FROM PHIEUNHAPXUAT WHERE maPhieu = NEW.maPhieu;
+    
+    IF v_loaiPhieu = 'Xuất kho' THEN
+        SELECT maKho INTO v_maKho FROM TUIMAU WHERE maTuiMau = NEW.maTuiMau;
+        UPDATE KHOMAU SET soLuongTon = soLuongTon - 1 WHERE maKho = v_maKho;
+    END IF;
+END //
+DELIMITER ;
+
+-- [TEST] Test Trigger trg_CapNhatTonKho_XuatMau
+-- (Lưu ý: Comment lại dòng này. Khi insert phiếu chi tiết xuất kho, tồn kho sẽ bị trừ)
+-- INSERT INTO CHITIETNHAPXUAT (maPhieu, maTuiMau) VALUES ('PX01', 'TM21');
+
+
+DELIMITER //
+-- 7. Trigger: Cảnh báo ngưỡng an toàn kho máu
+CREATE TRIGGER trg_CanhBaoNguongAnToanKho
+AFTER UPDATE ON KHOMAU
+FOR EACH ROW
+BEGIN
+    IF NEW.soLuongTon < NEW.nguongAnToan AND OLD.soLuongTon >= OLD.nguongAnToan THEN
+        INSERT INTO THONGBAO (maThongBao, maTaiKhoanGui, maTaiKhoanNhan, noiDung, trangThai)
+        VALUES (
+            CONCAT('TB_', DATE_FORMAT(NOW(), '%H%i%s')), 
+            'TK_NV14', 
+            'TK_NV12', 
+            CONCAT('[Cảnh báo tự động] Nhóm máu ', NEW.nhomMau, ' đang dưới ngưỡng an toàn!'),
+            'Chưa đọc'
+        );
+    END IF;
+END //
+DELIMITER ;
+
+-- [TEST] Test Trigger trg_CanhBaoNguongAnToanKho
+-- Cập nhật tồn kho của nhóm máu A- (DD01_A-) xuống 4 để kích hoạt ngưỡng an toàn (ngưỡng là 10)
+UPDATE KHOMAU SET soLuongTon = 4 WHERE maKho = 'DD01_A-';
+-- Kiểm tra xem thông báo đã được tự động tạo ra hay chưa
+SELECT * FROM THONGBAO ORDER BY thoiGianGui DESC LIMIT 1;
+
+
+DELIMITER //
+-- 8. Procedure: Thống kê thu nhận theo tháng
+CREATE PROCEDURE sp_ThongKeThuNhanTheoThang(
+    IN p_Thang INT,
+    IN p_Nam INT
+)
+BEGIN
+    SELECT 
+        k.nhomMau AS 'Nhóm Máu',
+        COUNT(t.maTuiMau) AS 'Số Lượng Túi',
+        SUM(t.theTich) AS 'Tổng Thể Tích (ml)'
+    FROM TUIMAU t
+    JOIN KHOMAU k ON t.maKho = k.maKho
+    WHERE MONTH(t.thoiGianLayMau) = p_Thang AND YEAR(t.thoiGianLayMau) = p_Nam AND t.trangThai = 'Nhập kho'
+    GROUP BY k.nhomMau;
+END //
+DELIMITER ;
+
+-- [TEST] Thống kê lượng máu thu nhận trong tháng 2 năm 2026
+CALL sp_ThongKeThuNhanTheoThang(2, 2026);
