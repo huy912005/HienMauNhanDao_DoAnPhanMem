@@ -1,5 +1,6 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
+import com.Nhom20.DoAnPhamMem.enums.TrangThaiTinTuc;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,5 @@ public class TinTucEntity {
     private String noiDung;
     private String hinhAnh;
     private LocalDateTime ngayDang = LocalDateTime.now();
-    private String trangThai;
+    private TrangThaiTinTuc trangThai;
 }
