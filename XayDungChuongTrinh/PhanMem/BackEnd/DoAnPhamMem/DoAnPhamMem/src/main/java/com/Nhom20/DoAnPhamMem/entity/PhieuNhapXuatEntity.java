@@ -1,5 +1,6 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
+import com.Nhom20.DoAnPhamMem.enums.LoaiPhieuNhapXuat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +21,7 @@ public class PhieuNhapXuatEntity {
     @JoinColumn(name = "maNhanVien")
     private NhanVienEntity nhanVienThucHien;
     @Column(name = "loaiPhieu", nullable = false, length = 50)
-    private String loaiPhieu;
+    private LoaiPhieuNhapXuat loaiPhieu;
     @Column(name = "ngayNhapXuat")
     private LocalDate ngayNhapXuat;
     @OneToMany(mappedBy = "phieuNhapXuat", cascade = CascadeType.ALL, orphanRemoval = true)

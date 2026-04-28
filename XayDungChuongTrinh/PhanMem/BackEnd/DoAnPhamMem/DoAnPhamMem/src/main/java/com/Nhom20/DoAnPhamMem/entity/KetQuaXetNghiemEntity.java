@@ -1,5 +1,6 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
+import com.Nhom20.DoAnPhamMem.enums.NhomMau;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,6 @@ public class KetQuaXetNghiemEntity {
     @JoinColumn(name = "maNhanVien")
     private NhanVienEntity nhanVienXetNghiem;
     @Column(name = "nhomMau", length = 5)
-    private String nhomMau;
+    private NhomMau nhomMau;
     private String moTa;
 }

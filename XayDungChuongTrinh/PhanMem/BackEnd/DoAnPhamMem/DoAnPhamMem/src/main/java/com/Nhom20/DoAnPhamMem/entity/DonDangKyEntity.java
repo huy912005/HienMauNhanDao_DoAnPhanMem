@@ -1,5 +1,6 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
+import com.Nhom20.DoAnPhamMem.enums.TrangThaiDonDangKy;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,5 +28,5 @@ public class DonDangKyEntity {
     @Column(name = "thoiGianDangKy")
     private LocalDateTime thoiGianDangKy;
     @Column(name = "trangThai", length = 50)
-    private String trangThai;
+    private TrangThaiDonDangKy trangThai;
 }

@@ -1,9 +1,12 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
+import com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau;
+import com.Nhom20.DoAnPhamMem.enums.TheTichTuiMau;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "TUIMAU")
 @Getter
@@ -19,9 +22,9 @@ public class TuiMauEntity {
     @JoinColumn(name = "maKho")
     private KhoMauEntity khoMau;
     @Column(name = "theTich")
-    private Integer theTich;
+    private TheTichTuiMau theTich;
     @Column(name = "thoiGianLayMau")
     private LocalDateTime thoiGianLayMau;
     @Column(name = "trangThai", length = 50)
-    private String trangThai;
+    private TrangThaiTuiMau trangThai;
 }
