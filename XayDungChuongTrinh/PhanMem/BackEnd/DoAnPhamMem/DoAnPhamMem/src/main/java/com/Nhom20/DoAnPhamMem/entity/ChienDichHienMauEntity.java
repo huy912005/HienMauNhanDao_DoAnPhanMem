@@ -1,5 +1,6 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
+import com.Nhom20.DoAnPhamMem.enums.TrangThaiChienDich;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,7 @@ public class ChienDichHienMauEntity {
     @Column(name = "soLuongDuKien")
     private Integer soLuongDuKien;
     @Column(name = "trangThai", nullable = false, length = 50)
-    private String trangThai;
+    private TrangThaiChienDich trangThai;
     @Column(name = "maQR")
     private String maQR;
 }

@@ -1,5 +1,7 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
+import com.Nhom20.DoAnPhamMem.enums.GioiTinh;
+import com.Nhom20.DoAnPhamMem.enums.NhomMau;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -25,11 +27,11 @@ public class TinhNguyenVienEntity {
     @Column(name = "ngaySinh", nullable = false)
     private LocalDate ngaySinh;
     @Column(name = "gioiTinh", length = 10)
-    private String gioiTinh;
+    private GioiTinh gioiTinh;
     @Column(name = "soDienThoai", nullable = false, length = 10)
     private String soDienThoai;
     @Column(name = "nhomMau", length = 5)
-    private String nhomMau;
+    private NhomMau nhomMau;
     @Column(name = "diaChi", length = 255)
     private String diaChi;
 }
