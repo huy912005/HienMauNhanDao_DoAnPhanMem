@@ -1,0 +1,294 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cấp Giấy Chứng nhận - Hệ thống Hiến máu Đà Nẵng</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+  <script src="../js/auth.js"></script>
+  <script src="../js/page-shell.js"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:'#af101a'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
+  <style>
+    body{font-family:'Inter',sans-serif;}
+    .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+    @media print { .no-print{display:none!important;} #cert-preview{page-break-inside:avoid;} }
+    .cert-bg { background: linear-gradient(135deg, #fff8f7 0%, #fff2f0 50%, #ffdad6 100%); }
+  </style>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50 antialiased">
+<div class="w-full min-h-screen flex">
+  <div id="sidebar-mount"></div>
+  <div class="flex-1 flex flex-col">
+    <div id="header-mount"></div>
+    <main class="flex-1 p-8">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h1 class="text-2xl font-black text-slate-900">Cấp Giấy Chứng nhận Hiến máu</h1>
+          <p class="text-sm text-slate-500 mt-1">Duyệt và phát hành giấy chứng nhận điện tử cho các tình nguyện viên đủ điều kiện.</p>
+        </div>
+        <div class="flex gap-3">
+          <button onclick="issueAll()" class="h-10 px-5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-all flex items-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.98]">
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1;">done_all</span>
+            Phát hành tất cả
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-4 gap-5 mb-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Chờ duyệt</p>
+          <p class="text-3xl font-black text-amber-600" id="cnt-pending">0</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Đã phát hành</p>
+          <p class="text-3xl font-black text-emerald-600" id="cnt-issued">0</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Tổng từ đầu năm</p>
+          <p class="text-3xl font-black text-slate-900">148</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Chiến dịch</p>
+          <p class="text-3xl font-black text-red-700">Giọt Máu Hồng</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-6">
+        <!-- Donor table -->
+        <div class="col-span-7">
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+              <h2 class="font-bold text-slate-800">Danh sách đủ điều kiện cấp chứng nhận</h2>
+              <div class="flex gap-2">
+                <input id="filter-cert" type="text" placeholder="Tìm tên..."
+                       class="h-9 w-44 px-3 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+                <select id="filter-status" class="h-9 px-3 border border-slate-200 rounded-lg text-sm outline-none bg-white">
+                  <option value="">Tất cả</option>
+                  <option value="pending">Chờ duyệt</option>
+                  <option value="issued">Đã phát hành</option>
+                </select>
+              </div>
+            </div>
+            <table class="w-full text-sm">
+              <thead><tr class="bg-slate-50">
+                <th class="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">TNV</th>
+                <th class="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Nhóm máu</th>
+                <th class="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Thể tích</th>
+                <th class="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">XN</th>
+                <th class="px-4 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Trạng thái</th>
+                <th class="px-4 py-3 text-center text-[10px] font-bold text-slate-500 uppercase tracking-wider">Hành động</th>
+              </tr></thead>
+              <tbody id="cert-tbody" class="divide-y divide-slate-50"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Certificate preview -->
+        <div class="col-span-5">
+          <div id="cert-empty" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-10 flex flex-col items-center justify-center text-center h-full">
+            <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-slate-400 text-3xl">workspace_premium</span>
+            </div>
+            <p class="font-bold text-slate-600">Chọn TNV để xem chứng nhận</p>
+            <p class="text-xs text-slate-400 mt-1">Bấm vào hàng để xem trước giấy chứng nhận</p>
+          </div>
+
+          <div id="cert-preview" class="hidden">
+            <!-- Certificate card -->
+            <div class="cert-bg rounded-2xl border-2 border-red-200 overflow-hidden shadow-lg">
+              <!-- Header -->
+              <div class="bg-gradient-to-r from-red-700 to-red-900 px-6 py-5 text-white text-center">
+                <div class="flex items-center justify-center gap-2 mb-2">
+                  <span class="material-symbols-outlined text-3xl" style="font-variation-settings:'FILL' 1,'wght' 700;">bloodtype</span>
+                </div>
+                <p class="text-[10px] font-bold uppercase tracking-widest opacity-80">TRUNG TÂM HUYẾT HỌC - TRUYỀN MÁU</p>
+                <h3 class="text-lg font-black uppercase tracking-tight mt-1">Thành phố Đà Nẵng</h3>
+              </div>
+
+              <div class="px-6 py-5">
+                <h2 class="text-center text-xl font-black text-red-800 uppercase tracking-wide mb-1">Giấy Chứng nhận</h2>
+                <p class="text-center text-sm text-slate-500 mb-5">Hiến máu tình nguyện</p>
+
+                <div class="flex items-center gap-4 mb-5 p-4 bg-white rounded-xl border border-red-100">
+                  <div class="w-14 h-14 rounded-xl flex items-center justify-center text-white text-lg font-black shrink-0"
+                       style="background:linear-gradient(135deg,#af101a,#d32f2f);" id="cert-initials"></div>
+                  <div>
+                    <p class="font-black text-slate-900 text-base" id="cert-name"></p>
+                    <p class="text-xs text-slate-500" id="cert-cccd"></p>
+                    <p class="text-xs text-slate-500" id="cert-dob"></p>
+                  </div>
+                </div>
+
+                <div class="space-y-2 text-sm mb-5">
+                  <div class="flex justify-between py-2 border-b border-red-100">
+                    <span class="text-slate-500">Nhóm máu</span>
+                    <span class="font-bold" id="cert-bt"></span>
+                  </div>
+                  <div class="flex justify-between py-2 border-b border-red-100">
+                    <span class="text-slate-500">Thể tích hiến</span>
+                    <span class="font-bold" id="cert-vol"></span>
+                  </div>
+                  <div class="flex justify-between py-2 border-b border-red-100">
+                    <span class="text-slate-500">Chiến dịch</span>
+                    <span class="font-bold" id="cert-campaign"></span>
+                  </div>
+                  <div class="flex justify-between py-2 border-b border-red-100">
+                    <span class="text-slate-500">Ngày hiến</span>
+                    <span class="font-bold" id="cert-date"></span>
+                  </div>
+                  <div class="flex justify-between py-2">
+                    <span class="text-slate-500">Mã chứng nhận</span>
+                    <span class="font-mono font-bold text-red-700" id="cert-code"></span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-4 p-3 bg-emerald-50 border border-emerald-200 rounded-xl mb-5">
+                  <span class="material-symbols-outlined text-emerald-600 text-2xl" style="font-variation-settings:'FILL' 1;">verified</span>
+                  <div>
+                    <p class="text-xs font-bold text-emerald-700">Kết quả xét nghiệm: ÂM TÍNH</p>
+                    <p class="text-[10px] text-emerald-600">HIV · Viêm gan B · Viêm gan C · Giang mai</p>
+                  </div>
+                </div>
+
+                <div class="flex gap-2">
+                  <button onclick="printCert()" class="flex-1 h-10 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">print</span>
+                    In / Tải PDF
+                  </button>
+                  <button id="btn-issue" onclick="issueCert()" class="flex-1 h-10 bg-red-700 hover:bg-red-800 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">send</span>
+                    Phát hành chính thức
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const CERT_DATA = [
+  { id:'C001', name:'Nguyễn Văn Bình', cccd:'048092000001', dob:'15/03/1990', bt:'O+', vol:'350ml', campaign:'Giọt Máu Hồng', date:'15/05/2025', status:'pending' },
+  { id:'C002', name:'Trần Thị Lan', cccd:'048092000002', dob:'20/07/1995', bt:'A+', vol:'250ml', campaign:'Giọt Máu Hồng', date:'15/05/2025', status:'pending' },
+  { id:'C003', name:'Lê Minh Tuấn', cccd:'048092000003', dob:'08/11/1988', bt:'B+', vol:'450ml', campaign:'Giọt Máu Hồng', date:'15/05/2025', status:'issued' },
+  { id:'C004', name:'Phạm Thị Hoa', cccd:'048092000004', dob:'12/04/2000', bt:'AB+', vol:'350ml', campaign:'Giọt Máu Hồng', date:'15/05/2025', status:'pending' },
+  { id:'C005', name:'Hoàng Văn Nam', cccd:'048092000005', dob:'30/09/1992', bt:'O-', vol:'350ml', campaign:'Hải Châu T5', date:'14/05/2025', status:'issued' },
+];
+
+let currentCert = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  initPage('CapGiayChungNhan.html');
+  renderTable();
+  updateStats();
+  document.getElementById('filter-cert').addEventListener('input', renderTable);
+  document.getElementById('filter-status').addEventListener('change', renderTable);
+});
+
+function renderTable() {
+  const q = document.getElementById('filter-cert').value.toLowerCase();
+  const s = document.getElementById('filter-status').value;
+  const filtered = CERT_DATA.filter(c => (!q || c.name.toLowerCase().includes(q)) && (!s || c.status === s));
+
+  document.getElementById('cert-tbody').innerHTML = filtered.map(c => `
+    <tr onclick="selectCert('${c.id}')" class="hover:bg-red-50 cursor-pointer transition-colors ${currentCert?.id===c.id?'bg-red-50':''}">
+      <td class="px-4 py-3">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-black shrink-0"
+               style="background:linear-gradient(135deg,#af101a,#d32f2f);">
+            ${c.name.split(' ').slice(-2).map(n=>n[0]).join('').toUpperCase()}
+          </div>
+          <div><p class="font-semibold text-slate-800 text-sm">${c.name}</p><p class="text-[11px] text-slate-400">${c.cccd}</p></div>
+        </div>
+      </td>
+      <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-red-100 text-red-700 text-xs font-bold">${c.bt}</span></td>
+      <td class="px-4 py-3 text-sm text-slate-600">${c.vol}</td>
+      <td class="px-4 py-3"><span class="text-xs font-bold text-emerald-600">✓ Âm tính</span></td>
+      <td class="px-4 py-3">
+        <span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase ${c.status==='issued'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">
+          ${c.status==='issued'?'Đã phát hành':'Chờ duyệt'}
+        </span>
+      </td>
+      <td class="px-4 py-3 text-center">
+        <button onclick="event.stopPropagation(); quickIssue('${c.id}')"
+          class="h-7 px-3 ${c.status==='issued'?'bg-slate-100 text-slate-400':'bg-red-700 hover:bg-red-800 text-white'} rounded-lg text-[10px] font-bold transition-all flex items-center gap-1 mx-auto">
+          <span class="material-symbols-outlined text-xs" style="font-variation-settings:'FILL' 1;">${c.status==='issued'?'download':'send'}</span>
+          ${c.status==='issued'?'Tải lại':'Phát hành'}
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+function selectCert(id) {
+  currentCert = CERT_DATA.find(c=>c.id===id);
+  if (!currentCert) return;
+  document.getElementById('cert-empty').classList.add('hidden');
+  document.getElementById('cert-preview').classList.remove('hidden');
+
+  const initials = currentCert.name.split(' ').slice(-2).map(n=>n[0]).join('').toUpperCase();
+  document.getElementById('cert-initials').textContent = initials;
+  document.getElementById('cert-name').textContent = currentCert.name;
+  document.getElementById('cert-cccd').textContent = 'CCCD: ' + currentCert.cccd;
+  document.getElementById('cert-dob').textContent = 'Ngày sinh: ' + currentCert.dob;
+  document.getElementById('cert-bt').textContent = currentCert.bt;
+  document.getElementById('cert-vol').textContent = currentCert.vol;
+  document.getElementById('cert-campaign').textContent = currentCert.campaign;
+  document.getElementById('cert-date').textContent = currentCert.date;
+  document.getElementById('cert-code').textContent = 'GCN-DN-' + currentCert.id + '-2025';
+
+  const issueBtn = document.getElementById('btn-issue');
+  if (currentCert.status === 'issued') {
+    issueBtn.textContent = '✓ Đã phát hành';
+    issueBtn.disabled = true;
+    issueBtn.className = 'flex-1 h-10 bg-emerald-600 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 opacity-70 cursor-default';
+  } else {
+    issueBtn.innerHTML = '<span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\' 1;">send</span>Phát hành chính thức';
+    issueBtn.disabled = false;
+    issueBtn.className = 'flex-1 h-10 bg-red-700 hover:bg-red-800 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2';
+  }
+  renderTable();
+}
+
+function issueCert() {
+  if (!currentCert) return;
+  currentCert.status = 'issued';
+  showToast(`Đã phát hành chứng nhận cho ${currentCert.name}!`, 'success');
+  updateStats(); renderTable(); selectCert(currentCert.id);
+}
+
+function quickIssue(id) {
+  const c = CERT_DATA.find(x=>x.id===id);
+  if (!c) return;
+  if (c.status === 'issued') { showToast('Đang tải chứng nhận PDF...','info'); return; }
+  c.status = 'issued';
+  showToast(`Đã phát hành chứng nhận cho ${c.name}!`, 'success');
+  updateStats(); renderTable();
+  if (currentCert?.id === id) selectCert(id);
+}
+
+function issueAll() {
+  const pending = CERT_DATA.filter(c=>c.status==='pending');
+  if (!pending.length) { showToast('Không có chứng nhận nào đang chờ!','info'); return; }
+  pending.forEach(c => c.status = 'issued');
+  showToast(`Đã phát hành ${pending.length} chứng nhận!`,'success');
+  updateStats(); renderTable();
+}
+
+function printCert() {
+  showToast('Đang chuẩn bị file PDF...','info');
+  setTimeout(() => window.print(), 500);
+}
+
+function updateStats() {
+  document.getElementById('cnt-pending').textContent = CERT_DATA.filter(c=>c.status==='pending').length;
+  document.getElementById('cnt-issued').textContent = CERT_DATA.filter(c=>c.status==='issued').length;
+}
+</script>
+</body>
+</html>
