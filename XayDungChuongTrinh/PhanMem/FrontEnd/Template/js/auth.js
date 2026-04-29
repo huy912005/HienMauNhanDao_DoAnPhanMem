@@ -26,7 +26,7 @@ const ROLE_CONFIG = {
     badgeColor: 'bg-purple-100 text-purple-700',
     icon: 'admin_panel_settings',
     menu: [
-      { id: 'trang-chu', label: 'Bảng điều khiển', icon: 'dashboard', page: 'TrangChu.html' },
+      { id: 'trang-chu', label: 'Bảng điều khiển', icon: 'dashboard', page: 'TrangChuAdmin.html' },
       { id: 'quan-ly-chien-dich', label: 'Quản lý chiến dịch', icon: 'campaign', page: 'QuanLyChienDich.html' },
       { id: 'thong-ke-ton-kho', label: 'Thống kê tồn kho', icon: 'bar_chart', page: 'ThongKeTonKho.html' },
       { id: 'quan-ly-tai-khoan', label: 'Quản lý tài khoản', icon: 'manage_accounts', page: 'QuanLyTaiKhoan.html' },
