@@ -22,15 +22,79 @@
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 </style>
 <script src="../js/auth.js"></script>
-<script src="../js/page-shell.js"></script>
 <link rel="stylesheet" href="../css/style.css">
 </head>
-<body class="bg-[#F3F4F6] text-slate-800 antialiased min-h-screen">
-<div class="w-full min-h-screen flex">
-  <div id="sidebar-mount"></div>
-  <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
-    <div id="header-mount"></div>
-    <main class="flex-1 p-8">
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden flex flex-col min-h-screen">
+    
+    <!-- Top Info Bar -->
+    <div class="w-full bg-slate-800 text-white text-[11px] font-medium py-1.5 px-8 flex justify-between items-center">
+        <div class="flex gap-6">
+            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">location_on</span>Địa chỉ: 123 Lê Lợi, Hải Châu, Đà Nẵng</span>
+            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">call</span>Đường dây nóng: 1900 1234</span>
+        </div>
+        <div class="flex gap-4 items-center">
+            <div class="flex gap-2">
+                <a href="#" class="hover:text-primary transition-colors">Facebook</a>
+                <a href="#" class="hover:text-primary transition-colors">Zalo</a>
+            </div>
+            <div class="h-3 w-[1px] bg-slate-600"></div>
+            <a href="#" class="hover:text-primary transition-colors">Hỗ trợ</a>
+        </div>
+    </div>
+
+    <!-- Header & Horizontal Navigation -->
+    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="w-[1200px] mx-auto h-24 flex items-center justify-between px-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='TrangChu.html'">
+                <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shrink-0">
+                    <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">bloodtype</span>
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-black tracking-tight text-red-700 leading-tight">HỆ THỐNG HIẾN MÁU</h1>
+                    <p class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">TP. Đà Nẵng</p>
+                </div>
+            </div>
+
+            <!-- Horizontal Nav -->
+            <nav class="flex items-center gap-1">
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TrangChu.html">Trang chủ</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TrangChu.html#gioi-thieu">Giới thiệu</a>
+                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm" href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TimKiemChienDich.html">Tìm chiến dịch</a>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="flex items-center gap-4">
+                <button class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full"></span>
+                </button>
+                <div class="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer relative group py-2">
+                    <div class="text-right hidden md:block">
+                        <p class="text-sm font-bold text-slate-900 leading-none mb-1">Lê Văn Bình</p>
+                        <p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Tình nguyện viên</p>
+                    </div>
+                    <img alt="User portrait" class="w-10 h-10 rounded-full object-cover border-2 border-primary-container/20 shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrkDisk3_j22F4lcXb3jllF-99BYq3_SrntgHddIgx0onK2l25zj9yhgH0CmKsiDKHkcKkj4fUkJYPLzjVjDwaqQGvaw9tMIBFeFdSruc8nrljijQYlXObDS9Cl8vGxmXo6QmITg4G4hMQYoZ8uopbYnk178pDHgbWOMuPbFk0gIfxKgLIZPEvBzsxP0L8DjAy2sjgVh-OfYdDzSpRdcdxYlZ4c9LNMFhhzsp2kBlmP-sFmYmsUQVv-D164nUzgWv_CxOokcTNjOZ" />
+                    
+                    <!-- Dropdown Menu -->
+                    <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="py-2">
+                            <a href="HoSoVaLichSu.html" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">person</span>Hồ sơ & Lịch sử
+                            </a>
+                            <div class="h-[1px] bg-slate-100 my-1"></div>
+                            <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">logout</span>Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 w-[1200px] mx-auto p-8 mt-8 bg-white border border-slate-200 rounded-2xl shadow-sm mb-16">
         
         <div class="mb-8">
             <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">ĐĂNG KÝ HIẾN MÁU VÀ KHAI BÁO Y TẾ</h1>
@@ -209,8 +273,6 @@
         </div>
 
     </main>
-  </div>
-</div>
 
 <!-- Modal QR Code -->
 <div class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" id="qr-modal">
@@ -244,9 +306,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  initPage('DangKyVaKhaiBaoYTe.html');
-});
+// File specific script
 </script>
 </body>
 </html>
