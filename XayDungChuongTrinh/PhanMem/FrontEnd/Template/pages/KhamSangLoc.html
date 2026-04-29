@@ -13,6 +13,7 @@
     rel="stylesheet" />
   <script src="../js/auth.js"></script>
   <script src="../js/page-shell.js"></script>
+  <script src="../js/toast.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -268,16 +269,19 @@
 
   <script>
     function evaluateScreening() {
-      const weight = parseFloat(document.getElementById('weight').value);
+      const weightInput = document.getElementById('weight');
+      const weight = parseFloat(weightInput.value);
+      const bp = document.getElementById('bloodPressure').value;
       const volumeSelect = document.getElementById('volumeSelect');
       const passResult = document.getElementById('passResult');
       const failResult = document.getElementById('failResult');
 
-      if (!isNaN(weight)) {
-        // Rule: Weight < 42kg is absolute fail (matching academic standards)
+      if (!isNaN(weight) && weight > 0) {
+        // Rule: Weight < 42kg is absolute fail
         if (weight < 42) {
           failResult.checked = true;
           volumeSelect.disabled = true;
+          showToast("Cảnh báo: Cân nặng dưới 42kg không đủ điều kiện hiến máu.", "error");
         } else {
           passResult.checked = true;
           volumeSelect.disabled = false;
@@ -288,17 +292,23 @@
             Array.from(volumeSelect.options).forEach(opt => {
               if (opt.value !== "250") opt.disabled = true;
             });
+            showToast("Lưu ý: Tình nguyện viên dưới 45kg chỉ được hiến tối đa 250ml.", "warning");
           } else {
             Array.from(volumeSelect.options).forEach(opt => opt.disabled = false);
           }
         }
+      }
+
+      // BP check (basic simulation)
+      if (bp && (parseInt(bp.split('/')[0]) > 160 || parseInt(bp.split('/')[0]) < 90)) {
+        showToast("Cảnh báo: Chỉ số huyết áp bất thường. Cần kiểm tra kỹ.", "error");
       }
     }
 
     function saveScreeningData() {
       const isPass = document.getElementById('passResult').checked;
       if (isPass) {
-        alert("Lưu dữ liệu thành công! Đã ghi nhận túi máu mới vào kho tạm thời.");
+        showToast("Lưu dữ liệu thành công! Đã ghi nhận túi máu mới vào kho tạm thời.", "success");
         // Logic to simulate UI update (e.g., increment counter)
         const countSpan = document.querySelector('span.text-red-700.font-bold');
         if (countSpan) {
@@ -306,7 +316,7 @@
           countSpan.textContent = (current + 1) + " túi thu nhận hôm nay";
         }
       } else {
-        alert("Hồ sơ không đạt yêu cầu hiến máu. Đã lưu trạng thái không đạt.");
+        showToast("Hồ sơ không đạt yêu cầu hiến máu. Đã lưu trạng thái không đạt.", "warning");
       }
     }
 

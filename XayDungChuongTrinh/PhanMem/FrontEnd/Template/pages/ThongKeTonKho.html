@@ -13,6 +13,7 @@
     rel="stylesheet" />
   <script src="../js/auth.js"></script>
   <script src="../js/page-shell.js"></script>
+  <script src="../js/toast.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -362,6 +363,8 @@
         const row = btn.closest('tr');
         row.remove();
         
+        showToast("Đã xóa đơn vị máu thành công.", "success");
+
         // Update summary numbers
         const totalBlood = document.getElementById('totalBlood');
         const currentTotal = parseInt(totalBlood.textContent.replace(',', ''));

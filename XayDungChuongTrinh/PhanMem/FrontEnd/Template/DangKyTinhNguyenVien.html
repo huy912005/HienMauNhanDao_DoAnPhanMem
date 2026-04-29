@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="utf-8"/>
@@ -10,6 +10,7 @@
   <script src="js/auth.js"></script>
   <script>tailwind.config={theme:{extend:{colors:{primary:'#af101a'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
   
+<script src="js/toast.js"></script>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="min-h-screen bg-gray-50">
@@ -159,8 +160,18 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
 
   const pw  = document.getElementById('reg-pw').value;
   const pw2 = document.getElementById('reg-pw2').value;
-  if (pw !== pw2) { errMsg.textContent = 'Mật khẩu xác nhận không khớp!'; errDiv.classList.remove('hidden'); return; }
-  if (pw.length < 8) { errMsg.textContent = 'Mật khẩu phải có ít nhất 8 ký tự!'; errDiv.classList.remove('hidden'); return; }
+  if (pw !== pw2) { 
+    errMsg.textContent = 'Mật khẩu xác nhận không khớp!'; 
+    errDiv.classList.remove('hidden'); 
+    showToast('Mật khẩu xác nhận không khớp!', 'error');
+    return; 
+  }
+  if (pw.length < 8) { 
+    errMsg.textContent = 'Mật khẩu phải có ít nhất 8 ký tự!'; 
+    errDiv.classList.remove('hidden'); 
+    showToast('Mật khẩu phải có ít nhất 8 ký tự!', 'error');
+    return; 
+  }
 
   const result = registerVolunteer({
     name: document.getElementById('reg-name').value.trim(),
@@ -168,7 +179,14 @@ document.getElementById('reg-form').addEventListener('submit', async function(e)
     password: pw,
   });
 
-  if (!result.success) { errMsg.textContent = result.message; errDiv.classList.remove('hidden'); return; }
+  if (!result.success) { 
+    errMsg.textContent = result.message; 
+    errDiv.classList.remove('hidden'); 
+    showToast(result.message, 'error');
+    return; 
+  }
+
+  showToast('Đăng ký thành công! Chào mừng bạn gia nhập cộng đồng.', 'success');
 
   this.classList.add('hidden');
   document.getElementById('success-box').classList.remove('hidden');

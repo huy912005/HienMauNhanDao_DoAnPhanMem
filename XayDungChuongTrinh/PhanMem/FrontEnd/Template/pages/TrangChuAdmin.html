@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   <script src="../js/auth.js"></script>
   <script src="../js/page-shell.js"></script>
+  <script src="../js/toast.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -217,7 +218,9 @@
       
       const authData = JSON.parse(sessionStorage.getItem('hm_dn_auth'));
       if(authData) {
-        document.getElementById('welcome-msg').textContent = `Xin chào ${authData.role === 'admin' ? 'Quản trị viên' : 'Bác sĩ'}, chúc một ngày làm việc hiệu quả!`;
+        const userName = authData.role === 'admin' ? 'Quản trị viên' : 'Nhân viên Y tế';
+        document.getElementById('welcome-msg').textContent = `Xin chào ${userName}, chúc một ngày làm việc hiệu quả!`;
+        showToast(`Chào mừng ${userName} trở lại hệ thống quản trị!`, "success");
       }
     });
   </script>

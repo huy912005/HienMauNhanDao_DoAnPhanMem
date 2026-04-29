@@ -32,6 +32,7 @@
 </style>
 <script src="../js/auth.js"></script>
 <script src="../js/page-shell.js"></script>
+<script src="../js/toast.js"></script>
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="bg-[#F3F4F6] text-slate-800 antialiased min-h-screen">
@@ -107,7 +108,7 @@
                             Tôi đồng ý với <a class="text-primary font-medium underline underline-offset-2" href="#">điều khoản hiến máu</a> và cam kết cung cấp thông tin sức khỏe trung thực theo quy định của Bộ Y Tế.
                         </label>
                     </div>
-                    <button class="w-full h-12 bg-primary-container text-white font-bold rounded-md hover:bg-red-800 transition-all shadow-sm active:opacity-90 flex items-center justify-center gap-2" type="button">
+                    <button onclick="showToast('Đăng ký tài khoản thành công! Vui lòng kiểm tra email để xác thực.', 'success')" class="w-full h-12 bg-primary-container text-white font-bold rounded-md hover:bg-red-800 transition-all shadow-sm active:opacity-90 flex items-center justify-center gap-2" type="button">
                         <span class="text-base">Đăng ký</span>
                         <span class="material-symbols-outlined text-xl">arrow_forward</span>
                     </button>

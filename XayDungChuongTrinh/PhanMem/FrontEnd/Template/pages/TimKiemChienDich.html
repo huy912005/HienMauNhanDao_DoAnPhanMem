@@ -43,6 +43,7 @@
         }
     </script>
     <script src="../js/auth.js"></script>
+    <script src="../js/toast.js"></script>
     <script src="../js/page-shell.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -366,6 +367,7 @@
             const filter = input.value.toLowerCase();
             const grid = document.getElementById('campaignGrid');
             const cards = grid.getElementsByClassName('group');
+            let visibleCount = 0;
 
             for (let i = 0; i < cards.length; i++) {
                 const title = cards[i].getElementsByTagName('h3')[0];
@@ -374,8 +376,17 @@
                 
                 if (txtValue.toLowerCase().indexOf(filter) > -1) {
                     cards[i].style.display = "";
+                    visibleCount++;
                 } else {
                     cards[i].style.display = "none";
+                }
+            }
+
+            if (visibleCount === 0 && filter !== "") {
+                // Throttle toast to avoid spamming while typing
+                if (!window.toastTimeout) {
+                    showToast("Không tìm thấy chiến dịch phù hợp với từ khóa.", "warning");
+                    window.toastTimeout = setTimeout(() => { window.toastTimeout = null; }, 3000);
                 }
             }
         }
