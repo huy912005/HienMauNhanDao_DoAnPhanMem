@@ -74,11 +74,10 @@
 
             <!-- Horizontal Nav -->
             <nav class="flex items-center gap-1">
-                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm" href="#">Trang chủ</a>
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="#">Giới thiệu</a>
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="#">Đăng ký hiến máu</a>
+                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm" href="TrangChu.html">Trang chủ</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TrangChu.html#gioi-thieu">Giới thiệu</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TimKiemChienDich.html">Tìm chiến dịch</a>
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="#">Tin tức</a>
             </nav>
 
             <!-- User Profile -->
@@ -87,12 +86,25 @@
                     <span class="material-symbols-outlined">notifications</span>
                     <span class="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full"></span>
                 </button>
-                <div class="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer">
+                <div class="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer relative group py-2">
                     <div class="text-right hidden md:block">
                         <p class="text-sm font-bold text-slate-900 leading-none mb-1">Lê Văn Bình</p>
                         <p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Tình nguyện viên</p>
                     </div>
                     <img alt="User portrait" class="w-10 h-10 rounded-full object-cover border-2 border-primary-container/20 shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrkDisk3_j22F4lcXb3jllF-99BYq3_SrntgHddIgx0onK2l25zj9yhgH0CmKsiDKHkcKkj4fUkJYPLzjVjDwaqQGvaw9tMIBFeFdSruc8nrljijQYlXObDS9Cl8vGxmXo6QmITg4G4hMQYoZ8uopbYnk178pDHgbWOMuPbFk0gIfxKgLIZPEvBzsxP0L8DjAy2sjgVh-OfYdDzSpRdcdxYlZ4c9LNMFhhzsp2kBlmP-sFmYmsUQVv-D164nUzgWv_CxOokcTNjOZ" />
+                    
+                    <!-- Dropdown Menu -->
+                    <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="py-2">
+                            <a href="HoSoVaLichSu.html" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">person</span>Hồ sơ & Lịch sử
+                            </a>
+                            <div class="h-[1px] bg-slate-100 my-1"></div>
+                            <a href="#" class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">logout</span>Đăng xuất
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -162,7 +174,7 @@
         </section>
 
         <!-- Giới thiệu Section -->
-        <section class="bg-white py-16 mb-16 border-y border-slate-200">
+        <section id="gioi-thieu" class="bg-white py-16 mb-16 border-y border-slate-200">
             <div class="w-[1200px] mx-auto px-4 flex gap-12 items-center">
                 <div class="w-1/2">
                     <div class="flex items-center gap-3 mb-6">
