@@ -23,6 +23,7 @@
 </style>
 <script src="../js/auth.js"></script>
 <script src="../js/page-shell.js"></script>
+<script src="../js/toast.js"></script>
 <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="bg-[#F3F4F6] text-slate-800 antialiased min-h-screen">
@@ -63,7 +64,7 @@
                         <input class="flex-1 h-full border-none focus:ring-0 p-0 text-xl font-medium placeholder:text-slate-300 outline-none" placeholder="Nhập hoặc Quét mã vạch túi máu (VD: BB-2024-...)" type="text"/>
                     </div>
                 </div>
-                <button class="w-[200px] h-16 bg-primary text-white font-bold rounded-xl hover:bg-red-800 transition-all flex flex-col items-center justify-center gap-0.5 shadow-md active:scale-[0.98]">
+                <button onclick="showToast('Đã nhận diện và thêm túi máu BB-2024-00415 vào danh sách.', 'success')" class="w-[200px] h-16 bg-primary text-white font-bold rounded-xl hover:bg-red-800 transition-all flex flex-col items-center justify-center gap-0.5 shadow-md active:scale-[0.98]">
                     <span class="material-symbols-outlined text-2xl">add_circle</span>
                     <span class="text-xs uppercase tracking-wide">Thêm vào danh sách</span>
                 </button>
@@ -162,7 +163,7 @@
                 <button class="w-[120px] h-12 bg-white border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors">
                     Hủy bỏ
                 </button>
-                <button class="w-[240px] h-12 bg-primary text-white font-bold rounded-lg hover:bg-red-800 transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2">
+                <button onclick="showToast('Đã lưu phiếu nhập kho thành công. Số lượng tồn kho đã được cập nhật.', 'success')" class="w-[240px] h-12 bg-primary text-white font-bold rounded-lg hover:bg-red-800 transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined">check_circle</span>
                     Hoàn tất lưu phiếu
                 </button>

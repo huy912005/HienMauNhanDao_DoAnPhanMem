@@ -30,6 +30,7 @@
         }
     </style>
     <script src="../js/auth.js"></script>
+    <script src="../js/toast.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
@@ -242,7 +243,7 @@
                                         không?</p>
                                     <div class="flex gap-6 w-32 justify-end">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input class="text-primary focus:ring-primary" name="q1" type="radio" />
+                                            <input class="text-primary focus:ring-primary" name="q1" type="radio" onchange="if(this.checked) showToast('Cảnh báo: Tình trạng mệt mỏi/sốt có thể khiến bạn không đủ điều kiện hiến máu.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer">
@@ -258,7 +259,7 @@
                                         bệnh nào không?</p>
                                     <div class="flex gap-6 w-32 justify-end">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input class="text-primary focus:ring-primary" name="q2" type="radio" />
+                                            <input class="text-primary focus:ring-primary" name="q2" type="radio" onchange="if(this.checked) showToast('Lưu ý: Việc sử dụng thuốc cần được bác sĩ kiểm tra kỹ trước khi hiến.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer">
@@ -274,7 +275,7 @@
                                         hay phẫu thuật không?</p>
                                     <div class="flex gap-6 w-32 justify-end">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input class="text-primary focus:ring-primary" name="q3" type="radio" />
+                                            <input class="text-primary focus:ring-primary" name="q3" type="radio" onchange="if(this.checked) showToast('Quan trọng: Tiền sử bệnh truyền nhiễm/phẫu thuật cần được khai báo chi tiết.', 'error')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer">
@@ -289,7 +290,7 @@
                                         mang thai hoặc cho con bú?</p>
                                     <div class="flex gap-6 w-32 justify-end">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input class="text-primary focus:ring-primary" name="q4" type="radio" />
+                                            <input class="text-primary focus:ring-primary" name="q4" type="radio" onchange="if(this.checked) showToast('Thông tin: Tình trạng thai kỳ/kinh nguyệt có thể tạm hoãn việc hiến máu.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer">
@@ -372,7 +373,7 @@
             // Check terms checkbox
             const terms = document.querySelector('input[type="checkbox"]');
             if (!terms.checked) {
-                alert("Vui lòng xác nhận cam đoan thông tin trước khi đăng ký.");
+                showToast("Vui lòng xác nhận cam đoan thông tin trước khi đăng ký.", "warning");
                 return;
             }
 
