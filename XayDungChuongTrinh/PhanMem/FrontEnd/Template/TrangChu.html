@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Quản lý Hiến máu Đà Nẵng</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#f9dcd9",
+                        "background": "#fff8f7",
+                        "surface-container-highest": "#f9dcd9",
+                        "tertiary-fixed": "#bee9ff",
+                        "on-secondary-container": "#586377",
+                        "on-primary-fixed": "#410003",
+                        "primary": "#af101a",
+                        "outline-variant": "#e4beba",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#ffb3ac",
+                        "error": "#ba1a1a",
+                        "outline": "#8f6f6c",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#ffe2de",
+                        "inverse-surface": "#3e2c2a",
+                        "error-container": "#ffdad6",
+                        "surface": "#fff8f7",
+                        "on-primary-fixed-variant": "#930010",
+                        "inverse-on-surface": "#ffedeb",
+                        "on-secondary-fixed": "#111c2d",
+                        "tertiary-container": "#00799c",
+                        "secondary-fixed": "#d8e3fb",
+                        "primary-container": "#d32f2f",
+                        "on-surface": "#271816",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#004d65",
+                        "secondary": "#545f73",
+                        "on-surface-variant": "#5b403d",
+                        "on-secondary-fixed-variant": "#3c475a",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#fff0ef",
+                        "surface-dim": "#f1d3d0",
+                        "surface-container": "#ffe9e7",
+                        "secondary-fixed-dim": "#bcc7de",
+                        "secondary-container": "#d5e0f8",
+                        "surface-tint": "#ba1a20",
+                        "primary-fixed": "#ffdad6",
+                        "on-tertiary-container": "#e9f7ff",
+                        "on-background": "#271816",
+                        "surface-bright": "#fff8f7",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#001f2a",
+                        "on-primary-container": "#fff2f0",
+                        "tertiary-fixed-dim": "#7bd1f8",
+                        "primary-fixed-dim": "#ffb3ac",
+                        "tertiary": "#005f7b",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Public Sans"],
+                        "display": ["Public Sans"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-background antialiased overflow-x-hidden">
+    <div class="w-[1440px] mx-auto min-h-screen bg-white relative flex">
+        <!-- Sidebar Navigation: Explicit Width -->
+        <aside
+            class="w-64 h-screen border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col py-4 sticky top-0 shrink-0">
+            <div class="px-6 mb-8 h-12 flex items-center shrink-0">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-white shrink-0">
+                        <span class="material-symbols-outlined text-2xl" data-icon="bloodtype"
+                            style="font-variation-settings: 'FILL' 1;">bloodtype</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <h1 class="text-lg font-black tracking-tight text-red-700 leading-tight">Hệ thống Hiến máu</h1>
+                        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">TP. Đà Nẵng</p>
+                    </div>
+                </div>
+            </div>
+            <nav class="flex-1 px-4 space-y-1">
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400 font-bold border-r-4 border-red-700 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined w-6 h-6" data-icon="dashboard">dashboard</span>
+                    <span class="font-sans text-sm antialiased">Bảng điều khiển</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined w-6 h-6" data-icon="event">event</span>
+                    <span class="font-sans text-sm antialiased">Chiến dịch</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined w-6 h-6" data-icon="group">group</span>
+                    <span class="font-sans text-sm antialiased">Người hiến máu</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined w-6 h-6" data-icon="bloodtype">bloodtype</span>
+                    <span class="font-sans text-sm antialiased">Kho máu</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined w-6 h-6" data-icon="calendar_today">calendar_today</span>
+                    <span class="font-sans text-sm antialiased">Lịch hẹn</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-200"
+                    href="#">
+                    <span class="material-symbols-outlined w-6 h-6" data-icon="analytics">analytics</span>
+                    <span class="font-sans text-sm antialiased">Báo cáo</span>
+                </a>
+            </nav>
+            <div class="px-4 mt-auto py-6 space-y-4 shrink-0">
+                <button
+                    class="w-full h-11 bg-primary text-on-primary rounded-xl font-bold text-sm shadow-lg shadow-primary/20 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+                    <span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                    Tạo chiến dịch mới
+                </button>
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-1">
+                    <a class="flex items-center gap-3 px-4 h-10 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-slate-100 transition-all"
+                        href="#">
+                        <span class="material-symbols-outlined w-5 h-5" data-icon="settings">settings</span>
+                        <span class="text-sm font-medium">Cài đặt</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-4 h-10 rounded-lg text-slate-600 dark:text-slate-400 hover:text-red-600 hover:bg-slate-100 transition-all"
+                        href="#">
+                        <span class="material-symbols-outlined w-5 h-5" data-icon="logout">logout</span>
+                        <span class="text-sm font-medium">Đăng xuất</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+        <!-- Main Content Canvas -->
+        <main class="w-[1176px] flex flex-col min-h-screen">
+            <!-- Top App Bar: Explicit Height -->
+            <header
+                class="w-full h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between px-8 sticky top-0 z-40">
+                <div class="flex items-center gap-4 w-[400px]">
+                    <div class="relative w-full">
+                        <span
+                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                        <input
+                            class="w-full h-10 pl-10 pr-4 bg-slate-50 border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400"
+                            placeholder="Tìm kiếm người hiến, chiến dịch..." type="text" />
+                    </div>
+                </div>
+                <div class="flex items-center gap-6 h-full">
+                    <div class="flex items-center gap-2">
+                        <button
+                            class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative">
+                            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+                            <span
+                                class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-600 rounded-full border-2 border-white"></span>
+                        </button>
+                        <button
+                            class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full">
+                            <span class="material-symbols-outlined" data-icon="help">help</span>
+                        </button>
+                    </div>
+                    <div class="h-8 w-[1px] bg-slate-200"></div>
+                    <div class="flex items-center gap-3">
+                        <div class="text-right">
+                            <p class="text-xs font-bold text-slate-900 leading-none mb-1">BS. Nguyễn Văn An</p>
+                            <p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Điều phối viên</p>
+                        </div>
+                        <img alt="User portrait"
+                            class="w-10 h-10 rounded-full object-cover border-2 border-primary-container/20 shrink-0"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrkDisk3_j22F4lcXb3jllF-99BYq3_SrntgHddIgx0onK2l25zj9yhgH0CmKsiDKHkcKkj4fUkJYPLzjVjDwaqQGvaw9tMIBFeFdSruc8nrljijQYlXObDS9Cl8vGxmXo6QmITg4G4hMQYoZ8uopbYnk178pDHgbWOMuPbFk0gIfxKgLIZPEvBzsxP0L8DjAy2sjgVh-OfYdDzSpRdcdxYlZ4c9LNMFhhzsp2kBlmP-sFmYmsUQVv-D164nUzgWv_CxOokcTNjOZ" />
+                    </div>
+                </div>
+            </header>
+            <!-- Emergency Alert Banner -->
+            <div class="w-full h-11 bg-error text-white flex items-center justify-center gap-4 animate-pulse shrink-0">
+                <span class="material-symbols-outlined text-2xl" data-icon="warning"
+                    style="font-variation-settings: 'FILL' 1;">warning</span>
+                <span class="font-bold tracking-wide uppercase text-[13px]">CẦN GẤP NHÓM MÁU O VÀ AB TẠI BV ĐÀ
+                    NẴNG</span>
+                <button
+                    class="h-7 px-4 bg-white text-error rounded-full text-[10px] font-black hover:bg-opacity-90 transition-all uppercase flex items-center">Phản
+                    ứng ngay</button>
+            </div>
+            <!-- Hero Section: Explicit Height -->
+            <section class="relative h-[400px] w-full overflow-hidden shrink-0">
+                <img alt="Hero Banner" class="w-full h-full object-cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLDJIMpiIIYwR-RAVGCwTuYQNHdkZi9FmR54vsaeJFVu7FB_MlvM--0b1AQIRjWz6Adw429PeQBhnpMmWNLyxB4P0z_qX_3LMpl1r2cvnbp3mBWqEkoWjvX88boiqw0R9kjF_TXl4Mu5ZgX9jRdepx5sM4CtVcgqPsLBiBg_Tr_18VqlPTZF1XghZQoagkrLqZGX92uay4YlO-tYZ22c4kdU17N-SovNx5esR-C_YZGkGmwQlfhMXegjekrcGxxmA3iGxL84Ez_F4E" />
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/40 to-transparent flex items-center px-16">
+                    <div class="w-[640px]">
+                        <span
+                            class="inline-block h-6 px-4 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest mb-6 flex items-center w-fit text-white">Chiến
+                            dịch 2024</span>
+                        <h2 class="text-6xl font-black mb-4 leading-[1.1] italic text-white">"Một giọt máu cho
+                            đi,<br />một cuộc đời ở lại"</h2>
+                        <p class="text-xl text-white/90 mb-8 font-light leading-relaxed">Đồng hành cùng cộng đồng Đà
+                            Nẵng trong hành trình nhân ái, kết nối những trái tim tình nguyện.</p>
+                        <div class="flex gap-4">
+                            <button
+                                class="h-14 px-8 bg-white text-primary rounded-xl font-black text-sm hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-black/10">
+                                <span class="material-symbols-outlined text-xl" data-icon="favorite"
+                                    style="font-variation-settings: 'FILL' 1;">favorite</span>
+                                Đăng ký hiến máu
+                            </button>
+                            <button
+                                class="h-14 px-8 bg-transparent border-2 border-white text-white rounded-xl font-black text-sm hover:bg-white/10 transition-all uppercase tracking-tight">Tìm
+                                hiểu thêm</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Content Area -->
+            <div class="flex flex-col p-8 w-full">
+                <!-- Quick Stats: Grid with explicit spans -->
+                <div class="grid grid-cols-12 gap-6 mb-12 h-52">
+                    <!-- Stock Level -->
+                    <div
+                        class="col-span-8 h-full bg-white border border-slate-200 rounded-2xl p-8 flex items-center justify-between shadow-sm">
+                        <div class="w-[300px]">
+                            <h3 class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-2">Trữ lượng kho
+                                máu hiện tại</h3>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-5xl font-black text-slate-900 leading-none">8,240</span>
+                                <span class="text-slate-500 font-medium italic text-sm">Đơn vị (ml)</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-6">
+                            <div class="w-12 flex flex-col items-center">
+                                <div
+                                    class="w-full h-24 bg-slate-100 rounded-full relative overflow-hidden flex flex-col justify-end">
+                                    <div class="w-full bg-primary h-[85%]"></div>
+                                </div>
+                                <span class="mt-2 font-bold text-xs text-slate-700">O+</span>
+                            </div>
+                            <div class="w-12 flex flex-col items-center">
+                                <div
+                                    class="w-full h-24 bg-slate-100 rounded-full relative overflow-hidden flex flex-col justify-end">
+                                    <div class="w-full bg-primary h-[20%]"></div>
+                                </div>
+                                <span class="mt-2 font-black text-xs text-error">AB-</span>
+                            </div>
+                            <div class="w-12 flex flex-col items-center">
+                                <div
+                                    class="w-full h-24 bg-slate-100 rounded-full relative overflow-hidden flex flex-col justify-end">
+                                    <div class="w-full bg-primary h-[60%]"></div>
+                                </div>
+                                <span class="mt-2 font-bold text-xs text-slate-700">A+</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Appointments -->
+                    <div
+                        class="col-span-4 h-full bg-primary text-white rounded-2xl p-8 shadow-xl shadow-primary/20 relative overflow-hidden flex flex-col justify-between">
+                        <div class="relative z-10">
+                            <h3 class="font-bold text-[10px] uppercase tracking-[0.15em] mb-2 text-white/70">Lịch hẹn
+                                hôm nay</h3>
+                            <div class="text-5xl font-black leading-none mb-4">124</div>
+                            <p class="text-white/80 text-[13px] font-medium leading-tight mb-2">Có 12 người hiến máu mới
+                                đang chờ duyệt đăng ký.</p>
+                        </div>
+                        <button
+                            class="w-full h-10 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-xl font-black text-[11px] transition-all uppercase tracking-widest relative z-10">Xem
+                            danh sách</button>
+                        <span
+                            class="material-symbols-outlined absolute -bottom-6 -right-6 text-white/10 text-[160px] pointer-events-none"
+                            data-icon="calendar_today">calendar_today</span>
+                    </div>
+                </div>
+                <!-- Medical News Section -->
+                <section class="mb-12">
+                    <div class="flex items-center justify-between mb-8 h-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-1.5 h-8 bg-primary rounded-full"></div>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Tin tức Y tế &amp; Cộng đồng
+                            </h2>
+                        </div>
+                        <a class="text-primary font-bold text-xs uppercase tracking-widest flex items-center gap-2 hover:underline"
+                            href="#">
+                            Xem tất cả bài viết
+                            <span class="material-symbols-outlined text-sm"
+                                data-icon="arrow_forward">arrow_forward</span>
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-3 gap-8">
+                        <!-- News Card 1 -->
+                        <div
+                            class="h-[400px] flex flex-col group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300">
+                            <div class="h-48 w-full overflow-hidden relative shrink-0">
+                                <img alt="Medical staff"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPZLY4bcQE7mkm5VnPjZDugPnqaDBDBmcIOK8X8SO8ODaFE9o4InVet3vHXqwWYXa9wRFwtLts3XIupjnXwnPw-3CxBVNK3cv6W_AUESi73RhPPLsi1r_G7zJwrI1bngE8MP_C4rjhWMUBG_CruQiwJ2tH3DDu46oZB_7LCFsvYoN5XXqxz66aJ--rnThrmeezAuE-tqsDOds25e75j2P7h5Du6Du6MAhO6e6CPrCYjawxSmQMCdeX0xKplHro9WCYdaFsPIoNif1E" />
+                                <span
+                                    class="absolute top-4 left-4 h-6 px-3 bg-primary text-white text-[10px] font-black uppercase rounded-full flex items-center">Y
+                                    học</span>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <p class="text-slate-400 text-[10px] font-black uppercase mb-3">12 Tháng 10, 2024</p>
+                                <h3
+                                    class="text-lg font-bold text-slate-900 mb-3 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                    Lợi ích sức khỏe không ngờ từ việc hiến máu định kỳ</h3>
+                                <p class="text-slate-500 text-[13px] line-clamp-4 font-light leading-relaxed">Hiến máu
+                                    không chỉ cứu người mà còn giúp người hiến giảm nguy cơ mắc các bệnh về tim mạch và
+                                    cân bằng lượng sắt trong cơ thể một cách tự nhiên...</p>
+                            </div>
+                        </div>
+                        <!-- News Card 2 -->
+                        <div
+                            class="h-[400px] flex flex-col group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300">
+                            <div class="h-48 w-full overflow-hidden relative shrink-0">
+                                <img alt="Laboratory"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSfWJNQeo_FmeCVLdrP8j28NXO0zRTS3WV5ywfjPzjuW1pfpAWcxkTBoiANWWw6IkfUBBrUXeIqRi_X0UgMbR9JaqjpjS6rxSG0dnML5k22XFEdSHsdd7IWFyVAxbPMq0SClJa18PYgmY-RYWTxeoMNQqi6CLAMNz2Ku9j8Po005puKFmk2VXoGQRiY8dgP4GrLYehY_1ar_10lco9_v-uAj3Cni9lm6rGr9PtD0wPYyw7oLlYkAocW21TTAJbpbUlKsphlVPX9Vp5" />
+                                <span
+                                    class="absolute top-4 left-4 h-6 px-3 bg-tertiary-container text-white text-[10px] font-black uppercase rounded-full flex items-center">Công
+                                    nghệ</span>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <p class="text-slate-400 text-[10px] font-black uppercase mb-3">10 Tháng 10, 2024</p>
+                                <h3
+                                    class="text-lg font-bold text-slate-900 mb-3 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                    Đà Nẵng triển khai hệ thống quản lý máu bằng mã QR bảo mật cao</h3>
+                                <p class="text-slate-500 text-[13px] line-clamp-4 font-light leading-relaxed">Công nghệ
+                                    mới giúp truy xuất nguồn gốc đơn vị máu một cách chính xác tuyệt đối, rút ngắn thời
+                                    gian chuẩn bị máu trong các tình huống cấp cứu khẩn cấp...</p>
+                            </div>
+                        </div>
+                        <!-- News Card 3 -->
+                        <div
+                            class="h-[400px] flex flex-col group bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-300">
+                            <div class="h-48 w-full overflow-hidden relative shrink-0">
+                                <img alt="Volunteer"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7u5UrXbjZMy3JhkBit1aBzIL-Il_t_NtwbDLkdFRsspBgweJG10nkRxusoftL4NYiyg_qYdd6GXcD7UVep6D7s2_7g5dVllMDjyTlgAePW8uS4Y7W8nkceijM52js3dYCzhRhT0c4ddy6GiALNjvzr69j6tNhSsgIg783m1kFt00wx7AcgwPNJopMKKXlxMvU829Kgw1SyR9Et0OQXllGaRKkuZB7lLRhe0iNbHxpltVpLGSAeGVHrV07ennhpWfRfBRVLa7nAFX9" />
+                                <span
+                                    class="absolute top-4 left-4 h-6 px-3 bg-orange-500 text-white text-[10px] font-black uppercase rounded-full flex items-center">Cộng
+                                    đồng</span>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <p class="text-slate-400 text-[10px] font-black uppercase mb-3">08 Tháng 10, 2024</p>
+                                <h3
+                                    class="text-lg font-bold text-slate-900 mb-3 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                                    Câu chuyện cảm động về người 50 lần hiến máu tình nguyện</h3>
+                                <p class="text-slate-500 text-[13px] line-clamp-4 font-light leading-relaxed">Ông Trần
+                                    Văn B. đã duy trì thói quen hiến máu suốt 20 năm qua, trở thành tấm gương sáng lan
+                                    tỏa lòng nhân ái trong phong trào tình nguyện của thành phố...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Bottom CTA Section: Fixed Dimensions -->
+                <section
+                    class="w-full h-[400px] bg-surface-container rounded-[2rem] flex flex-col items-center justify-center text-center border border-surface-variant relative overflow-hidden shrink-0">
+                    <div
+                        class="absolute top-0 left-0 w-48 h-48 bg-primary/5 rounded-full -translate-x-24 -translate-y-24">
+                    </div>
+                    <div
+                        class="absolute bottom-0 right-0 w-80 h-80 bg-primary/5 rounded-full translate-x-40 translate-y-40">
+                    </div>
+                    <h2 class="text-[32px] font-black text-slate-900 mb-4 tracking-tight leading-none relative z-10">Sẵn
+                        sàng để trở thành người hùng thầm lặng?</h2>
+                    <p class="text-slate-600 max-w-[560px] mb-10 font-medium text-base relative z-10 leading-relaxed">
+                        Mỗi đơn vị máu bạn hiến có thể cứu sống được 3 người. Hãy cùng chúng tôi xây dựng một ngân hàng
+                        máu an toàn và dồi dào cho Đà Nẵng.</p>
+                    <div class="flex justify-center gap-12 relative z-10">
+                        <div class="flex flex-col items-center gap-3">
+                            <div
+                                class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-primary group hover:bg-primary hover:text-white transition-colors duration-300">
+                                <span class="material-symbols-outlined text-3xl" data-icon="share">share</span>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Lan
+                                tỏa</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-3">
+                            <div
+                                class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-primary group hover:bg-primary hover:text-white transition-colors duration-300">
+                                <span class="material-symbols-outlined text-3xl"
+                                    data-icon="volunteer_activism">volunteer_activism</span>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Hiến
+                                tặng</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-3">
+                            <div
+                                class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-primary group hover:bg-primary hover:text-white transition-colors duration-300">
+                                <span class="material-symbols-outlined text-3xl"
+                                    data-icon="history_edu">history_edu</span>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Đăng
+                                ký</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <footer class="w-full h-20 border-t border-slate-200 mt-auto bg-white flex items-center px-8 shrink-0">
+                <div class="w-full flex justify-between items-center text-slate-500">
+                    <div class="flex items-center gap-2">
+                        <span class="font-black text-primary text-sm uppercase tracking-tight">Danang Blood Admin</span>
+                        <span class="text-[13px] font-medium opacity-60">© 2024 All Rights Reserved</span>
+                    </div>
+                    <div class="flex gap-8">
+                        <a class="text-[11px] font-black uppercase tracking-widest hover:text-primary transition-colors"
+                            href="#">Quy định bảo mật</a>
+                        <a class="text-[11px] font-black uppercase tracking-widest hover:text-primary transition-colors"
+                            href="#">Điều khoản sử dụng</a>
+                        <a class="text-[11px] font-black uppercase tracking-widest hover:text-primary transition-colors"
+                            href="#">Liên hệ hỗ trợ</a>
+                    </div>
+                </div>
+            </footer>
+        </main>
+        <!-- FAB -->
+        <button
+            class="fixed bottom-10 right-10 w-16 h-16 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+            <span class="material-symbols-outlined text-3xl" data-icon="add_location">add_location</span>
+        </button>
+    </div>
+</body>
+
+</html>
