@@ -77,7 +77,7 @@
             </div>
             <div>
               <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Tổng đơn vị máu</p>
-              <h3 class="text-3xl font-black text-slate-800">1,284</h3>
+              <h3 id="totalBlood" class="text-3xl font-black text-slate-800">1,284</h3>
             </div>
             <p class="text-xs text-green-600 font-medium flex items-center gap-1">
               <span class="material-symbols-outlined text-sm">trending_up</span> +12% so với tháng trước
@@ -273,7 +273,7 @@
                     class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-green-100 text-green-700">Khả
                     dụng</span></td>
                 <td class="px-6 text-right">
-                    <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="if(confirm('Xóa túi máu này khỏi kho?')) this.closest('tr').remove();">
+                    <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="deleteBloodUnit(this)">
                         <span class="material-symbols-outlined text-lg">delete</span>
                     </button>
                 </td>
@@ -288,7 +288,7 @@
                     class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-orange-100 text-orange-700">Đang
                     kiểm định</span></td>
                 <td class="px-6 text-right">
-                    <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="if(confirm('Xóa túi máu này khỏi kho?')) this.closest('tr').remove();">
+                    <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="deleteBloodUnit(this)">
                         <span class="material-symbols-outlined text-lg">delete</span>
                     </button>
                 </td>
@@ -303,7 +303,7 @@
                     class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-red-100 text-red-700">Sắp hết
                     hạn</span></td>
                 <td class="px-6 text-right">
-                    <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="if(confirm('Xóa túi máu này khỏi kho?')) this.closest('tr').remove();">
+                    <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="deleteBloodUnit(this)">
                         <span class="material-symbols-outlined text-lg">delete</span>
                     </button>
                 </td>
@@ -318,7 +318,7 @@
                     class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-green-100 text-green-700">Khả
                     dụng</span></td>
                 <td class="px-6 text-right">
-                    <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="if(confirm('Xóa túi máu này khỏi kho?')) this.closest('tr').remove();">
+                    <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="deleteBloodUnit(this)">
                         <span class="material-symbols-outlined text-lg">delete</span>
                     </button>
                 </td>
@@ -357,6 +357,25 @@
   </button>
 
   <script>
+    function deleteBloodUnit(btn) {
+      if (confirm('Xác nhận xóa túi máu này khỏi hệ thống?')) {
+        const row = btn.closest('tr');
+        row.remove();
+        
+        // Update summary numbers
+        const totalBlood = document.getElementById('totalBlood');
+        const currentTotal = parseInt(totalBlood.textContent.replace(',', ''));
+        totalBlood.textContent = (currentTotal - 1).toLocaleString();
+        
+        // Update pagination text
+        const displaySpan = document.querySelector('span.text-xs.font-medium.text-slate-500');
+        if (displaySpan) {
+           const rowsLeft = document.querySelectorAll('tbody tr').length;
+           displaySpan.textContent = `Hiển thị ${rowsLeft} trên ${(currentTotal - 1).toLocaleString()} đơn vị`;
+        }
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       initPage('ThongKeTonKho.html');
     });
