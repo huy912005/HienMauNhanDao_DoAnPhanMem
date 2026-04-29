@@ -1,44 +1,62 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Tìm kiếm chiến dịch hiến máu - Đà Nẵng</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<style>
-    body {
-        font-family: 'Public Sans', sans-serif;
-        background-color: #F3F4F6;
-    }
-    .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-</style>
-<script id="tailwind-config">
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: { primary: "#af101a", "primary-container": "#d32f2f" },
-                fontFamily: { sans: ["Public Sans", "sans-serif"] }
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Tìm kiếm chiến dịch hiến máu - Đà Nẵng</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #F3F4F6;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: "#af101a", "primary-container": "#d32f2f" },
+                    fontFamily: { sans: ["Public Sans", "sans-serif"] }
+                }
             }
         }
-    }
-</script>
-<script src="../js/auth.js"></script>
-<script src="../js/page-shell.js"></script>
-<link rel="stylesheet" href="../css/style.css">
+    </script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/page-shell.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden flex flex-col min-h-screen">
-    
+
     <!-- Top Info Bar -->
     <div class="w-full bg-slate-800 text-white text-[11px] font-medium py-1.5 px-8 flex justify-between items-center">
         <div class="flex gap-6">
-            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">location_on</span>Địa chỉ: 123 Lê Lợi, Hải Châu, Đà Nẵng</span>
-            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">call</span>Đường dây nóng: 1900 1234</span>
+            <span class="flex items-center gap-2"><span
+                    class="material-symbols-outlined text-[14px]">location_on</span>Địa chỉ: 123 Lê Lợi, Hải Châu, Đà
+                Nẵng</span>
+            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">call</span>Đường
+                dây nóng: 1900 1234</span>
         </div>
         <div class="flex gap-4 items-center">
             <div class="flex gap-2">
@@ -56,7 +74,8 @@
             <!-- Logo -->
             <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='TrangChu.html'">
                 <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shrink-0">
-                    <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">bloodtype</span>
+                    <span class="material-symbols-outlined text-3xl"
+                        style="font-variation-settings: 'FILL' 1;">bloodtype</span>
                 </div>
                 <div class="flex flex-col">
                     <h1 class="text-xl font-black tracking-tight text-red-700 leading-tight">HỆ THỐNG HIẾN MÁU</h1>
@@ -66,15 +85,20 @@
 
             <!-- Horizontal Nav -->
             <nav class="flex items-center gap-1">
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TrangChu.html">Trang chủ</a>
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TrangChu.html#gioi-thieu">Giới thiệu</a>
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
-                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm" href="TimKiemChienDich.html">Tìm chiến dịch</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="TrangChu.html">Trang chủ</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="TrangChu.html#gioi-thieu">Giới thiệu</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
+                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm"
+                    href="TimKiemChienDich.html">Tìm chiến dịch</a>
             </nav>
 
             <!-- User Profile -->
             <div class="flex items-center gap-4">
-                <button class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative">
+                <button
+                    class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative">
                     <span class="material-symbols-outlined">notifications</span>
                     <span class="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full"></span>
                 </button>
@@ -83,16 +107,21 @@
                         <p class="text-sm font-bold text-slate-900 leading-none mb-1">Lê Văn Bình</p>
                         <p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Tình nguyện viên</p>
                     </div>
-                    <img alt="User portrait" class="w-10 h-10 rounded-full object-cover border-2 border-primary-container/20 shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrkDisk3_j22F4lcXb3jllF-99BYq3_SrntgHddIgx0onK2l25zj9yhgH0CmKsiDKHkcKkj4fUkJYPLzjVjDwaqQGvaw9tMIBFeFdSruc8nrljijQYlXObDS9Cl8vGxmXo6QmITg4G4hMQYoZ8uopbYnk178pDHgbWOMuPbFk0gIfxKgLIZPEvBzsxP0L8DjAy2sjgVh-OfYdDzSpRdcdxYlZ4c9LNMFhhzsp2kBlmP-sFmYmsUQVv-D164nUzgWv_CxOokcTNjOZ" />
-                    
+                    <img alt="User portrait"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-primary-container/20 shrink-0"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrkDisk3_j22F4lcXb3jllF-99BYq3_SrntgHddIgx0onK2l25zj9yhgH0CmKsiDKHkcKkj4fUkJYPLzjVjDwaqQGvaw9tMIBFeFdSruc8nrljijQYlXObDS9Cl8vGxmXo6QmITg4G4hMQYoZ8uopbYnk178pDHgbWOMuPbFk0gIfxKgLIZPEvBzsxP0L8DjAy2sjgVh-OfYdDzSpRdcdxYlZ4c9LNMFhhzsp2kBlmP-sFmYmsUQVv-D164nUzgWv_CxOokcTNjOZ" />
+
                     <!-- Dropdown Menu -->
-                    <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div
+                        class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <div class="py-2">
-                            <a href="HoSoVaLichSu.html" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
+                            <a href="HoSoVaLichSu.html"
+                                class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">person</span>Hồ sơ & Lịch sử
                             </a>
                             <div class="h-[1px] bg-slate-100 my-1"></div>
-                            <a href="#" onclick="logout(); return false;" class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                            <a href="#" onclick="logout(); return false;"
+                                class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">logout</span>Đăng xuất
                             </a>
                         </div>
@@ -110,36 +139,51 @@
         </div>
 
         <!-- Horizontal Filter Bar -->
-        <div class="w-full bg-white p-6 rounded-md border border-slate-200 mb-8 flex flex-wrap items-end gap-6 shadow-sm">
+        <div
+            class="w-full bg-white p-6 rounded-md border border-slate-200 mb-8 flex flex-wrap items-end gap-6 shadow-sm">
             <div class="w-[320px]">
-                <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Tên chiến dịch</label>
+                <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Tên chiến
+                    dịch</label>
                 <div class="relative">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-                    <input class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-md text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Nhập từ khóa tìm kiếm..." type="text"/>
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                    <input
+                        class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-md text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                        placeholder="Nhập từ khóa tìm kiếm..." type="text" />
                 </div>
             </div>
             <div class="w-[200px]">
-                <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Quận/Huyện</label>
+                <label
+                    class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Quận/Huyện</label>
                 <div class="relative">
-                    <select class="w-full pl-4 pr-10 py-2.5 border border-slate-200 rounded-md text-sm appearance-none cursor-pointer outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white">
+                    <select
+                        class="w-full pl-4 pr-10 py-2.5 border border-slate-200 rounded-md text-sm appearance-none cursor-pointer outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white">
                         <option>Tất cả các quận</option>
                         <option>Hải Châu</option>
                         <option>Thanh Khê</option>
                     </select>
-                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                    <span
+                        class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
                 </div>
             </div>
             <div class="w-[300px] flex gap-2">
                 <div class="w-1/2">
-                    <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Từ ngày</label>
-                    <input class="w-full px-3 py-2.5 border border-slate-200 rounded-md text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white" type="date"/>
+                    <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Từ
+                        ngày</label>
+                    <input
+                        class="w-full px-3 py-2.5 border border-slate-200 rounded-md text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white"
+                        type="date" />
                 </div>
                 <div class="w-1/2">
-                    <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Đến ngày</label>
-                    <input class="w-full px-3 py-2.5 border border-slate-200 rounded-md text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white" type="date"/>
+                    <label class="block text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Đến
+                        ngày</label>
+                    <input
+                        class="w-full px-3 py-2.5 border border-slate-200 rounded-md text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all bg-white"
+                        type="date" />
                 </div>
             </div>
-            <button class="w-[160px] h-[42px] bg-red-700 text-white rounded-md font-bold text-sm hover:bg-red-800 flex items-center justify-center gap-2 shadow-lg shadow-red-700/20 active:scale-[0.98] transition-all">
+            <button
+                class="w-[160px] h-[42px] bg-red-700 text-white rounded-md font-bold text-sm hover:bg-red-800 flex items-center justify-center gap-2 shadow-lg shadow-red-700/20 active:scale-[0.98] transition-all">
                 <span class="material-symbols-outlined text-lg">filter_list</span>
                 Lọc kết quả
             </button>
@@ -148,13 +192,20 @@
         <!-- Campaign List Grid -->
         <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Card 1 -->
-            <div class="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
+            <div
+                class="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
                 <div class="w-full h-[200px] relative bg-slate-100 overflow-hidden">
-                    <img alt="Campaign 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEckmZSeA5zr01RGEf2XSz1-PS3wePPnFxuUA3phpT1_KQ2dbOcWJsrsBzddHJauozPLCI8O5S82SJosIdN_q8f4F5zhdeKJmp7nsrgIKzQxwG_Fn-3l0Z34dkrIBHhNLb1xCN7vsCCfNrXHykui7NGk5zcj52N_6QIyM5LoGHjS6P7Jn9lEyPkf-GHZ-8BdcqxrGowSXLalzrCieQcD-LdaCt8avxN-66Q09ZnjZwZonFE3bVAxWG0z6roeDwV0wSV9ijRfGQixy4"/>
+                    <img alt="Campaign 1"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEckmZSeA5zr01RGEf2XSz1-PS3wePPnFxuUA3phpT1_KQ2dbOcWJsrsBzddHJauozPLCI8O5S82SJosIdN_q8f4F5zhdeKJmp7nsrgIKzQxwG_Fn-3l0Z34dkrIBHhNLb1xCN7vsCCfNrXHykui7NGk5zcj52N_6QIyM5LoGHjS6P7Jn9lEyPkf-GHZ-8BdcqxrGowSXLalzrCieQcD-LdaCt8avxN-66Q09ZnjZwZonFE3bVAxWG0z6roeDwV0wSV9ijRfGQixy4" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                     <div class="absolute top-3 left-3 flex gap-2">
-                        <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-green-200 shadow-sm">Đang mở</span>
-                        <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-blue-200 shadow-sm">Cần gấp O+</span>
+                        <span
+                            class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-green-200 shadow-sm">Đang
+                            mở</span>
+                        <span
+                            class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-blue-200 shadow-sm">Cần
+                            gấp O+</span>
                     </div>
                 </div>
                 <div class="p-6 flex-1 flex flex-col">
@@ -162,7 +213,8 @@
                     <div class="space-y-3 mb-6">
                         <div class="flex items-start gap-3 text-sm text-slate-600">
                             <span class="material-symbols-outlined text-red-700 text-lg">location_on</span>
-                            <span class="line-clamp-2 leading-relaxed">Trung tâm Y tế Quận Hải Châu, 02 Phan Chu Trinh</span>
+                            <span class="line-clamp-2 leading-relaxed">Trung tâm Y tế Quận Hải Châu, 02 Phan Chu
+                                Trinh</span>
                         </div>
                         <div class="flex items-center gap-3 text-sm text-slate-600">
                             <span class="material-symbols-outlined text-red-700 text-lg">calendar_month</span>
@@ -174,14 +226,16 @@
                         </div>
                     </div>
                     <div class="mt-auto">
-                        <div class="flex justify-between text-[10px] mb-2 font-medium text-slate-500 uppercase tracking-wide">
+                        <div
+                            class="flex justify-between text-[10px] mb-2 font-medium text-slate-500 uppercase tracking-wide">
                             <span>Tiến độ thu nhận</span>
                             <span class="font-bold text-slate-700">182 / 250 (72%)</span>
                         </div>
                         <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-6">
                             <div class="h-full bg-red-700" style="width: 72%"></div>
                         </div>
-                        <button class="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98]">
+                        <button
+                            class="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98]">
                             Đăng ký tham gia
                         </button>
                     </div>
@@ -189,12 +243,17 @@
             </div>
 
             <!-- Card 2 -->
-            <div class="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
+            <div
+                class="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
                 <div class="w-full h-[200px] relative bg-slate-100 overflow-hidden">
-                    <img alt="Campaign 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvjZQPcxF5PtOHj0rifmTTgpFt2up9NnW4G1jX0yzyKc47JePtAIXn_oC25zTxoV10_jwdSHf3CYa98UkJtAMHpsQlHE6V9H_1UeyeSBhsJ548i-DYK7JzRATzlX8nS0HkVfETeQ7AVIe-7dgcr4u53nR7DZvyVL6qClmIeEMgt58E8iRNCUEnAx3xgHMecKsixcrr_lN619Zf8JVv3dLAnValrlzzJ8w0WRRkoXgW7LeysUjb_41gLoIuOqcTqPZUnBh7qb16eyAD"/>
+                    <img alt="Campaign 2"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvjZQPcxF5PtOHj0rifmTTgpFt2up9NnW4G1jX0yzyKc47JePtAIXn_oC25zTxoV10_jwdSHf3CYa98UkJtAMHpsQlHE6V9H_1UeyeSBhsJ548i-DYK7JzRATzlX8nS0HkVfETeQ7AVIe-7dgcr4u53nR7DZvyVL6qClmIeEMgt58E8iRNCUEnAx3xgHMecKsixcrr_lN619Zf8JVv3dLAnValrlzzJ8w0WRRkoXgW7LeysUjb_41gLoIuOqcTqPZUnBh7qb16eyAD" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                     <div class="absolute top-3 left-3 flex gap-2">
-                        <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-green-200 shadow-sm">Đang mở</span>
+                        <span
+                            class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-green-200 shadow-sm">Đang
+                            mở</span>
                     </div>
                 </div>
                 <div class="p-6 flex-1 flex flex-col">
@@ -214,14 +273,16 @@
                         </div>
                     </div>
                     <div class="mt-auto">
-                        <div class="flex justify-between text-[10px] mb-2 font-medium text-slate-500 uppercase tracking-wide">
+                        <div
+                            class="flex justify-between text-[10px] mb-2 font-medium text-slate-500 uppercase tracking-wide">
                             <span>Tiến độ thu nhận</span>
                             <span class="font-bold text-slate-700">120 / 500 (24%)</span>
                         </div>
                         <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-6">
                             <div class="h-full bg-red-700" style="width: 24%"></div>
                         </div>
-                        <button class="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98]">
+                        <button
+                            class="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98]">
                             Đăng ký tham gia
                         </button>
                     </div>
@@ -229,12 +290,17 @@
             </div>
 
             <!-- Card 3 -->
-            <div class="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
+            <div
+                class="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
                 <div class="w-full h-[200px] relative bg-slate-100 overflow-hidden">
-                    <img alt="Campaign 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRngX_391bk91k_e0DxPaXEUsZ_cz5yscnrC8Foi_COkJUWIacLcPBt3oKcx12Dp8wA2NwSvHbBHgR-E0_C-QA11QdWC4JwtfzLXbPp2NUdN3e-1LXNjJX588Imh4CI6EgbdldJ_vqkxZdX1EOwhS-cp1SxgqoEEp49ClgnH933vn5MRRjxN0Asw8PU-jBmIY0oSqYUTT5GCbvPsN1HCLCnyoZDtWpnsEDXJdbqb3Our_AUVJEjjl9YUpj-J5AD0Zf-nwlevu13aoh"/>
+                    <img alt="Campaign 3"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRngX_391bk91k_e0DxPaXEUsZ_cz5yscnrC8Foi_COkJUWIacLcPBt3oKcx12Dp8wA2NwSvHbBHgR-E0_C-QA11QdWC4JwtfzLXbPp2NUdN3e-1LXNjJX588Imh4CI6EgbdldJ_vqkxZdX1EOwhS-cp1SxgqoEEp49ClgnH933vn5MRRjxN0Asw8PU-jBmIY0oSqYUTT5GCbvPsN1HCLCnyoZDtWpnsEDXJdbqb3Our_AUVJEjjl9YUpj-J5AD0Zf-nwlevu13aoh" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                     <div class="absolute top-3 left-3 flex gap-2">
-                        <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-amber-200 shadow-sm">Sắp diễn ra</span>
+                        <span
+                            class="bg-amber-100 text-amber-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase border border-amber-200 shadow-sm">Sắp
+                            diễn ra</span>
                     </div>
                 </div>
                 <div class="p-6 flex-1 flex flex-col">
@@ -254,14 +320,16 @@
                         </div>
                     </div>
                     <div class="mt-auto">
-                        <div class="flex justify-between text-[10px] mb-2 font-medium text-slate-500 uppercase tracking-wide">
+                        <div
+                            class="flex justify-between text-[10px] mb-2 font-medium text-slate-500 uppercase tracking-wide">
                             <span>Tiến độ thu nhận</span>
                             <span class="font-bold text-slate-700">0 / 150 (0%)</span>
                         </div>
                         <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-6">
                             <div class="h-full bg-slate-300" style="width: 0%"></div>
                         </div>
-                        <button class="w-full h-11 bg-slate-100 border border-slate-200 text-slate-400 rounded-md font-bold uppercase tracking-wide text-sm cursor-not-allowed">
+                        <button
+                            class="w-full h-11 bg-slate-100 border border-slate-200 text-slate-400 rounded-md font-bold uppercase tracking-wide text-sm cursor-not-allowed">
                             Chưa mở đăng ký
                         </button>
                     </div>
@@ -271,23 +339,30 @@
 
         <!-- Pagination -->
         <div class="mt-12 flex justify-center items-center gap-2">
-            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-400 hover:bg-white transition-colors bg-white shadow-sm">
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-400 hover:bg-white transition-colors bg-white shadow-sm">
                 <span class="material-symbols-outlined">chevron_left</span>
             </button>
-            <button class="w-10 h-10 flex items-center justify-center rounded-md border-2 border-red-700 bg-red-50 text-red-700 font-bold shadow-sm">1</button>
-            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm">2</button>
-            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm">3</button>
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-md border-2 border-red-700 bg-red-50 text-red-700 font-bold shadow-sm">1</button>
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm">2</button>
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm">3</button>
             <span class="w-10 text-center text-slate-400 font-bold tracking-widest">...</span>
-            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm">10</button>
-            <button class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-400 hover:bg-white transition-colors bg-white shadow-sm">
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm">10</button>
+            <button
+                class="w-10 h-10 flex items-center justify-center rounded-md border border-slate-200 text-slate-400 hover:bg-white transition-colors bg-white shadow-sm">
                 <span class="material-symbols-outlined">chevron_right</span>
             </button>
         </div>
 
     </main>
 
-<script>
-// Logic specific to TimKiemChienDich.html can be placed here
-</script>
+    <script>
+        // Logic specific to TimKiemChienDich.html can be placed here
+    </script>
 </body>
+
 </html>
