@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quản lý Tài khoản - Hệ thống Hiến máu Đà Nẵng</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+  <script src="../js/auth.js"></script>
+  <script src="../js/page-shell.js"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:'#af101a','primary-dark':'#8b0d15'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
+  
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50 text-slate-800 antialiased">
+<div class="w-full min-h-screen flex">
+  <div id="sidebar-mount"></div>
+  <div class="flex-1 flex flex-col min-h-screen">
+    <div id="header-mount"></div>
+    <main class="flex-1 p-8">
+
+      <!-- Page Header -->
+      <div class="flex justify-between items-center mb-8">
+        <div>
+          <h1 class="text-2xl font-black text-slate-900">Quản lý Tài khoản Nhân sự</h1>
+          <p class="text-sm text-slate-500 mt-1">Tạo và quản lý tài khoản cho bác sĩ, nhân viên y tế và kho máu.</p>
+        </div>
+        <button onclick="openModal('modal-add-user')"
+          class="flex items-center gap-2 h-11 px-6 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-500/20 active:scale-[0.98]">
+          <span class="material-symbols-outlined text-xl">person_add</span>
+          Thêm nhân viên
+        </button>
+      </div>
+
+      <!-- Stats row -->
+      <div class="grid grid-cols-4 gap-5 mb-8">
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Tổng tài khoản</p>
+          <p class="text-3xl font-black text-slate-900" id="count-total">5</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Bác sĩ</p>
+          <p class="text-3xl font-black text-emerald-600" id="count-bs">1</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Nhân viên Y tế</p>
+          <p class="text-3xl font-black text-cyan-600" id="count-yte">1</p>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-5">
+          <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Quản lý kho</p>
+          <p class="text-3xl font-black text-amber-600" id="count-kho">1</p>
+        </div>
+      </div>
+
+      <!-- Staff Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+          <h2 class="font-bold text-slate-800">Danh sách nhân sự</h2>
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+              <input id="search-staff" type="text" placeholder="Tìm theo tên, email..."
+                     class="h-9 w-60 pl-9 pr-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none"/>
+            </div>
+            <select id="filter-role" class="h-9 px-3 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none bg-white">
+              <option value="">Tất cả vai trò</option>
+              <option value="admin">Admin</option>
+              <option value="bac_si">Bác sĩ</option>
+              <option value="nhan_vien_y_te">Nhân viên Y tế</option>
+              <option value="quan_ly_kho">Quản lý kho</option>
+              <option value="tinh_nguyen_vien">Tình nguyện viên</option>
+            </select>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-slate-50">
+                <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Nhân viên</th>
+                <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Email</th>
+                <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Khoa / Phòng ban</th>
+                <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Vai trò</th>
+                <th class="px-6 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Trạng thái</th>
+                <th class="px-6 py-3 text-center text-[10px] font-bold text-slate-500 uppercase tracking-wider">Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="staff-tbody" class="divide-y divide-slate-50">
+              <!-- injected by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal: Add User -->
+<div id="modal-add-user" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-[520px] rounded-3xl shadow-2xl overflow-hidden">
+    <div class="bg-gradient-to-r from-red-700 to-red-900 px-7 py-6 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-white text-2xl" style="font-variation-settings:'FILL' 1;">person_add</span>
+        </div>
+        <div>
+          <h3 class="font-black text-white text-lg">Thêm nhân viên mới</h3>
+          <p class="text-white/70 text-xs">Hệ thống sẽ tự động tạo mật khẩu</p>
+        </div>
+      </div>
+      <button onclick="closeModal('modal-add-user')" class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+        <span class="material-symbols-outlined text-white text-xl">close</span>
+      </button>
+    </div>
+    <form id="form-add-user" class="p-7 space-y-5">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Họ và tên *</label>
+          <input id="new-name" type="text" required placeholder="Nguyễn Văn A"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Email *</label>
+          <input id="new-email" type="email" required placeholder="name@hospital.vn"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">CCCD *</label>
+          <input id="new-cccd" type="text" required placeholder="0123456789xx" maxlength="12"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Khoa / Phòng ban</label>
+          <input id="new-dept" type="text" placeholder="Khoa Huyết học"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none"/>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Vai trò *</label>
+        <select id="new-role" required
+                class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none bg-white">
+          <option value="">-- Chọn vai trò --</option>
+          <option value="nhan_vien_y_te">Nhân viên Y tế</option>
+          <option value="bac_si">Bác sĩ</option>
+          <option value="quan_ly_kho">Quản lý Kho máu</option>
+        </select>
+      </div>
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
+        <span class="material-symbols-outlined text-amber-500 shrink-0 text-xl" style="font-variation-settings:'FILL' 1;">info</span>
+        <p class="text-xs text-amber-700 font-medium">Mật khẩu ngẫu nhiên sẽ được tạo tự động và hiển thị sau khi tạo tài khoản thành công.</p>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button type="button" onclick="closeModal('modal-add-user')"
+          class="flex-1 h-11 border border-slate-200 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors">Hủy</button>
+        <button type="submit"
+          class="flex-1 h-11 bg-red-700 hover:bg-red-800 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-red-500/20 active:scale-[0.98]">
+          Tạo tài khoản
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Show Password -->
+<div id="modal-show-pw" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
+    <div class="bg-gradient-to-r from-emerald-600 to-emerald-800 px-7 py-6 flex items-center gap-3">
+      <span class="material-symbols-outlined text-white text-3xl" style="font-variation-settings:'FILL' 1;">check_circle</span>
+      <div>
+        <h3 class="font-black text-white text-lg">Tạo tài khoản thành công!</h3>
+        <p class="text-white/70 text-xs">Lưu mật khẩu trước khi đóng cửa sổ này.</p>
+      </div>
+    </div>
+    <div class="p-7">
+      <div id="created-info" class="mb-5 space-y-2"><!-- injected --></div>
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Mật khẩu được cấp</p>
+        <div class="flex items-center justify-between">
+          <p id="created-pw" class="font-mono text-xl font-black text-slate-800 tracking-widest"></p>
+          <button onclick="copyPw()" class="w-9 h-9 flex items-center justify-center rounded-lg bg-slate-200 hover:bg-slate-300 transition-colors" title="Sao chép">
+            <span class="material-symbols-outlined text-slate-600 text-xl">content_copy</span>
+          </button>
+        </div>
+      </div>
+      <p class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl p-3 mt-4">
+        ⚠️ Gửi mật khẩu này cho nhân viên qua kênh bảo mật. Hệ thống không lưu lại mật khẩu rõ.
+      </p>
+      <button onclick="closeModal('modal-show-pw')"
+        class="mt-5 w-full h-11 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-sm font-bold transition-colors">
+        Đã lưu, đóng lại
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  initPage('QuanLyTaiKhoan.html');
+  renderTable();
+  setupSearch();
+
+  document.getElementById('form-add-user').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const data = {
+      name: document.getElementById('new-name').value.trim(),
+      email: document.getElementById('new-email').value.trim(),
+      cccd: document.getElementById('new-cccd').value.trim(),
+      department: document.getElementById('new-dept').value.trim(),
+      role: document.getElementById('new-role').value,
+    };
+    const result = createStaffAccount(data);
+    if (!result.success) { showToast(result.message, 'error'); return; }
+
+    closeModal('modal-add-user');
+    this.reset();
+    renderTable();
+    updateStats();
+
+    // Show password modal
+    const ROLE_NAMES = { nhan_vien_y_te:'Nhân viên Y tế', bac_si:'Bác sĩ', quan_ly_kho:'Quản lý kho' };
+    document.getElementById('created-info').innerHTML = `
+      <div class="flex justify-between text-sm"><span class="text-slate-500">Họ tên:</span><span class="font-bold">${data.name}</span></div>
+      <div class="flex justify-between text-sm"><span class="text-slate-500">Email:</span><span class="font-bold">${data.email}</span></div>
+      <div class="flex justify-between text-sm"><span class="text-slate-500">Vai trò:</span><span class="font-bold">${ROLE_NAMES[data.role]||data.role}</span></div>`;
+    document.getElementById('created-pw').textContent = result.password;
+    openModal('modal-show-pw');
+  });
+});
+
+function copyPw() {
+  const pw = document.getElementById('created-pw').textContent;
+  navigator.clipboard.writeText(pw).then(() => showToast('Đã sao chép mật khẩu!', 'success'));
+}
+
+function renderTable(filter = '', roleFilter = '') {
+  const ROLE_LABELS = { admin:'Admin', nhan_vien_y_te:'Nhân viên Y tế', bac_si:'Bác sĩ', quan_ly_kho:'Quản lý kho', tinh_nguyen_vien:'TNV' };
+  const ROLE_COLORS = { admin:'bg-purple-100 text-purple-700', nhan_vien_y_te:'bg-cyan-100 text-cyan-700', bac_si:'bg-emerald-100 text-emerald-700', quan_ly_kho:'bg-amber-100 text-amber-700', tinh_nguyen_vien:'bg-red-100 text-red-700' };
+  const ROLE_ICONS  = { admin:'admin_panel_settings', nhan_vien_y_te:'medical_services', bac_si:'stethoscope', quan_ly_kho:'inventory_2', tinh_nguyen_vien:'volunteer_activism' };
+
+  const users = getAllUsers().filter(u =>
+    (!filter || u.name.toLowerCase().includes(filter) || u.email.toLowerCase().includes(filter)) &&
+    (!roleFilter || u.role === roleFilter)
+  );
+
+  document.getElementById('staff-tbody').innerHTML = users.map(u => `
+    <tr class="hover:bg-slate-50 transition-colors">
+      <td class="px-6 py-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-black shrink-0"
+               style="background:linear-gradient(135deg,#af101a,#d32f2f);">
+            ${u.name.split(' ').slice(-2).map(n=>n[0]).join('').toUpperCase()}
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800">${u.name}</p>
+            <p class="text-xs text-slate-500">${u.department || '—'}</p>
+          </div>
+        </div>
+      </td>
+      <td class="px-6 py-4 text-slate-600 text-sm">${u.email}</td>
+      <td class="px-6 py-4 text-slate-600 text-sm">${u.department || '—'}</td>
+      <td class="px-6 py-4">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase ${ROLE_COLORS[u.role]||'bg-slate-100 text-slate-600'}">
+          <span class="material-symbols-outlined text-xs" style="font-variation-settings:'FILL' 1;">${ROLE_ICONS[u.role]||'person'}</span>
+          ${ROLE_LABELS[u.role]||u.role}
+        </span>
+      </td>
+      <td class="px-6 py-4">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-emerald-100 text-emerald-700">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+          Hoạt động
+        </span>
+      </td>
+      <td class="px-6 py-4">
+        <div class="flex items-center justify-center gap-2">
+          <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 transition-colors" title="Xem chi tiết">
+            <span class="material-symbols-outlined text-sm">visibility</span>
+          </button>
+          <button class="w-8 h-8 flex items-center justify-center rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-600 transition-colors" title="Đặt lại mật khẩu">
+            <span class="material-symbols-outlined text-sm">lock_reset</span>
+          </button>
+          ${u.role !== 'admin' ? `<button onclick="deactivateUser('${u.id}')" class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors" title="Vô hiệu hóa">
+            <span class="material-symbols-outlined text-sm">block</span>
+          </button>` : ''}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function updateStats() {
+  const users = getAllUsers();
+  document.getElementById('count-total').textContent = users.length;
+  document.getElementById('count-bs').textContent = users.filter(u=>u.role==='bac_si').length;
+  document.getElementById('count-yte').textContent = users.filter(u=>u.role==='nhan_vien_y_te').length;
+  document.getElementById('count-kho').textContent = users.filter(u=>u.role==='quan_ly_kho').length;
+}
+
+function setupSearch() {
+  const searchInput = document.getElementById('search-staff');
+  const roleSelect  = document.getElementById('filter-role');
+  const refresh = () => renderTable(searchInput.value.toLowerCase(), roleSelect.value);
+  searchInput.addEventListener('input', refresh);
+  roleSelect.addEventListener('change', refresh);
+}
+
+function deactivateUser(id) {
+  if (!confirm('Bạn có chắc muốn vô hiệu hóa tài khoản này?')) return;
+  showToast('Đã vô hiệu hóa tài khoản.', 'warning');
+}
+</script>
+</body>
+</html>

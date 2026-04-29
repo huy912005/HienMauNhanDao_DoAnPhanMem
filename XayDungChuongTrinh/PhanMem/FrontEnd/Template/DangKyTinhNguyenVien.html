@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đăng ký Tình nguyện viên - Hệ thống Hiến máu Đà Nẵng</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+  <script src="js/auth.js"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:'#af101a'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
+  
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="min-h-screen bg-gray-50">
+
+<header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-30">
+  <div class="flex items-center gap-3">
+    <div class="w-9 h-9 bg-red-700 rounded-xl flex items-center justify-center">
+      <span class="material-symbols-outlined text-white text-xl" style="font-variation-settings:'FILL' 1,'wght' 700;">bloodtype</span>
+    </div>
+    <span class="font-black text-red-700">Hệ thống Hiến máu TP. Đà Nẵng</span>
+  </div>
+  <a href="DangNhap.html" class="text-sm text-slate-600 hover:text-red-700 font-semibold flex items-center gap-1">
+    <span class="material-symbols-outlined text-base">login</span> Đã có tài khoản? Đăng nhập
+  </a>
+</header>
+
+<div class="max-w-2xl mx-auto py-12 px-4">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-black text-slate-900">Đăng ký Tình nguyện viên</h1>
+    <p class="text-slate-500 mt-2">Tạo tài khoản để đăng ký tham gia hiến máu tình nguyện.</p>
+  </div>
+
+  <!-- Info notice -->
+  <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6 flex gap-3">
+    <span class="material-symbols-outlined text-blue-500 shrink-0" style="font-variation-settings:'FILL' 1;">info</span>
+    <div class="text-sm text-blue-700">
+      <strong>Lưu ý:</strong> Chỉ Tình nguyện viên (người hiến máu) mới được tự đăng ký tài khoản. Các tài khoản Bác sĩ, Y tế, Kho máu do Admin cấp.
+    </div>
+  </div>
+
+  <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-8">
+    <!-- Error alert -->
+    <div id="reg-error" class="hidden mb-5 flex items-center gap-3 bg-red-50 border border-red-200 rounded-xl p-4">
+      <span class="material-symbols-outlined text-red-500 shrink-0" style="font-variation-settings:'FILL' 1;">error</span>
+      <p id="reg-error-msg" class="text-sm text-red-700 font-medium"></p>
+    </div>
+
+    <form id="reg-form" class="space-y-5">
+      <!-- Name + DOB -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Họ và tên *</label>
+          <input id="reg-name" type="text" required placeholder="Nguyễn Văn A"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Ngày sinh *</label>
+          <input id="reg-dob" type="date" required
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+        </div>
+      </div>
+      <!-- Gender + Blood type -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Giới tính *</label>
+          <select id="reg-gender" required class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none bg-white">
+            <option value="">-- Chọn --</option>
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+            <option value="Khác">Khác</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Nhóm máu</label>
+          <select id="reg-blood" class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none bg-white">
+            <option value="">-- Chưa biết --</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+          </select>
+        </div>
+      </div>
+      <!-- CCCD + Phone -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Số CCCD *</label>
+          <input id="reg-cccd" type="text" required maxlength="12" placeholder="012345678901"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm font-mono focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Số điện thoại *</label>
+          <input id="reg-phone" type="tel" required placeholder="0901234567"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+        </div>
+      </div>
+      <!-- Email -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Email *</label>
+        <input id="reg-email" type="email" required placeholder="your@email.com"
+               class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+      </div>
+      <!-- Address -->
+      <div>
+        <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Địa chỉ</label>
+        <input id="reg-addr" type="text" placeholder="123 Đường ABC, Q.Hải Châu, Đà Nẵng"
+               class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+      </div>
+      <!-- Password -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Mật khẩu *</label>
+          <input id="reg-pw" type="password" required placeholder="Ít nhất 8 ký tự"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wide">Xác nhận mật khẩu *</label>
+          <input id="reg-pw2" type="password" required placeholder="Nhập lại mật khẩu"
+                 class="w-full h-11 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+        </div>
+      </div>
+      <!-- Terms -->
+      <div class="flex items-start gap-3 p-4 bg-slate-50 rounded-xl">
+        <input id="reg-terms" type="checkbox" required class="mt-1 w-4 h-4 rounded text-red-700 border-slate-300 focus:ring-red-300"/>
+        <label for="reg-terms" class="text-xs text-slate-600 leading-relaxed cursor-pointer">
+          Tôi đồng ý với <a href="#" class="text-red-700 underline font-semibold">Điều khoản sử dụng</a> và <a href="#" class="text-red-700 underline font-semibold">Chính sách bảo mật</a>. Tôi cam kết cung cấp thông tin trung thực và tự nguyện tham gia hiến máu.
+        </label>
+      </div>
+      <!-- Submit -->
+      <button type="submit" id="btn-reg"
+        class="w-full h-12 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-500/20 active:scale-[0.98] flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">how_to_reg</span>
+        Tạo tài khoản
+      </button>
+    </form>
+  </div>
+
+  <!-- Success message (hidden initially) -->
+  <div id="success-box" class="hidden mt-8 bg-white rounded-3xl border-2 border-emerald-300 shadow-lg p-8 text-center">
+    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+      <span class="material-symbols-outlined text-emerald-600 text-4xl" style="font-variation-settings:'FILL' 1;">verified</span>
+    </div>
+    <h2 class="text-2xl font-black text-slate-900 mb-2">Đăng ký thành công! 🎉</h2>
+    <p class="text-slate-500 mb-6">Tài khoản của bạn đã được tạo. Hãy đăng nhập để bắt đầu.</p>
+    <a href="DangNhap.html"
+       class="inline-flex items-center gap-2 h-12 px-8 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-500/20">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">login</span>
+      Đăng nhập ngay
+    </a>
+  </div>
+</div>
+
+<script>
+document.getElementById('reg-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const errDiv = document.getElementById('reg-error');
+  const errMsg = document.getElementById('reg-error-msg');
+  errDiv.classList.add('hidden');
+
+  const pw  = document.getElementById('reg-pw').value;
+  const pw2 = document.getElementById('reg-pw2').value;
+  if (pw !== pw2) { errMsg.textContent = 'Mật khẩu xác nhận không khớp!'; errDiv.classList.remove('hidden'); return; }
+  if (pw.length < 8) { errMsg.textContent = 'Mật khẩu phải có ít nhất 8 ký tự!'; errDiv.classList.remove('hidden'); return; }
+
+  const result = registerVolunteer({
+    name: document.getElementById('reg-name').value.trim(),
+    email: document.getElementById('reg-email').value.trim(),
+    password: pw,
+  });
+
+  if (!result.success) { errMsg.textContent = result.message; errDiv.classList.remove('hidden'); return; }
+
+  this.classList.add('hidden');
+  document.getElementById('success-box').classList.remove('hidden');
+});
+</script>
+</body>
+</html>

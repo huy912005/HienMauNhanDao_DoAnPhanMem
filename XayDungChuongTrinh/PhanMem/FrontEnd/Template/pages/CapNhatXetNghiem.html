@@ -1,0 +1,326 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cập nhật Xét nghiệm - Hệ thống Hiến máu Đà Nẵng</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+  <script src="../js/auth.js"></script>
+  <script src="../js/page-shell.js"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:'#af101a'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
+  
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50 antialiased">
+<div class="w-full min-h-screen flex">
+  <div id="sidebar-mount"></div>
+  <div class="flex-1 flex flex-col">
+    <div id="header-mount"></div>
+    <main class="flex-1 p-8">
+      <div class="mb-6">
+        <h1 class="text-2xl font-black text-slate-900">Cập nhật Kết quả Xét nghiệm</h1>
+        <p class="text-sm text-slate-500 mt-1">Nhập kết quả HIV, Viêm gan B/C cho từng túi máu trước khi nhập kho.</p>
+      </div>
+
+      <div class="grid grid-cols-12 gap-6">
+        <!-- Scanner Panel -->
+        <div class="col-span-5 space-y-6">
+          <!-- Barcode input -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+            <h2 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-red-600" style="font-variation-settings:'FILL' 1;">barcode_scanner</span>
+              Quét mã vạch túi máu
+            </h2>
+            <div class="relative">
+              <input id="barcode-input" type="text" placeholder="BB-DN-2025-XXXXXX"
+                     class="w-full h-14 px-5 pr-14 border-2 border-dashed border-slate-300 rounded-xl font-mono text-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition-all"/>
+              <button onclick="scanBarcode()" class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-red-700 hover:bg-red-800 rounded-lg flex items-center justify-center transition-colors">
+                <span class="material-symbols-outlined text-white text-xl" style="font-variation-settings:'FILL' 1;">search</span>
+              </button>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Nhấn Enter hoặc nhấn nút tìm để tra cứu túi máu</p>
+
+            <!-- Bag Info Card -->
+            <div id="bag-info" class="mt-5 hidden">
+              <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3">Thông tin túi máu</p>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between"><span class="text-slate-500">Mã vạch:</span><span class="font-mono font-bold" id="bi-code"></span></div>
+                  <div class="flex justify-between"><span class="text-slate-500">Người hiến:</span><span class="font-semibold" id="bi-donor"></span></div>
+                  <div class="flex justify-between"><span class="text-slate-500">Thể tích:</span><span class="font-semibold" id="bi-vol"></span></div>
+                  <div class="flex justify-between"><span class="text-slate-500">Thu nhận lúc:</span><span class="font-semibold" id="bi-time"></span></div>
+                  <div class="flex justify-between"><span class="text-slate-500">Chiến dịch:</span><span class="font-semibold" id="bi-campaign"></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending list -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <div class="px-5 py-4 border-b border-slate-100 flex justify-between items-center">
+              <h2 class="font-bold text-slate-800 text-sm">Chờ xét nghiệm hôm nay</h2>
+              <span class="text-xs bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">14 túi</span>
+            </div>
+            <div class="divide-y divide-slate-50 max-h-72 overflow-y-auto">
+              <div id="pending-list">
+                <!-- injected by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Form -->
+        <div class="col-span-7 space-y-6">
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+            <h2 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
+              <span class="material-symbols-outlined text-red-600" style="font-variation-settings:'FILL' 1;">biotech</span>
+              Nhập kết quả xét nghiệm
+            </h2>
+
+            <!-- Blood group -->
+            <div class="mb-6">
+              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">Xác nhận nhóm máu</label>
+              <div class="grid grid-cols-8 gap-2" id="blood-type-btns">
+                <!-- injected -->
+              </div>
+            </div>
+
+            <!-- Test Results Grid -->
+            <div class="mb-6">
+              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">Kết quả xét nghiệm bệnh truyền nhiễm</label>
+              <div class="grid grid-cols-2 gap-4" id="test-grid">
+                <!-- injected -->
+              </div>
+            </div>
+
+            <!-- Hemoglobin -->
+            <div class="mb-6 grid grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Hemoglobin (g/dL)</label>
+                <input id="hgb-val" type="number" step="0.1" min="0" max="20" placeholder="13.5"
+                       class="w-full h-10 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Hematocrit (%)</label>
+                <input id="hct-val" type="number" step="0.1" min="0" max="60" placeholder="41.0"
+                       class="w-full h-10 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Tiểu cầu (K/μL)</label>
+                <input id="plt-val" type="number" min="0" placeholder="250"
+                       class="w-full h-10 px-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+              </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="mb-6">
+              <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Ghi chú kỹ thuật viên</label>
+              <textarea id="lab-note" rows="2" placeholder="Nhập ghi chú nếu có..."
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm resize-none focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"></textarea>
+            </div>
+
+            <!-- Summary badge -->
+            <div id="result-summary" class="mb-6 hidden"></div>
+
+            <!-- Action buttons -->
+            <div class="flex gap-3">
+              <button onclick="confirmApprove()"
+                class="flex-1 h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-[0.98]">
+                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">check_circle</span>
+                XÁC NHẬN ÂM TÍNH — Cho phép nhập kho
+              </button>
+              <button onclick="confirmReject()"
+                class="w-40 h-12 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 active:scale-[0.98]">
+                <span class="material-symbols-outlined text-xl" style="font-variation-settings:'FILL' 1;">cancel</span>
+                Hủy túi
+              </button>
+            </div>
+          </div>
+
+          <!-- Today log -->
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-100"><h3 class="font-bold text-slate-800 text-sm">Đã xử lý hôm nay</h3></div>
+            <table class="w-full text-sm">
+              <thead><tr class="bg-slate-50">
+                <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Mã vạch</th>
+                <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Nhóm máu</th>
+                <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">HIV</th>
+                <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">HBV/HCV</th>
+                <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Kết quả</th>
+                <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Thời gian</th>
+              </tr></thead>
+              <tbody id="log-tbody" class="divide-y divide-slate-50">
+                <!-- injected -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const BLOOD_TYPES = ['A+','A-','B+','B-','O+','O-','AB+','AB-'];
+const TESTS = [
+  { id:'hiv', label:'HIV', icon:'coronavirus' },
+  { id:'hbv', label:'Viêm gan B (HBV)', icon:'biotech' },
+  { id:'hcv', label:'Viêm gan C (HCV)', icon:'science' },
+  { id:'syphilis', label:'Giang mai (TPHA)', icon:'healing' },
+];
+const PENDING_BAGS = [
+  { code:'BB-DN-2025-00412', donor:'Nguyễn Văn Bình', vol:'350ml', campaign:'Giọt Máu Hồng' },
+  { code:'BB-DN-2025-00413', donor:'Trần Thị Lan', vol:'250ml', campaign:'Giọt Máu Hồng' },
+  { code:'BB-DN-2025-00414', donor:'Lê Minh Tuấn', vol:'450ml', campaign:'Giọt Máu Hồng' },
+  { code:'BB-DN-2025-00415', donor:'Phạm Thị Hoa', vol:'350ml', campaign:'Hải Châu' },
+];
+
+let selectedBloodType = null;
+let testResults = {};
+let currentBag = null;
+const logEntries = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  initPage('CapNhatXetNghiem.html');
+  renderBloodTypes();
+  renderTests();
+  renderPending();
+  renderLog();
+  document.getElementById('barcode-input').addEventListener('keydown', e => { if(e.key==='Enter') scanBarcode(); });
+});
+
+function renderBloodTypes() {
+  document.getElementById('blood-type-btns').innerHTML = BLOOD_TYPES.map(t => `
+    <button onclick="selectBloodType('${t}')" id="bt-${t.replace('+','P').replace('-','M')}"
+      class="h-10 rounded-xl border-2 border-slate-200 text-xs font-black text-slate-600 hover:border-red-400 hover:text-red-700 hover:bg-red-50 transition-all">${t}</button>`).join('');
+}
+
+function renderTests() {
+  document.getElementById('test-grid').innerHTML = TESTS.map(t => `
+    <div class="border border-slate-200 rounded-xl p-4">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="material-symbols-outlined text-sm text-slate-500" style="font-variation-settings:'FILL' 1;">${t.icon}</span>
+        <span class="text-sm font-semibold text-slate-700">${t.label}</span>
+      </div>
+      <div class="flex gap-3">
+        <label class="flex-1 flex items-center gap-2 cursor-pointer p-2.5 rounded-lg border border-slate-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50">
+          <input type="radio" name="test-${t.id}" value="negative" class="text-emerald-500" onchange="setTest('${t.id}','negative')"/>
+          <span class="text-xs font-bold text-emerald-700">Âm tính</span>
+        </label>
+        <label class="flex-1 flex items-center gap-2 cursor-pointer p-2.5 rounded-lg border border-slate-200 hover:border-red-400 hover:bg-red-50 transition-all has-[:checked]:border-red-500 has-[:checked]:bg-red-50">
+          <input type="radio" name="test-${t.id}" value="positive" class="text-red-500" onchange="setTest('${t.id}','positive')"/>
+          <span class="text-xs font-bold text-red-700">Dương tính</span>
+        </label>
+      </div>
+    </div>`).join('');
+}
+
+function renderPending() {
+  document.getElementById('pending-list').innerHTML = PENDING_BAGS.map(b => `
+    <div onclick="loadBag('${b.code}')" class="flex items-center justify-between px-5 py-3 hover:bg-slate-50 cursor-pointer transition-colors">
+      <div>
+        <p class="font-mono text-xs font-bold text-slate-700">${b.code}</p>
+        <p class="text-xs text-slate-500">${b.donor} · ${b.vol}</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-300 text-sm">arrow_forward_ios</span>
+    </div>`).join('');
+}
+
+function renderLog() {
+  const STATUS_COLORS = { approved:'bg-emerald-100 text-emerald-700', rejected:'bg-red-100 text-red-700' };
+  const STATUS_LABELS = { approved:'✓ Nhập kho', rejected:'✗ Đã hủy' };
+  document.getElementById('log-tbody').innerHTML = logEntries.length === 0
+    ? `<tr><td colspan="6" class="px-5 py-8 text-center text-slate-400 text-sm">Chưa có kết quả nào hôm nay</td></tr>`
+    : logEntries.map(e => `
+      <tr class="hover:bg-slate-50 transition-colors">
+        <td class="px-5 py-3 font-mono text-xs font-bold text-slate-700">${e.code}</td>
+        <td class="px-5 py-3"><span class="px-2 py-0.5 rounded bg-red-100 text-red-700 text-xs font-bold">${e.bloodType}</span></td>
+        <td class="px-5 py-3"><span class="text-xs font-bold ${e.hiv==='positive'?'text-red-600':'text-emerald-600'}">${e.hiv==='positive'?'Dương tính':'Âm tính'}</span></td>
+        <td class="px-5 py-3"><span class="text-xs font-bold ${e.hbv==='positive'||e.hcv==='positive'?'text-red-600':'text-emerald-600'}">${e.hbv==='positive'||e.hcv==='positive'?'Dương tính':'Âm tính'}</span></td>
+        <td class="px-5 py-3"><span class="px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase ${STATUS_COLORS[e.status]}">${STATUS_LABELS[e.status]}</span></td>
+        <td class="px-5 py-3 text-xs text-slate-500">${e.time}</td>
+      </tr>`).join('');
+}
+
+function selectBloodType(t) {
+  selectedBloodType = t;
+  BLOOD_TYPES.forEach(bt => {
+    const id = 'bt-'+bt.replace('+','P').replace('-','M');
+    const el = document.getElementById(id);
+    if (el) el.className = bt===t
+      ? 'h-10 rounded-xl border-2 border-red-600 bg-red-50 text-red-700 text-xs font-black transition-all'
+      : 'h-10 rounded-xl border-2 border-slate-200 text-xs font-black text-slate-600 hover:border-red-400 hover:text-red-700 hover:bg-red-50 transition-all';
+  });
+}
+
+function setTest(id, val) { testResults[id] = val; updateSummary(); }
+
+function updateSummary() {
+  const allNeg = Object.values(testResults).length === 4 && Object.values(testResults).every(v=>v==='negative');
+  const anyPos = Object.values(testResults).some(v=>v==='positive');
+  const div = document.getElementById('result-summary');
+  div.classList.remove('hidden');
+  if (anyPos) {
+    div.innerHTML = `<div class="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+      <span class="material-symbols-outlined text-red-600 text-2xl" style="font-variation-settings:'FILL' 1;">dangerous</span>
+      <div><p class="font-bold text-red-700">Phát hiện kết quả Dương tính!</p><p class="text-xs text-red-600 mt-0.5">Túi máu này sẽ bị hủy và không được nhập kho.</p></div></div>`;
+  } else if (allNeg) {
+    div.innerHTML = `<div class="flex items-center gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+      <span class="material-symbols-outlined text-emerald-600 text-2xl" style="font-variation-settings:'FILL' 1;">verified</span>
+      <div><p class="font-bold text-emerald-700">Tất cả xét nghiệm Âm tính</p><p class="text-xs text-emerald-600 mt-0.5">Túi máu đủ tiêu chuẩn nhập kho.</p></div></div>`;
+  }
+}
+
+function loadBag(code) {
+  const bag = PENDING_BAGS.find(b=>b.code===code) || { code, donor:'---', vol:'350ml', campaign:'---', time:'08:30 hôm nay' };
+  currentBag = bag;
+  document.getElementById('barcode-input').value = code;
+  document.getElementById('bag-info').classList.remove('hidden');
+  document.getElementById('bi-code').textContent = bag.code;
+  document.getElementById('bi-donor').textContent = bag.donor||'---';
+  document.getElementById('bi-vol').textContent = bag.vol||'350ml';
+  document.getElementById('bi-time').textContent = bag.time||new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('bi-campaign').textContent = bag.campaign||'---';
+}
+
+function scanBarcode() {
+  const code = document.getElementById('barcode-input').value.trim();
+  if (!code) { showToast('Vui lòng nhập mã vạch!','error'); return; }
+  loadBag(code);
+}
+
+function validateForm() {
+  if (!currentBag) { showToast('Vui lòng quét mã vạch túi máu trước!','error'); return false; }
+  if (!selectedBloodType) { showToast('Vui lòng chọn nhóm máu!','error'); return false; }
+  if (Object.keys(testResults).length < 4) { showToast('Vui lòng nhập đủ 4 kết quả xét nghiệm!','error'); return false; }
+  return true;
+}
+
+function confirmApprove() {
+  if (!validateForm()) return;
+  const anyPos = Object.values(testResults).some(v=>v==='positive');
+  if (anyPos) { showToast('Không thể nhập kho — có kết quả Dương tính!','error'); return; }
+  logEntries.unshift({ code:currentBag.code, bloodType:selectedBloodType, ...testResults, status:'approved', time:new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}) });
+  showToast(`Túi ${currentBag.code} đã được phép nhập kho!`,'success');
+  resetForm();
+}
+
+function confirmReject() {
+  if (!validateForm()) return;
+  if (!confirm('Xác nhận HỦY túi máu này do nhiễm bệnh?')) return;
+  logEntries.unshift({ code:currentBag.code, bloodType:selectedBloodType, ...testResults, status:'rejected', time:new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}) });
+  showToast(`Túi ${currentBag.code} đã bị hủy.`,'warning');
+  resetForm();
+}
+
+function resetForm() {
+  currentBag = null; selectedBloodType = null; testResults = {};
+  document.getElementById('barcode-input').value = '';
+  document.getElementById('bag-info').classList.add('hidden');
+  document.getElementById('result-summary').classList.add('hidden');
+  renderBloodTypes(); renderTests(); renderLog();
+}
+</script>
+</body>
+</html>

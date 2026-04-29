@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quản lý Nhập/Xuất Kho - Hệ thống Hiến máu TP. Đà Nẵng</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: { primary: "#af101a", "primary-container": "#d32f2f", "tertiary-container": "#00799c" },
+                fontFamily: { sans: ["Public Sans", "sans-serif"] }
+            }
+        }
+    }
+</script>
+<style>
+    body { font-family: 'Public Sans', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+<script src="../js/auth.js"></script>
+<script src="../js/page-shell.js"></script>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-[#F3F4F6] text-slate-800 antialiased min-h-screen">
+<div class="w-full min-h-screen flex">
+  <div id="sidebar-mount"></div>
+  <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+    <div id="header-mount"></div>
+    <main class="flex-1 p-8 space-y-8">
+
+        <!-- Page Header -->
+        <div class="w-full">
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Nhập / Xuất Kho Máu</h2>
+            <p class="text-slate-500 text-sm">Quản lý luân chuyển các đơn vị máu bằng hệ thống quét mã vạch chuyên dụng.</p>
+        </div>
+
+        <!-- Scanner Section -->
+        <section class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
+            <div class="flex items-center justify-between mb-8">
+                <!-- Switch -->
+                <div class="w-[240px] h-10 flex bg-slate-100 p-1 rounded-lg">
+                    <button class="flex-1 h-full bg-white text-primary text-sm font-bold rounded-md shadow-sm">Nhập kho</button>
+                    <button class="flex-1 h-full text-slate-500 text-sm font-semibold hover:text-slate-700">Xuất kho</button>
+                </div>
+                <!-- Info -->
+                <div class="flex items-center gap-2 text-xs text-slate-500 italic">
+                    <span class="material-symbols-outlined text-red-600 text-lg">info</span>
+                    Hệ thống tự động nhận diện thông tin túi máu khi quét mã.
+                </div>
+            </div>
+            
+            <div class="flex gap-4">
+                <div class="relative flex-1">
+                    <label class="absolute -top-2.5 left-4 px-1 bg-white text-[10px] font-bold text-primary uppercase tracking-widest z-10">
+                        Quét mã vạch túi máu
+                    </label>
+                    <div class="relative flex items-center h-16 w-full border-2 border-slate-200 rounded-xl px-4 focus-within:border-primary transition-colors">
+                        <span class="material-symbols-outlined text-slate-400 text-3xl mr-4">barcode_scanner</span>
+                        <input class="flex-1 h-full border-none focus:ring-0 p-0 text-xl font-medium placeholder:text-slate-300 outline-none" placeholder="Nhập hoặc Quét mã vạch túi máu (VD: BB-2024-...)" type="text"/>
+                    </div>
+                </div>
+                <button class="w-[200px] h-16 bg-primary text-white font-bold rounded-xl hover:bg-red-800 transition-all flex flex-col items-center justify-center gap-0.5 shadow-md active:scale-[0.98]">
+                    <span class="material-symbols-outlined text-2xl">add_circle</span>
+                    <span class="text-xs uppercase tracking-wide">Thêm vào danh sách</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Table Section -->
+        <section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="h-14 px-6 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="font-bold text-sm text-slate-900">Danh sách túi máu đã quét (8 túi)</h3>
+                <button class="text-xs font-bold text-primary hover:underline uppercase tracking-wider">Xóa tất cả</button>
+            </div>
+            <div class="w-full overflow-x-auto">
+                <table class="w-full table-fixed min-w-[800px]">
+                    <thead>
+                        <tr class="h-12 border-b border-slate-100 bg-white">
+                            <th class="w-16 px-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">STT</th>
+                            <th class="w-auto px-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Mã vạch túi máu</th>
+                            <th class="w-32 px-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nhóm máu</th>
+                            <th class="w-28 px-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Thể tích</th>
+                            <th class="w-40 px-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Ngày hết hạn</th>
+                            <th class="w-36 px-6 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Trạng thái</th>
+                            <th class="w-24 px-6 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">
+                        <tr class="h-14 hover:bg-slate-50 transition-colors">
+                            <td class="px-6 text-sm font-medium text-slate-500">01</td>
+                            <td class="px-6 font-mono font-bold text-sm text-slate-900">BB-2024-00412</td>
+                            <td class="px-6"><span class="w-10 h-6 flex items-center justify-center bg-red-100 text-red-700 rounded-full font-black text-xs">O+</span></td>
+                            <td class="px-6 text-sm text-slate-700">350ml</td>
+                            <td class="px-6 text-sm text-slate-700">12/11/2024</td>
+                            <td class="px-6">
+                                <span class="inline-flex items-center gap-1.5 h-6 px-2 rounded-md text-[10px] font-bold bg-green-100 text-green-800 uppercase">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Hợp lệ
+                                </span>
+                            </td>
+                            <td class="px-6 text-center">
+                                <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors">
+                                    <span class="material-symbols-outlined text-xl">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="h-14 hover:bg-slate-50 transition-colors">
+                            <td class="px-6 text-sm font-medium text-slate-500">02</td>
+                            <td class="px-6 font-mono font-bold text-sm text-slate-900">BB-2024-00413</td>
+                            <td class="px-6"><span class="w-10 h-6 flex items-center justify-center bg-red-100 text-red-700 rounded-full font-black text-xs">A+</span></td>
+                            <td class="px-6 text-sm text-slate-700">250ml</td>
+                            <td class="px-6 text-sm text-slate-700">15/11/2024</td>
+                            <td class="px-6">
+                                <span class="inline-flex items-center gap-1.5 h-6 px-2 rounded-md text-[10px] font-bold bg-green-100 text-green-800 uppercase">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Hợp lệ
+                                </span>
+                            </td>
+                            <td class="px-6 text-center">
+                                <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors">
+                                    <span class="material-symbols-outlined text-xl">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="h-14 hover:bg-slate-50 transition-colors bg-orange-50">
+                            <td class="px-6 text-sm font-medium text-slate-500">03</td>
+                            <td class="px-6 font-mono font-bold text-sm text-slate-900">BB-2024-00414</td>
+                            <td class="px-6"><span class="w-10 h-6 flex items-center justify-center bg-red-100 text-red-700 rounded-full font-black text-xs">B-</span></td>
+                            <td class="px-6 text-sm text-slate-700">450ml</td>
+                            <td class="px-6 text-sm text-orange-600 font-bold">01/11/2024</td>
+                            <td class="px-6">
+                                <span class="inline-flex items-center gap-1.5 h-6 px-2 rounded-md text-[10px] font-bold bg-orange-100 text-orange-800 uppercase">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span> Sắp hết hạn
+                                </span>
+                            </td>
+                            <td class="px-6 text-center">
+                                <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors">
+                                    <span class="material-symbols-outlined text-xl">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Bottom Actions -->
+        <div class="flex justify-between items-center pt-4">
+            <div class="flex gap-12">
+                <div class="space-y-1">
+                    <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Tổng đơn vị</span>
+                    <span class="text-xl font-bold text-slate-900">08 đơn vị</span>
+                </div>
+                <div class="space-y-1">
+                    <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Loại giao dịch</span>
+                    <span class="text-xl font-bold text-primary">Nhập Kho</span>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button class="w-[120px] h-12 bg-white border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-colors">
+                    Hủy bỏ
+                </button>
+                <button class="w-[240px] h-12 bg-primary text-white font-bold rounded-lg hover:bg-red-800 transition-all shadow-lg active:scale-[0.98] flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    Hoàn tất lưu phiếu
+                </button>
+            </div>
+        </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  initPage('QuanLyNhapXuatKho.html');
+});
+</script>
+</body>
+</html>
