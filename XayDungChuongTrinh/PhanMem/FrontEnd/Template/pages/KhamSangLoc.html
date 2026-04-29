@@ -116,9 +116,9 @@
               <div class="grid grid-cols-3 gap-4">
                 <div class="w-full flex flex-col gap-1">
                   <label class="text-sm font-semibold text-slate-600">Huyết áp (mmHg)</label>
-                  <input
+                  <input id="bloodPressure"
                     class="w-full h-11 bg-white border border-slate-200 rounded-xl focus:border-red-400 focus:ring-2 focus:ring-red-200 transition-shadow px-4 outline-none"
-                    placeholder="120/80" type="text" />
+                    placeholder="120/80" type="text" onchange="evaluateScreening()" />
                 </div>
                 <div class="w-full flex flex-col gap-1">
                   <label class="text-sm font-semibold text-slate-600">Nhịp tim (bpm)</label>
@@ -128,9 +128,9 @@
                 </div>
                 <div class="w-full flex flex-col gap-1">
                   <label class="text-sm font-semibold text-slate-600">Cân nặng (kg)</label>
-                  <input
+                  <input id="weight"
                     class="w-full h-11 bg-white border border-slate-200 rounded-xl focus:border-red-400 focus:ring-2 focus:ring-red-200 px-4 outline-none"
-                    placeholder="65" type="number" />
+                    placeholder="65" type="number" oninput="evaluateScreening()" />
                 </div>
               </div>
               <div class="pt-4 flex flex-col gap-4">
@@ -138,16 +138,16 @@
                 <div class="flex gap-4 h-16">
                   <label
                     class="w-full flex items-center px-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors group">
-                    <input class="w-5 h-5 text-red-700 focus:ring-red-200 border-slate-300" name="result"
-                      type="radio" />
+                    <input id="passResult" class="w-5 h-5 text-red-700 focus:ring-red-200 border-slate-300" name="result"
+                      type="radio" value="pass" />
                     <span class="ml-3 text-slate-700 font-medium">Đạt yêu cầu</span>
                     <span class="material-symbols-outlined text-green-600 ml-auto opacity-0 group-hover:opacity-100"
                       style="font-variation-settings:'FILL' 1;">check_circle</span>
                   </label>
                   <label
                     class="w-full flex items-center px-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition-colors group">
-                    <input class="w-5 h-5 text-red-700 focus:ring-red-200 border-slate-300" name="result"
-                      type="radio" />
+                    <input id="failResult" class="w-5 h-5 text-red-700 focus:ring-red-200 border-slate-300" name="result"
+                      type="radio" value="fail" />
                     <span class="ml-3 text-slate-700 font-medium">Không đạt</span>
                     <span class="material-symbols-outlined text-red-600 ml-auto opacity-0 group-hover:opacity-100"
                       style="font-variation-settings:'FILL' 1;">cancel</span>
@@ -166,7 +166,7 @@
             <div class="space-y-8 flex-1">
               <div class="flex flex-col gap-1">
                 <label class="text-sm font-semibold text-slate-600">Thể tích hiến máu</label>
-                <select
+                <select id="volumeSelect"
                   class="w-full h-11 bg-white border border-slate-200 rounded-xl focus:border-red-400 focus:ring-2 focus:ring-red-200 px-4 outline-none">
                   <option value="250">250 ml</option>
                   <option value="350">350 ml</option>
@@ -188,7 +188,7 @@
             </div>
             <!-- Primary Action -->
             <div class="mt-8 flex flex-col gap-3 flex-shrink-0">
-              <button
+              <button onclick="saveScreeningData()"
                 class="w-full h-14 bg-red-700 hover:bg-red-800 text-white rounded-xl font-bold transition-all shadow-lg shadow-red-500/20 active:scale-[0.98] flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined">save</span>
                 LƯU DỮ LIỆU
@@ -267,6 +267,49 @@
   </div>
 
   <script>
+    function evaluateScreening() {
+      const weight = parseFloat(document.getElementById('weight').value);
+      const volumeSelect = document.getElementById('volumeSelect');
+      const passResult = document.getElementById('passResult');
+      const failResult = document.getElementById('failResult');
+
+      if (!isNaN(weight)) {
+        // Rule: Weight < 42kg is absolute fail (matching academic standards)
+        if (weight < 42) {
+          failResult.checked = true;
+          volumeSelect.disabled = true;
+        } else {
+          passResult.checked = true;
+          volumeSelect.disabled = false;
+          
+          // Rule: Weight < 45kg only allowed 250ml
+          if (weight < 45) {
+            volumeSelect.value = "250";
+            Array.from(volumeSelect.options).forEach(opt => {
+              if (opt.value !== "250") opt.disabled = true;
+            });
+          } else {
+            Array.from(volumeSelect.options).forEach(opt => opt.disabled = false);
+          }
+        }
+      }
+    }
+
+    function saveScreeningData() {
+      const isPass = document.getElementById('passResult').checked;
+      if (isPass) {
+        alert("Lưu dữ liệu thành công! Đã ghi nhận túi máu mới vào kho tạm thời.");
+        // Logic to simulate UI update (e.g., increment counter)
+        const countSpan = document.querySelector('span.text-red-700.font-bold');
+        if (countSpan) {
+          const current = parseInt(countSpan.textContent);
+          countSpan.textContent = (current + 1) + " túi thu nhận hôm nay";
+        }
+      } else {
+        alert("Hồ sơ không đạt yêu cầu hiến máu. Đã lưu trạng thái không đạt.");
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       initPage('KhamSangLoc.html');
     });

@@ -147,9 +147,9 @@
                 <div class="relative">
                     <span
                         class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-                    <input
+                    <input id="searchInput"
                         class="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-md text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                        placeholder="Nhập từ khóa tìm kiếm..." type="text" />
+                        placeholder="Nhập từ khóa tìm kiếm..." type="text" onkeyup="filterCampaigns()" />
                 </div>
             </div>
             <div class="w-[200px]">
@@ -190,7 +190,7 @@
         </div>
 
         <!-- Campaign List Grid -->
-        <div class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="campaignGrid" class="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Card 1 -->
             <div
                 class="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
@@ -361,7 +361,24 @@
     </main>
 
     <script>
-        // Logic specific to TimKiemChienDich.html can be placed here
+        function filterCampaigns() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const grid = document.getElementById('campaignGrid');
+            const cards = grid.getElementsByClassName('group');
+
+            for (let i = 0; i < cards.length; i++) {
+                const title = cards[i].getElementsByTagName('h3')[0];
+                const location = cards[i].getElementsByClassName('leading-relaxed')[0];
+                const txtValue = (title.textContent || title.innerText) + " " + (location.textContent || location.innerText);
+                
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        }
     </script>
 </body>
 

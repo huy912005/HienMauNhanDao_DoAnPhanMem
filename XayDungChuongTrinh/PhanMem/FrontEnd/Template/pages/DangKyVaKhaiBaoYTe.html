@@ -313,9 +313,9 @@
                             </label>
                         </div>
                         <div class="flex justify-end pt-4">
-                            <button
+                            <button id="submitBtn"
                                 class="w-64 h-12 bg-red-700 text-white rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-lg active:scale-[0.98]"
-                                onclick="document.getElementById('qr-modal').classList.remove('hidden')" type="button">
+                                onclick="validateRegistration()" type="button">
                                 <span class="material-symbols-outlined text-xl">qr_code_2</span>
                                 XÁC NHẬN &amp; NHẬN MÃ QR
                             </button>
@@ -368,7 +368,33 @@
     </div>
 
     <script>
-        // File specific script
+        function validateRegistration() {
+            // Check terms checkbox
+            const terms = document.querySelector('input[type="checkbox"]');
+            if (!terms.checked) {
+                alert("Vui lòng xác nhận cam đoan thông tin trước khi đăng ký.");
+                return;
+            }
+
+            // Check health questions (Simulate exclusion logic)
+            // q1, q2, q3, q4 are radio groups. If any is 'Có' (Yes), warn user.
+            const answers = document.querySelectorAll('input[type="radio"]:checked');
+            let hasIssue = false;
+            answers.forEach(ans => {
+                if (ans.nextElementSibling.textContent.trim() === "Có") {
+                    hasIssue = true;
+                }
+            });
+
+            if (hasIssue) {
+                if (!confirm("Thông tin khai báo cho thấy bạn có thể không đủ điều kiện hiến máu lúc này. Bạn có chắc chắn vẫn muốn đăng ký để được bác sĩ tư vấn trực tiếp không?")) {
+                    return;
+                }
+            }
+
+            // Show success modal
+            document.getElementById('qr-modal').classList.remove('hidden');
+        }
     </script>
 </body>
 
