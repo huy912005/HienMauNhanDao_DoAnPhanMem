@@ -19,6 +19,20 @@
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 
+        @keyframes shimmer {
+            0% { background-position: -468px 0; }
+            100% { background-position: 468px 0; }
+        }
+        .skeleton {
+            background: #f6f7f8;
+            background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+            background-repeat: no-repeat;
+            background-size: 800px 104px;
+            display: inline-block;
+            position: relative;
+            animation: shimmer 1s linear infinite forwards;
+        }
+
         .custom-scrollbar::-webkit-scrollbar {
             width: 4px;
         }
@@ -89,7 +103,7 @@
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
                     href="TrangChu.html">Trang chủ</a>
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
-                    href="TrangChu.html#gioi-thieu">Giới thiệu</a>
+                    href="GioiThieu.html">Giới thiệu</a>
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
                     href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
                 <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm"
@@ -235,7 +249,7 @@
                         <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-6">
                             <div class="h-full bg-red-700" style="width: 72%"></div>
                         </div>
-                        <button
+                        <button onclick="window.location.href='DangKyVaKhaiBaoYTe.html?campaign=' + encodeURIComponent('Giọt hồng Đà Nẵng 2024')"
                             class="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98]">
                             Đăng ký tham gia
                         </button>
@@ -282,7 +296,7 @@
                         <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-6">
                             <div class="h-full bg-red-700" style="width: 24%"></div>
                         </div>
-                        <button
+                        <button onclick="window.location.href='DangKyVaKhaiBaoYTe.html?campaign=' + encodeURIComponent('Ngày hội Thanh niên tình nguyện')"
                             class="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98]">
                             Đăng ký tham gia
                         </button>
@@ -363,32 +377,38 @@
 
     <script>
         function filterCampaigns() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toLowerCase();
             const grid = document.getElementById('campaignGrid');
             const cards = grid.getElementsByClassName('group');
-            let visibleCount = 0;
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            
+            // Premium: Add loading overlay simulation
+            grid.classList.add('opacity-30', 'pointer-events-none');
+            
+            setTimeout(() => {
+                grid.classList.remove('opacity-30', 'pointer-events-none');
+                let visibleCount = 0;
 
-            for (let i = 0; i < cards.length; i++) {
-                const title = cards[i].getElementsByTagName('h3')[0];
-                const location = cards[i].getElementsByClassName('leading-relaxed')[0];
-                const txtValue = (title.textContent || title.innerText) + " " + (location.textContent || location.innerText);
-                
-                if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                    cards[i].style.display = "";
-                    visibleCount++;
-                } else {
-                    cards[i].style.display = "none";
+                for (let i = 0; i < cards.length; i++) {
+                    const title = cards[i].getElementsByTagName('h3')[0];
+                    const location = cards[i].getElementsByClassName('leading-relaxed')[0];
+                    const txtValue = (title.textContent || title.innerText) + " " + (location.textContent || location.innerText);
+                    
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        cards[i].style.display = "";
+                        visibleCount++;
+                    } else {
+                        cards[i].style.display = "none";
+                    }
                 }
-            }
 
-            if (visibleCount === 0 && filter !== "") {
-                // Throttle toast to avoid spamming while typing
-                if (!window.toastTimeout) {
-                    showToast("Không tìm thấy chiến dịch phù hợp với từ khóa.", "warning");
-                    window.toastTimeout = setTimeout(() => { window.toastTimeout = null; }, 3000);
+                if (visibleCount === 0 && filter !== "") {
+                    if (!window.toastTimeout) {
+                        showToast("Không tìm thấy chiến dịch phù hợp.", "warning");
+                        window.toastTimeout = setTimeout(() => { window.toastTimeout = null; }, 3000);
+                    }
                 }
-            }
+            }, 300);
         }
     </script>
 </body>

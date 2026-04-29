@@ -39,6 +39,15 @@
     .chart-bar {
       transition: height 0.3s ease;
     }
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .pulse-low-stock {
+      animation: pulse-red 2s infinite;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
   </style>
   <link rel="stylesheet" href="../css/style.css">
 </head>
@@ -57,7 +66,7 @@
             <p class="text-slate-500 text-sm mt-1">Dữ liệu được cập nhật tự động vào lúc 08:30 hôm nay.</p>
           </div>
           <div class="flex gap-3">
-            <button
+            <button onclick="showToast('Đang tạo báo cáo thống kê định dạng PDF...', 'info'); setTimeout(() => showToast('Báo cáo đã sẵn sàng. Tải xuống tự động...', 'success'), 2000)"
               class="h-10 px-4 bg-white border border-slate-300 rounded-xl text-sm font-medium text-slate-700 flex items-center gap-2 hover:bg-slate-50">
               <span class="material-symbols-outlined text-sm">file_download</span> Xuất báo cáo
             </button>
@@ -135,13 +144,13 @@
                 <svg class="w-full h-full rotate-[-90deg] absolute inset-0" viewBox="0 0 36 36">
                   <circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#F3F4F6" stroke-width="4"></circle>
                   <circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#af101a" stroke-dasharray="45 55"
-                    stroke-dashoffset="0" stroke-width="4"></circle>
+                    stroke-dashoffset="0" stroke-width="4" class="cursor-pointer hover:stroke-red-800 transition-colors" onclick="showToast('Nhóm máu O: 578 đơn vị (Ưu tiên cao)', 'info')"></circle>
                   <circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#d32f2f" stroke-dasharray="25 75"
-                    stroke-dashoffset="-45" stroke-width="4"></circle>
+                    stroke-dashoffset="-45" stroke-width="4" class="cursor-pointer hover:stroke-red-700 transition-colors" onclick="showToast('Nhóm máu A: 321 đơn vị (Ổn định)', 'info')"></circle>
                   <circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#ffb3ac" stroke-dasharray="20 80"
-                    stroke-dashoffset="-70" stroke-width="4"></circle>
+                    stroke-dashoffset="-70" stroke-width="4" class="cursor-pointer hover:stroke-red-300 transition-colors" onclick="showToast('Nhóm máu B: 256 đơn vị (Ổn định)', 'info')"></circle>
                   <circle cx="18" cy="18" fill="transparent" r="15.915" stroke="#8f6f6c" stroke-dasharray="10 90"
-                    stroke-dashoffset="-90" stroke-width="4"></circle>
+                    stroke-dashoffset="-90" stroke-width="4" class="cursor-pointer hover:stroke-slate-700 transition-colors" onclick="showToast('Nhóm máu AB: 129 đơn vị (Khan hiếm)', 'warning')"></circle>
                 </svg>
                 <div class="flex flex-col items-center">
                   <span class="text-2xl font-black text-slate-800">100%</span>
@@ -301,7 +310,7 @@
                 </td>
                 <td class="px-6 text-sm text-slate-600">12/05/2024</td>
                 <td class="px-6"><span
-                    class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-red-100 text-red-700">Sắp hết
+                    class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-red-100 text-red-700 pulse-low-stock">Sắp hết
                     hạn</span></td>
                 <td class="px-6 text-right">
                     <button class="text-slate-400 hover:text-red-600 transition-colors" onclick="deleteBloodUnit(this)">

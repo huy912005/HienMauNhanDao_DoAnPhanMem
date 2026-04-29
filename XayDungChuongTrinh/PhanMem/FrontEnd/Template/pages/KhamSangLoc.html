@@ -65,16 +65,17 @@
             <div
               class="absolute inset-0 bg-slate-50/50 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             </div>
-            <div class="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mb-4 text-red-700">
-              <span class="material-symbols-outlined text-4xl">qr_code_scanner</span>
+            <div class="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mb-4 text-red-700 relative">
+              <div id="sensor-pulse" class="absolute inset-0 rounded-full bg-red-400 opacity-20 animate-ping hidden"></div>
+              <span class="material-symbols-outlined text-4xl relative z-10">qr_code_scanner</span>
             </div>
             <h4 class="font-bold text-slate-800 mb-2">Quét mã QR</h4>
             <p class="text-sm text-slate-500 px-4">Vui lòng quét mã QR của TNV để check-in và bắt đầu quy trình khám
               sàng lọc</p>
-            <div
-              class="mt-6 w-full h-12 border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-300 font-medium text-sm">
-              Waiting for sensor...
-            </div>
+            <button id="qr-scan-btn" onclick="simulateQRScan()" class="mt-6 w-full h-12 border-2 border-dashed border-red-200 bg-red-50 hover:bg-red-100 rounded-xl flex items-center justify-center text-red-600 font-bold text-sm transition-all">
+              <span class="material-symbols-outlined mr-2">barcode_scanner</span>
+              BẮT ĐẦU QUÉT MÃ QR
+            </button>
           </div>
 
           <!-- Section 2: Donor Info Summary -->
@@ -268,6 +269,32 @@
   </div>
 
   <script>
+    let isCheckIn = false;
+
+    function simulateQRScan() {
+      const pulse = document.getElementById('sensor-pulse');
+      pulse.classList.remove('hidden');
+      showToast("Đang kích hoạt cảm biến quét...", "info");
+      
+      setTimeout(() => {
+        pulse.classList.add('hidden');
+        isCheckIn = true;
+        // Fill donor info
+        document.querySelector('p.text-slate-700.font-medium').textContent = "Lê Văn Bình";
+        document.querySelectorAll('p.text-slate-700.font-medium')[1].textContent = "12/05/1995 / Nam";
+        document.querySelectorAll('p.text-slate-700.font-medium')[2].textContent = "O+";
+        document.querySelectorAll('p.text-slate-700.font-medium')[3].textContent = "3 lần";
+        
+        document.querySelector('span.px-3.py-1.bg-green-100').textContent = "Đã check-in";
+        document.getElementById('qr-scan-btn').textContent = "CHECK-IN THÀNH CÔNG";
+        document.getElementById('qr-scan-btn').classList.replace('text-red-600', 'text-green-600');
+        document.getElementById('qr-scan-btn').classList.replace('border-red-200', 'border-green-200');
+        document.getElementById('qr-scan-btn').classList.replace('bg-red-50', 'bg-green-50');
+        
+        showToast("Check-in thành công: Lê Văn Bình", "success");
+      }, 1000);
+    }
+
     function evaluateScreening() {
       const weightInput = document.getElementById('weight');
       const weight = parseFloat(weightInput.value);
@@ -306,15 +333,25 @@
     }
 
     function saveScreeningData() {
+      if (!isCheckIn) {
+        showToast("Vui lòng quét mã QR để check-in trước khi lưu dữ liệu.", "error");
+        return;
+      }
       const isPass = document.getElementById('passResult').checked;
       if (isPass) {
-        showToast("Lưu dữ liệu thành công! Đã ghi nhận túi máu mới vào kho tạm thời.", "success");
-        // Logic to simulate UI update (e.g., increment counter)
-        const countSpan = document.querySelector('span.text-red-700.font-bold');
-        if (countSpan) {
-          const current = parseInt(countSpan.textContent);
-          countSpan.textContent = (current + 1) + " túi thu nhận hôm nay";
-        }
+        showToast("Đang mã hóa dữ liệu túi máu...", "info");
+        setTimeout(() => {
+          showToast("Đang in tem nhãn barcode cho túi máu...", "info");
+          setTimeout(() => {
+            showToast("Hoàn tất! Đã lưu dữ liệu và ghi nhận túi máu vào hệ thống.", "success");
+            // Update counter
+            const countSpan = document.querySelector('span.text-red-700.font-bold');
+            if (countSpan) {
+              const current = parseInt(countSpan.textContent);
+              countSpan.textContent = (current + 1) + " túi thu nhận hôm nay";
+            }
+          }, 1500);
+        }, 1000);
       } else {
         showToast("Hồ sơ không đạt yêu cầu hiến máu. Đã lưu trạng thái không đạt.", "warning");
       }

@@ -75,7 +75,7 @@
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
                     href="TrangChu.html">Trang chủ</a>
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
-                    href="TrangChu.html#gioi-thieu">Giới thiệu</a>
+                    href="GioiThieu.html">Giới thiệu</a>
                 <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm"
                     href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
@@ -303,15 +303,24 @@
                             </div>
                         </div>
 
-                        <div class="p-5 bg-slate-50 border border-slate-200 rounded-md">
-                            <label class="flex items-start gap-4 cursor-pointer">
+                        <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <label class="flex items-start gap-4 cursor-pointer mb-6">
                                 <input class="mt-1 w-4 h-4 text-primary rounded focus:ring-primary border-slate-300"
                                     type="checkbox" />
-                                <span class="text-xs text-slate-600 leading-relaxed font-medium">
+                                <span class="text-sm text-slate-600 leading-relaxed font-medium">
                                     Tôi cam đoan những thông tin trên là hoàn toàn đúng sự thật. Tôi tự nguyện hiến máu
                                     để cứu người và đã hiểu rõ các quyền lợi cũng như rủi ro có thể xảy ra.
                                 </span>
                             </label>
+                            
+                            <div class="pt-6 border-t border-slate-200">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Chữ ký điện tử</p>
+                                <div class="w-full h-24 border border-slate-200 bg-white rounded-xl flex items-center justify-center relative group overflow-hidden cursor-crosshair">
+                                    <span class="material-symbols-outlined text-slate-200 text-4xl group-hover:opacity-0 transition-opacity">draw</span>
+                                    <p class="absolute bottom-2 right-4 text-[10px] text-slate-400 italic">Ký tên tại đây</p>
+                                    <div class="absolute inset-0 bg-transparent" onclick="this.innerHTML='<img src=\'https://www.svgrepo.com/show/421633/signature.svg\' class=\'h-full opacity-70 invert p-2\' />'; showToast('Đã nhận diện chữ ký số', 'success')"></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="flex justify-end pt-4">
                             <button id="submitBtn"
@@ -332,10 +341,10 @@
     <div class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm"
         id="qr-modal">
         <div class="bg-white w-[400px] rounded-lg shadow-2xl overflow-hidden flex flex-col">
-            <div class="bg-[#AF101A] h-28 flex flex-col items-center justify-center text-white px-6 text-center">
-                <h3 class="text-xl font-bold uppercase tracking-tight">Đăng ký thành công</h3>
-                <p class="text-[11px] opacity-80 mt-1 uppercase tracking-widest font-semibold">Mã định danh hiến máu của
-                    bạn</p>
+            <div class="bg-gradient-to-br from-red-700 to-red-900 h-32 flex flex-col items-center justify-center text-white px-6 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                <h3 class="text-xl font-black uppercase tracking-tight relative z-10">Đăng ký thành công</h3>
+                <p class="text-[11px] opacity-80 mt-1 uppercase tracking-widest font-bold relative z-10">Mã định danh hiến máu điện tử</p>
             </div>
             <div class="p-8 flex flex-col items-center">
                 <div
@@ -369,7 +378,18 @@
     </div>
 
     <script>
-        function validateRegistration() {
+        // ── Handle Campaign URL Parameter ─────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaign = urlParams.get('campaign');
+        if (campaign) {
+            const titleEl = document.querySelector('h3.text-xl.font-bold.text-slate-800');
+            if (titleEl) titleEl.textContent = decodeURIComponent(campaign);
+            showToast("Đã chọn chiến dịch: " + decodeURIComponent(campaign), "info");
+        }
+    });
+
+    function validateRegistration() {
             // Check terms checkbox
             const terms = document.querySelector('input[type="checkbox"]');
             if (!terms.checked) {
@@ -388,9 +408,7 @@
             });
 
             if (hasIssue) {
-                if (!confirm("Thông tin khai báo cho thấy bạn có thể không đủ điều kiện hiến máu lúc này. Bạn có chắc chắn vẫn muốn đăng ký để được bác sĩ tư vấn trực tiếp không?")) {
-                    return;
-                }
+                showToast("Dựa trên khai báo, bạn có thể không đủ điều kiện. Bác sĩ sẽ tư vấn chi tiết cho bạn.", "warning");
             }
 
             // Show success modal
