@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quản lý Chiến dịch - Hệ thống Hiến máu Đà Nẵng</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+<script src="../js/auth.js"></script>
+<script src="../js/page-shell.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#af101a', 'primary-dark': '#8b0d15', 'primary-light': '#d32f2f',
+          'primary-surface': '#fff2f0', secondary: '#545f73',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'] }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50 text-slate-800 antialiased">
+<div class="w-full min-h-screen flex">
+  <div id="sidebar-mount"></div>
+  <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+    <div id="header-mount"></div>
+    <main class="flex-1 p-8 space-y-8">
+
+      <!-- Page Header -->
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Quản lý Chiến dịch</h1>
+          <p class="text-slate-500 text-sm mt-1">Quản lý và theo dõi tiến độ các hoạt động hiến máu tình nguyện.</p>
+        </div>
+        <button class="h-12 px-6 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-200 transition-all active:scale-95 flex items-center gap-2">
+          <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+          Tạo chiến dịch mới
+        </button>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-4 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">event_available</span>
+          </div>
+          <div>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tổng chiến dịch</p>
+            <p class="text-2xl font-black text-slate-900">24</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">running_with_errors</span>
+          </div>
+          <div>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Đang diễn ra</p>
+            <p class="text-2xl font-black text-slate-900">08</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl">upcoming</span>
+          </div>
+          <div>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sắp diễn ra</p>
+            <p class="text-2xl font-black text-slate-900">12</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">bloodtype</span>
+          </div>
+          <div>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Đã thu nhận</p>
+            <p class="text-2xl font-black text-slate-900">1.250 <span class="text-sm font-medium text-slate-400">đv</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campaign Table -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+        <div class="h-16 px-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
+          <div class="flex items-center gap-3">
+            <span class="text-lg font-extrabold text-slate-900">Danh sách chiến dịch</span>
+            <span class="px-2 py-0.5 bg-slate-200 text-slate-600 text-[11px] font-bold rounded-full">24 MỤC</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="h-9 px-4 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2 transition-colors">
+              <span class="material-symbols-outlined text-lg">filter_list</span>
+              Bộ lọc
+            </button>
+            <button class="h-9 px-4 border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2 transition-colors">
+              <span class="material-symbols-outlined text-lg">download</span>
+              Xuất báo cáo
+            </button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="h-12 bg-slate-50/50 border-b border-slate-200">
+                <th class="px-6 text-[11px] font-black text-slate-400 uppercase tracking-wider">Tên chiến dịch</th>
+                <th class="px-6 text-[11px] font-black text-slate-400 uppercase tracking-wider text-center">Thời gian</th>
+                <th class="px-6 text-[11px] font-black text-slate-400 uppercase tracking-wider">Địa điểm</th>
+                <th class="px-6 text-[11px] font-black text-slate-400 uppercase tracking-wider text-center">Chỉ tiêu</th>
+                <th class="px-6 text-[11px] font-black text-slate-400 uppercase tracking-wider">Tiến độ</th>
+                <th class="px-6 text-[11px] font-black text-slate-400 uppercase tracking-wider text-center">Trạng thái</th>
+                <th class="px-6 text-[11px] font-black text-slate-400 uppercase tracking-wider text-right">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <!-- Row 1 -->
+              <tr class="h-[84px] hover:bg-slate-50/50 transition-colors">
+                <td class="px-6">
+                  <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
+                      <span class="material-symbols-outlined text-red-600">volunteer_activism</span>
+                    </div>
+                    <div class="truncate">
+                      <p class="text-sm font-bold text-slate-900 truncate">Giọt máu hồng 2024</p>
+                      <p class="text-[11px] text-slate-400 mt-0.5">ID: CAM-00124</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 text-center">
+                  <div class="flex flex-col text-[11px] font-bold text-slate-600 leading-tight">
+                    <span>10/05/2024</span>
+                    <span class="text-slate-300">to</span>
+                    <span>20/05/2024</span>
+                  </div>
+                </td>
+                <td class="px-6"><p class="text-sm text-slate-600 truncate">Bệnh viện Đa khoa Đà Nẵng</p></td>
+                <td class="px-6 text-center"><span class="text-sm font-bold text-slate-900">500</span></td>
+                <td class="px-6">
+                  <div class="w-full space-y-1.5">
+                    <div class="flex justify-between text-[10px] font-black uppercase">
+                      <span class="text-red-700">325 đv</span><span class="text-slate-400">65%</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div class="h-full bg-red-600 rounded-full" style="width: 65%"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 text-center">
+                  <span class="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 text-[11px] font-black rounded-full border border-green-200">
+                    <span class="w-1.5 h-1.5 bg-green-600 rounded-full mr-2 animate-pulse"></span>ĐANG DIỄN RA
+                  </span>
+                </td>
+                <td class="px-6 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+                    <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors"><span class="material-symbols-outlined text-lg">more_vert</span></button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 2 -->
+              <tr class="h-[84px] hover:bg-slate-50/50 transition-colors">
+                <td class="px-6">
+                  <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0">
+                      <span class="material-symbols-outlined text-slate-600">school</span>
+                    </div>
+                    <div class="truncate">
+                      <p class="text-sm font-bold text-slate-900 truncate">Sinh viên tình nguyện hè</p>
+                      <p class="text-[11px] text-slate-400 mt-0.5">ID: CAM-00125</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 text-center">
+                  <div class="flex flex-col text-[11px] font-bold text-slate-600 leading-tight">
+                    <span>01/06/2024</span>
+                    <span class="text-slate-300">to</span>
+                    <span>05/06/2024</span>
+                  </div>
+                </td>
+                <td class="px-6"><p class="text-sm text-slate-600 truncate">Đại học Bách Khoa Đà Nẵng</p></td>
+                <td class="px-6 text-center"><span class="text-sm font-bold text-slate-900">300</span></td>
+                <td class="px-6">
+                  <div class="w-full space-y-1.5">
+                    <div class="flex justify-between text-[10px] font-black uppercase">
+                      <span class="text-slate-400">0 đv</span><span class="text-slate-400">0%</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div class="h-full bg-slate-200 rounded-full" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 text-center">
+                  <span class="inline-flex items-center px-3 py-1 bg-amber-100 text-amber-700 text-[11px] font-black rounded-full border border-amber-200">
+                    <span class="w-1.5 h-1.5 bg-amber-600 rounded-full mr-2"></span>SẮP DIỄN RA
+                  </span>
+                </td>
+                <td class="px-6 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+                    <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors"><span class="material-symbols-outlined text-lg">more_vert</span></button>
+                  </div>
+                </td>
+              </tr>
+              <!-- Row 3 -->
+              <tr class="h-[84px] hover:bg-slate-50/50 transition-colors">
+                <td class="px-6">
+                  <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-purple-100 flex items-center justify-center flex-shrink-0">
+                      <span class="material-symbols-outlined text-purple-600">local_hospital</span>
+                    </div>
+                    <div class="truncate">
+                      <p class="text-sm font-bold text-slate-900 truncate">Hiến máu Nhân đạo Q. Hải Châu</p>
+                      <p class="text-[11px] text-slate-400 mt-0.5">ID: CAM-00126</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 text-center">
+                  <div class="flex flex-col text-[11px] font-bold text-slate-600 leading-tight">
+                    <span>10/04/2024</span>
+                    <span class="text-slate-300">to</span>
+                    <span>12/04/2024</span>
+                  </div>
+                </td>
+                <td class="px-6"><p class="text-sm text-slate-600 truncate">UBND Q. Hải Châu</p></td>
+                <td class="px-6 text-center"><span class="text-sm font-bold text-slate-900">400</span></td>
+                <td class="px-6">
+                  <div class="w-full space-y-1.5">
+                    <div class="flex justify-between text-[10px] font-black uppercase">
+                      <span class="text-red-700">400 đv</span><span class="text-slate-400">100%</span>
+                    </div>
+                    <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                      <div class="h-full bg-emerald-500 rounded-full" style="width: 100%"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 text-center">
+                  <span class="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-600 text-[11px] font-black rounded-full border border-slate-200">
+                    <span class="w-1.5 h-1.5 bg-slate-500 rounded-full mr-2"></span>ĐÃ KẾT THÚC
+                  </span>
+                </td>
+                <td class="px-6 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-600 transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+                    <button class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors"><span class="material-symbols-outlined text-lg">more_vert</span></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div class="h-16 px-6 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Hiển thị 1 - 3 của 24 chiến dịch</p>
+          <div class="flex items-center gap-1.5">
+            <button class="w-8 h-8 flex items-center justify-center rounded border border-slate-200 bg-white text-slate-400 disabled:opacity-30" disabled="">
+              <span class="material-symbols-outlined text-lg">chevron_left</span>
+            </button>
+            <button class="w-8 h-8 flex items-center justify-center rounded bg-red-600 text-white text-[11px] font-black">1</button>
+            <button class="w-8 h-8 flex items-center justify-center rounded border border-slate-200 bg-white text-slate-600 text-[11px] font-bold hover:bg-slate-50 transition-colors">2</button>
+            <button class="w-8 h-8 flex items-center justify-center rounded border border-slate-200 bg-white text-slate-600 text-[11px] font-bold hover:bg-slate-50 transition-colors">3</button>
+            <span class="px-1 text-slate-300 text-xs">...</span>
+            <button class="w-8 h-8 flex items-center justify-center rounded border border-slate-200 bg-white text-slate-600 text-[11px] font-bold hover:bg-slate-50 transition-colors">6</button>
+            <button class="w-8 h-8 flex items-center justify-center rounded border border-slate-200 bg-white text-slate-400 hover:text-slate-700 transition-colors">
+              <span class="material-symbols-outlined text-lg">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Promo Cards -->
+      <div class="grid grid-cols-3 gap-8">
+        <div class="col-span-2 h-[200px] relative rounded-3xl overflow-hidden shadow-sm group">
+          <div class="absolute inset-0 bg-gradient-to-r from-red-950/90 via-red-900/60 to-transparent z-10"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-red-700 to-red-900"></div>
+          <div class="absolute inset-0 z-20 p-10 flex flex-col justify-center">
+            <h3 class="text-white text-3xl font-black mb-3 uppercase tracking-tight">Giao lưu Tình nguyện viên</h3>
+            <p class="text-red-100 max-w-md text-sm font-medium leading-relaxed">Hội nghị tổng kết công tác vận động hiến máu sẽ diễn ra vào tháng 6 tại Trung tâm Hành chính Đà Nẵng.</p>
+            <div class="mt-6">
+              <button class="h-10 px-6 bg-white text-red-700 font-black rounded-xl text-sm hover:bg-red-50 transition-colors">Xem chi tiết</button>
+            </div>
+          </div>
+        </div>
+        <div class="h-[200px] bg-red-50/50 rounded-3xl p-8 border border-red-100 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="material-symbols-outlined text-red-600">tips_and_updates</span>
+              <h4 class="text-xs font-black text-red-900 uppercase tracking-widest">Mẹo quản lý</h4>
+            </div>
+            <p class="text-xs leading-relaxed text-red-800 font-medium">Bạn nên cập nhật lượng máu đạt được sau mỗi 4 tiếng để đảm bảo báo cáo thời gian thực chính xác nhất.</p>
+          </div>
+          <a class="text-xs font-black text-red-700 flex items-center gap-1 hover:gap-2 transition-all" href="#">
+            Đọc thêm hướng dẫn
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  initPage('QuanLyChienDich.html');
+});
+</script>
+</body>
+</html>

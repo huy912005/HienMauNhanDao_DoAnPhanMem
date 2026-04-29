@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hồ sơ Bệnh án - Hệ thống Hiến máu Đà Nẵng</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+  <script src="../js/auth.js"></script>
+  <script src="../js/page-shell.js"></script>
+  <script>tailwind.config={theme:{extend:{colors:{primary:'#af101a'},fontFamily:{sans:['Inter','sans-serif']}}}}</script>
+  
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50 antialiased">
+<div class="w-full min-h-screen flex">
+  <div id="sidebar-mount"></div>
+  <div class="flex-1 flex flex-col">
+    <div id="header-mount"></div>
+    <main class="flex-1 p-8">
+      <div class="mb-6">
+        <h1 class="text-2xl font-black text-slate-900">Xem Hồ sơ Bệnh án</h1>
+        <p class="text-sm text-slate-500 mt-1">Tra cứu tiền sử bệnh và lịch sử hiến máu của tình nguyện viên.</p>
+      </div>
+
+      <!-- Search bar -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
+        <p class="text-sm font-bold text-slate-700 mb-3">Tra cứu theo CCCD hoặc mã QR</p>
+        <div class="flex gap-3">
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">person_search</span>
+            <input id="search-input" type="text" placeholder="Nhập số CCCD hoặc mã định danh..."
+                   class="w-full h-13 h-[52px] pl-12 pr-4 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"/>
+          </div>
+          <button onclick="searchDonor()" class="h-[52px] px-6 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-500/20 flex items-center gap-2 active:scale-[0.98]">
+            <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">manage_search</span>
+            Tra cứu
+          </button>
+          <button onclick="scanQR()" class="h-[52px] px-5 border-2 border-slate-200 hover:border-red-400 hover:text-red-700 text-slate-600 font-bold rounded-xl transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined">qr_code_scanner</span>
+            QR
+          </button>
+        </div>
+        <!-- Quick picks -->
+        <div class="flex gap-2 mt-3">
+          <span class="text-xs text-slate-400 mr-1">Demo nhanh:</span>
+          <button onclick="quickSearch('048092000001')" class="text-xs text-red-700 underline font-medium">048092000001</button>
+          <button onclick="quickSearch('048092000002')" class="text-xs text-red-700 underline font-medium">048092000002</button>
+        </div>
+      </div>
+
+      <!-- Result area -->
+      <div id="result-area" class="hidden">
+        <div class="grid grid-cols-12 gap-6">
+          <!-- Left: Patient info -->
+          <div class="col-span-4 space-y-5">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+              <div class="flex items-center gap-4 mb-5">
+                <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-white text-xl font-black shrink-0"
+                     style="background:linear-gradient(135deg,#af101a,#d32f2f);" id="donor-initials"></div>
+                <div>
+                  <h2 class="font-black text-slate-900 text-lg" id="donor-name"></h2>
+                  <p class="text-sm text-slate-500" id="donor-id-display"></p>
+                  <div id="donor-badge" class="mt-1"></div>
+                </div>
+              </div>
+              <div class="space-y-3 text-sm" id="donor-meta"></div>
+            </div>
+
+            <!-- Medical conditions -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+              <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-red-600 text-xl" style="font-variation-settings:'FILL' 1;">medical_information</span>
+                Tiền sử bệnh nền
+              </h3>
+              <div id="conditions-list" class="space-y-2"></div>
+            </div>
+
+            <!-- Doctor decision -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+              <h3 class="font-bold text-slate-800 mb-4">Quyết định của Bác sĩ</h3>
+              <div class="space-y-3">
+                <label class="flex items-center gap-3 p-3 border-2 border-emerald-200 rounded-xl cursor-pointer bg-emerald-50 hover:bg-emerald-100 transition-colors">
+                  <input type="radio" name="bs-decision" value="allow" class="text-emerald-600"/>
+                  <div>
+                    <p class="text-sm font-bold text-emerald-700">Cho phép hiến máu</p>
+                    <p class="text-xs text-emerald-600">Đủ điều kiện sức khỏe</p>
+                  </div>
+                </label>
+                <label class="flex items-center gap-3 p-3 border-2 border-red-200 rounded-xl cursor-pointer hover:bg-red-50 transition-colors">
+                  <input type="radio" name="bs-decision" value="deny" class="text-red-600"/>
+                  <div>
+                    <p class="text-sm font-bold text-red-700">Từ chối</p>
+                    <p class="text-xs text-red-600">Không đủ điều kiện sức khỏe</p>
+                  </div>
+                </label>
+                <textarea rows="2" placeholder="Ghi chú lý do (nếu từ chối)..."
+                          class="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm resize-none focus:ring-2 focus:ring-red-100 focus:border-red-400 outline-none"></textarea>
+                <button onclick="saveDecision()" class="w-full h-10 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl text-sm transition-all active:scale-[0.98]">
+                  Lưu quyết định
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Donation history -->
+          <div class="col-span-8 space-y-5">
+            <!-- Stats summary -->
+            <div class="grid grid-cols-3 gap-4">
+              <div class="bg-white rounded-2xl border border-slate-200 p-4 text-center">
+                <p class="text-3xl font-black text-red-700" id="stat-count">0</p>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Lần hiến</p>
+              </div>
+              <div class="bg-white rounded-2xl border border-slate-200 p-4 text-center">
+                <p class="text-3xl font-black text-slate-900" id="stat-vol">0ml</p>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Tổng thể tích</p>
+              </div>
+              <div class="bg-white rounded-2xl border border-slate-200 p-4 text-center">
+                <p class="text-3xl font-black text-emerald-600" id="stat-last">—</p>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wide mt-1">Lần cuối</p>
+              </div>
+            </div>
+
+            <!-- Vitals history table -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div class="px-6 py-4 border-b border-slate-100">
+                <h3 class="font-bold text-slate-800">Lịch sử hiến máu & Sinh tồn</h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead><tr class="bg-slate-50">
+                    <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Ngày</th>
+                    <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Chiến dịch</th>
+                    <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">H.Áp</th>
+                    <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Nhịp tim</th>
+                    <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Cân nặng</th>
+                    <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Thể tích</th>
+                    <th class="px-5 py-3 text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider">Kết quả XN</th>
+                  </tr></thead>
+                  <tbody id="history-tbody" class="divide-y divide-slate-50"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Pre-donation health declaration -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+              <h3 class="font-bold text-slate-800 mb-4">Khai báo y tế lần đăng ký gần nhất</h3>
+              <div id="health-decl" class="space-y-2"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="flex flex-col items-center justify-center py-24 text-center">
+        <div class="w-20 h-20 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-slate-400 text-4xl">manage_search</span>
+        </div>
+        <p class="font-bold text-slate-600">Nhập CCCD để tra cứu hồ sơ</p>
+        <p class="text-sm text-slate-400 mt-1">Hệ thống sẽ hiển thị toàn bộ lịch sử y tế của người hiến.</p>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const DONORS_DB = {
+  '048092000001': {
+    name: 'Nguyễn Văn Bình', dob: '15/03/1990', gender: 'Nam', phone: '0901234567',
+    bloodType: 'O+', address: '12 Nguyễn Văn Linh, Đà Nẵng',
+    conditions: ['Không có tiền sử bệnh mãn tính'],
+    allergy: 'Không',
+    history: [
+      { date:'15/05/2025', campaign:'Giọt Máu Hồng', bp:'120/80', hr:72, weight:68, vol:'350ml', xn:'Âm tính', ok:true },
+      { date:'10/11/2024', campaign:'Thu Đông 2024', bp:'118/76', hr:74, weight:67, vol:'350ml', xn:'Âm tính', ok:true },
+      { date:'05/05/2024', campaign:'Hè 2024', bp:'122/82', hr:70, weight:67, vol:'450ml', xn:'Âm tính', ok:true },
+    ],
+    decl: [
+      { q:'Đang cảm thấy mệt mỏi, sốt?', a:'Không' },
+      { q:'Đang dùng thuốc kháng sinh?', a:'Không' },
+      { q:'6 tháng qua mắc bệnh truyền nhiễm?', a:'Không' },
+      { q:'Phụ nữ: kỳ kinh/mang thai/cho con bú?', a:'Không áp dụng' },
+    ]
+  },
+  '048092000002': {
+    name: 'Trần Thị Lan', dob: '20/07/1995', gender: 'Nữ', phone: '0912345678',
+    bloodType: 'A+', address: '45 Phan Chu Trinh, Đà Nẵng',
+    conditions: ['Viêm mũi dị ứng nhẹ (đã ổn định)', 'Thiếu máu nhẹ - theo dõi'],
+    allergy: 'Penicillin',
+    history: [
+      { date:'15/05/2025', campaign:'Giọt Máu Hồng', bp:'110/70', hr:78, weight:52, vol:'250ml', xn:'Âm tính', ok:true },
+      { date:'12/11/2024', campaign:'Thu Đông 2024', bp:'108/68', hr:80, weight:51, vol:'250ml', xn:'Âm tính', ok:true },
+    ],
+    decl: [
+      { q:'Đang cảm thấy mệt mỏi, sốt?', a:'Không' },
+      { q:'Đang dùng thuốc kháng sinh?', a:'Không' },
+      { q:'6 tháng qua mắc bệnh truyền nhiễm?', a:'Không' },
+      { q:'Phụ nữ: kỳ kinh/mang thai/cho con bú?', a:'Không' },
+    ]
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  initPage('XemHoSoBenhAn.html');
+  document.getElementById('search-input').addEventListener('keydown', e => { if(e.key==='Enter') searchDonor(); });
+});
+
+function quickSearch(cccd) {
+  document.getElementById('search-input').value = cccd;
+  searchDonor();
+}
+
+function scanQR() { showToast('Kết nối thiết bị đọc QR...','info'); }
+
+function searchDonor() {
+  const q = document.getElementById('search-input').value.trim();
+  if (!q) { showToast('Vui lòng nhập CCCD!','error'); return; }
+  const donor = DONORS_DB[q];
+  if (!donor) { showToast('Không tìm thấy hồ sơ với CCCD này.','error'); return; }
+  displayDonor(q, donor);
+}
+
+function displayDonor(cccd, d) {
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('result-area').classList.remove('hidden');
+
+  const initials = d.name.split(' ').slice(-2).map(n=>n[0]).join('').toUpperCase();
+  document.getElementById('donor-initials').textContent = initials;
+  document.getElementById('donor-name').textContent = d.name;
+  document.getElementById('donor-id-display').textContent = 'CCCD: ' + cccd;
+  document.getElementById('donor-badge').innerHTML = `<span class="px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-bold uppercase">Nhóm máu ${d.bloodType}</span>`;
+
+  document.getElementById('donor-meta').innerHTML = [
+    ['person', 'Ngày sinh', d.dob], ['wc', 'Giới tính', d.gender],
+    ['call', 'Điện thoại', d.phone], ['home', 'Địa chỉ', d.address],
+    ['vaccines', 'Dị ứng thuốc', d.allergy],
+  ].map(([icon, label, val]) => `
+    <div class="flex items-start gap-3">
+      <span class="material-symbols-outlined text-slate-400 text-base shrink-0 mt-0.5">${icon}</span>
+      <div><p class="text-[10px] font-bold text-slate-400 uppercase">${label}</p><p class="text-slate-700 font-medium text-sm">${val}</p></div>
+    </div>`).join('');
+
+  document.getElementById('conditions-list').innerHTML = d.conditions.map(c => `
+    <div class="flex items-start gap-2 p-3 bg-slate-50 rounded-xl">
+      <span class="material-symbols-outlined text-amber-500 text-base shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">info</span>
+      <span class="text-sm text-slate-700">${c}</span>
+    </div>`).join('');
+
+  const totalVol = d.history.reduce((s,h)=>s+parseInt(h.vol),0);
+  document.getElementById('stat-count').textContent = d.history.length;
+  document.getElementById('stat-vol').textContent = totalVol + 'ml';
+  document.getElementById('stat-last').textContent = d.history[0]?.date || '—';
+
+  document.getElementById('history-tbody').innerHTML = d.history.map(h => `
+    <tr class="hover:bg-slate-50 transition-colors">
+      <td class="px-5 py-3 text-sm font-medium text-slate-700">${h.date}</td>
+      <td class="px-5 py-3 text-sm text-slate-500">${h.campaign}</td>
+      <td class="px-5 py-3 text-sm font-mono font-bold text-slate-700">${h.bp}</td>
+      <td class="px-5 py-3 text-sm text-slate-700">${h.hr} bpm</td>
+      <td class="px-5 py-3 text-sm text-slate-700">${h.weight} kg</td>
+      <td class="px-5 py-3 text-sm font-bold text-slate-700">${h.vol}</td>
+      <td class="px-5 py-3">
+        <span class="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase ${h.ok?'bg-emerald-100 text-emerald-700':'bg-red-100 text-red-700'}">${h.xn}</span>
+      </td>
+    </tr>`).join('');
+
+  document.getElementById('health-decl').innerHTML = d.decl.map(q => `
+    <div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+      <p class="text-sm text-slate-600">${q.q}</p>
+      <span class="text-xs font-bold ml-4 shrink-0 ${q.a==='Có'?'text-red-600':'text-emerald-600'}">${q.a}</span>
+    </div>`).join('');
+}
+
+function saveDecision() {
+  const val = document.querySelector('input[name="bs-decision"]:checked')?.value;
+  if (!val) { showToast('Vui lòng chọn quyết định!','error'); return; }
+  showToast(val==='allow' ? '✓ Đã cho phép hiến máu' : '✗ Đã từ chối hiến máu', val==='allow'?'success':'warning');
+}
+</script>
+</body>
+</html>
