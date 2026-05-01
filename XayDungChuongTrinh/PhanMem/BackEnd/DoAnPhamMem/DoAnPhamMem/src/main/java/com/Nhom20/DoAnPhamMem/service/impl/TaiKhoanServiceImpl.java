@@ -1,8 +1,116 @@
 package com.Nhom20.DoAnPhamMem.service.impl;
 
+import com.Nhom20.DoAnPhamMem.dto.LoginRequest;
+import com.Nhom20.DoAnPhamMem.dto.LoginResponse;
+import com.Nhom20.DoAnPhamMem.dto.RegisterRequest;
+import com.Nhom20.DoAnPhamMem.entity.InvalidatedTokenEntity;
+import com.Nhom20.DoAnPhamMem.entity.TaiKhoanEntity;
+import com.Nhom20.DoAnPhamMem.entity.VaiTroEntity;
+import com.Nhom20.DoAnPhamMem.repository.InvalidatedTokenRepository;
+import com.Nhom20.DoAnPhamMem.repository.TaiKhoanRepository;
+import com.Nhom20.DoAnPhamMem.repository.VaiTroRepository;
+import com.Nhom20.DoAnPhamMem.security.JwtTokenProvider;
 import com.Nhom20.DoAnPhamMem.service.TaiKhoanService;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.UUID;
 
 @Service
 public class TaiKhoanServiceImpl implements TaiKhoanService {
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder;
+    private final TaiKhoanRepository taiKhoanRepository;
+    private final VaiTroRepository vaiTroRepository;
+    private final InvalidatedTokenRepository invalidatedTokenRepository;
+
+    public TaiKhoanServiceImpl(AuthenticationManager authenticationManager,
+                               JwtTokenProvider tokenProvider,
+                               PasswordEncoder passwordEncoder,
+                               TaiKhoanRepository taiKhoanRepository,
+                               VaiTroRepository vaiTroRepository,
+                               InvalidatedTokenRepository invalidatedTokenRepository) {
+        this.authenticationManager = authenticationManager;
+        this.tokenProvider = tokenProvider;
+        this.passwordEncoder = passwordEncoder;
+        this.taiKhoanRepository = taiKhoanRepository;
+        this.vaiTroRepository = vaiTroRepository;
+        this.invalidatedTokenRepository = invalidatedTokenRepository;
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(),
+                        loginRequest.getMatKhau()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = tokenProvider.generateToken(authentication);
+
+        TaiKhoanEntity taiKhoan = taiKhoanRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return LoginResponse.builder()
+                .token(jwt)
+                .email(taiKhoan.getEmail())
+                .vaiTro(taiKhoan.getVaiTro().getTenVaiTro())
+                .maTaiKhoan(taiKhoan.getMaTaiKhoan())
+                .build();
+    }
+
+    @Override
+    public void logout(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            String jwt = bearerToken.substring(7);
+            LocalDateTime expiryTime = tokenProvider.getExpirationDateFromToken(jwt)
+                    .toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+
+            InvalidatedTokenEntity invalidatedToken = InvalidatedTokenEntity.builder()
+                    .id(jwt)
+                    .expiryTime(expiryTime)
+                    .build();
+
+            invalidatedTokenRepository.save(invalidatedToken);
+        }
+    }
+
+    @Override
+    public void register(RegisterRequest registerRequest) {
+        if (taiKhoanRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        VaiTroEntity vaiTro = vaiTroRepository.findByTenVaiTro("VOLUNTEER") // Mặc định là Tình nguyện viên
+                .orElseGet(() -> {
+                    VaiTroEntity newRole = new VaiTroEntity();
+                    newRole.setMaVaiTro("ROLE_VOL");
+                    newRole.setTenVaiTro("VOLUNTEER");
+                    return vaiTroRepository.save(newRole);
+                });
+
+        TaiKhoanEntity taiKhoan = new TaiKhoanEntity();
+        taiKhoan.setMaTaiKhoan(UUID.randomUUID().toString().substring(0, 10)); // Giới hạn 10 ký tự như DB
+        taiKhoan.setEmail(registerRequest.getEmail());
+        taiKhoan.setMatKhau(passwordEncoder.encode(registerRequest.getMatKhau()));
+        taiKhoan.setVaiTro(vaiTro);
+        taiKhoan.setTrangThai(true);
+
+        taiKhoanRepository.save(taiKhoan);
+    }
 }
