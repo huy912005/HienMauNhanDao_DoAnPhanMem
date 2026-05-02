@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="utf-8"/>
@@ -55,6 +55,7 @@
     .demo-account:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .demo-account { transition: all 0.2s; }
   </style>
+<script src="js/toast.js"></script>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="min-h-screen bg-gray-100 flex overflow-hidden">
@@ -293,8 +294,11 @@
     if (!result.success) {
       errMsg.textContent = result.message;
       errDiv.classList.remove('hidden');
+      showToast(result.message, 'error');
       return;
     }
+
+    showToast('Đăng nhập thành công! Đang chuyển hướng...', 'success');
 
     // Success → redirect to role's first page
     const firstPage = getFirstPage(result.user.role);

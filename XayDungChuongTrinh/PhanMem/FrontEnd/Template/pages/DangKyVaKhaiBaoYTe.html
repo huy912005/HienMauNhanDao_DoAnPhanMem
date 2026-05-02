@@ -1,36 +1,49 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Đăng ký hiến máu &amp; Khai báo y tế - Hệ thống Hiến máu Đà Nẵng</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: { primary: "#af101a", "primary-container": "#d32f2f", "tertiary-container": "#00799c" },
-                fontFamily: { sans: ["Public Sans", "sans-serif"] }
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Đăng ký hiến máu &amp; Khai báo y tế - Hệ thống Hiến máu Đà Nẵng</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: "#af101a", "primary-container": "#d32f2f", "tertiary-container": "#00799c" },
+                    fontFamily: { sans: ["Public Sans", "sans-serif"] }
+                }
             }
         }
-    }
-</script>
-<style>
-    body { font-family: 'Public Sans', sans-serif; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-</style>
-<script src="../js/auth.js"></script>
-<link rel="stylesheet" href="../css/style.css">
+    </script>
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <script src="../js/toast.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
+
 <body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden flex flex-col min-h-screen">
-    
+
     <!-- Top Info Bar -->
     <div class="w-full bg-slate-800 text-white text-[11px] font-medium py-1.5 px-8 flex justify-between items-center">
         <div class="flex gap-6">
-            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">location_on</span>Địa chỉ: 123 Lê Lợi, Hải Châu, Đà Nẵng</span>
-            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">call</span>Đường dây nóng: 1900 1234</span>
+            <span class="flex items-center gap-2"><span
+                    class="material-symbols-outlined text-[14px]">location_on</span>Địa chỉ: 123 Lê Lợi, Hải Châu, Đà
+                Nẵng</span>
+            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">call</span>Đường
+                dây nóng: 1900 1234</span>
         </div>
         <div class="flex gap-4 items-center">
             <div class="flex gap-2">
@@ -48,7 +61,8 @@
             <!-- Logo -->
             <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='TrangChu.html'">
                 <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shrink-0">
-                    <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">bloodtype</span>
+                    <span class="material-symbols-outlined text-3xl"
+                        style="font-variation-settings: 'FILL' 1;">bloodtype</span>
                 </div>
                 <div class="flex flex-col">
                     <h1 class="text-xl font-black tracking-tight text-red-700 leading-tight">HỆ THỐNG HIẾN MÁU</h1>
@@ -58,15 +72,20 @@
 
             <!-- Horizontal Nav -->
             <nav class="flex items-center gap-1">
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TrangChu.html">Trang chủ</a>
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TrangChu.html#gioi-thieu">Giới thiệu</a>
-                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm" href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
-                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm" href="TimKiemChienDich.html">Tìm chiến dịch</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="TrangChu.html">Trang chủ</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="GioiThieu.html">Giới thiệu</a>
+                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm"
+                    href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="TimKiemChienDich.html">Tìm chiến dịch</a>
             </nav>
 
             <!-- User Profile -->
             <div class="flex items-center gap-4">
-                <button class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative">
+                <button
+                    class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative">
                     <span class="material-symbols-outlined">notifications</span>
                     <span class="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full"></span>
                 </button>
@@ -75,16 +94,21 @@
                         <p class="text-sm font-bold text-slate-900 leading-none mb-1">Lê Văn Bình</p>
                         <p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Tình nguyện viên</p>
                     </div>
-                    <img alt="User portrait" class="w-10 h-10 rounded-full object-cover border-2 border-primary-container/20 shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrkDisk3_j22F4lcXb3jllF-99BYq3_SrntgHddIgx0onK2l25zj9yhgH0CmKsiDKHkcKkj4fUkJYPLzjVjDwaqQGvaw9tMIBFeFdSruc8nrljijQYlXObDS9Cl8vGxmXo6QmITg4G4hMQYoZ8uopbYnk178pDHgbWOMuPbFk0gIfxKgLIZPEvBzsxP0L8DjAy2sjgVh-OfYdDzSpRdcdxYlZ4c9LNMFhhzsp2kBlmP-sFmYmsUQVv-D164nUzgWv_CxOokcTNjOZ" />
-                    
+                    <img alt="User portrait"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-primary-container/20 shrink-0"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZrkDisk3_j22F4lcXb3jllF-99BYq3_SrntgHddIgx0onK2l25zj9yhgH0CmKsiDKHkcKkj4fUkJYPLzjVjDwaqQGvaw9tMIBFeFdSruc8nrljijQYlXObDS9Cl8vGxmXo6QmITg4G4hMQYoZ8uopbYnk178pDHgbWOMuPbFk0gIfxKgLIZPEvBzsxP0L8DjAy2sjgVh-OfYdDzSpRdcdxYlZ4c9LNMFhhzsp2kBlmP-sFmYmsUQVv-D164nUzgWv_CxOokcTNjOZ" />
+
                     <!-- Dropdown Menu -->
-                    <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div
+                        class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                         <div class="py-2">
-                            <a href="HoSoVaLichSu.html" class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
+                            <a href="HoSoVaLichSu.html"
+                                class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">person</span>Hồ sơ & Lịch sử
                             </a>
                             <div class="h-[1px] bg-slate-100 my-1"></div>
-                            <a href="#" onclick="logout(); return false;" class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                            <a href="#" onclick="logout(); return false;"
+                                class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">logout</span>Đăng xuất
                             </a>
                         </div>
@@ -95,22 +119,26 @@
     </header>
 
     <main class="flex-1 w-[1200px] mx-auto p-8 mt-8 bg-white border border-slate-200 rounded-2xl shadow-sm mb-16">
-        
+
         <div class="mb-8">
             <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">ĐĂNG KÝ HIẾN MÁU VÀ KHAI BÁO Y TẾ</h1>
-            <p class="text-slate-500 text-sm mt-1">Vui lòng hoàn thành thông tin khai báo để nhận mã định danh hiến máu.</p>
+            <p class="text-slate-500 text-sm mt-1">Vui lòng hoàn thành thông tin khai báo để nhận mã định danh hiến máu.
+            </p>
         </div>
 
         <div class="grid grid-cols-12 gap-8">
             <!-- Campaign Info -->
             <div class="col-span-4 space-y-6">
-                <div class="w-full bg-white border border-slate-200 rounded-md p-6 relative overflow-hidden h-fit shadow-sm">
+                <div
+                    class="w-full bg-white border border-slate-200 rounded-md p-6 relative overflow-hidden h-fit shadow-sm">
                     <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
                         <span class="material-symbols-outlined text-8xl">campaign</span>
                     </div>
                     <div class="relative z-10">
                         <div class="mb-4">
-                            <span class="inline-block px-2 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded uppercase">Chiến dịch đang diễn ra</span>
+                            <span
+                                class="inline-block px-2 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded uppercase">Chiến
+                                dịch đang diễn ra</span>
                         </div>
                         <h3 class="text-xl font-bold text-slate-800 mb-6">Giọt Máu Hồng - Hè 2024</h3>
                         <div class="space-y-5">
@@ -126,12 +154,14 @@
                                 <div>
                                     <p class="text-[11px] text-slate-500 font-bold uppercase">Địa điểm</p>
                                     <p class="text-sm font-semibold text-slate-700">Trung tâm Hành chính TP. Đà Nẵng</p>
-                                    <p class="text-xs text-slate-400 mt-1 italic leading-relaxed">24 Trần Phú, Thạch Thang, Hải Châu, Đà Nẵng</p>
+                                    <p class="text-xs text-slate-400 mt-1 italic leading-relaxed">24 Trần Phú, Thạch
+                                        Thang, Hải Châu, Đà Nẵng</p>
                                 </div>
                             </div>
                         </div>
                         <div class="mt-8 pt-6 border-t border-slate-100">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Mức độ tồn kho hiện tại</h4>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Mức độ tồn kho
+                                hiện tại</h4>
                             <div class="space-y-4">
                                 <div>
                                     <div class="flex justify-between text-[10px] mb-1.5">
@@ -162,9 +192,11 @@
                         Lưu ý trước khi hiến
                     </h4>
                     <ul class="text-[13px] text-slate-700 space-y-3 leading-relaxed">
-                        <li class="flex gap-2"><span>•</span> <span>Ngủ đủ ít nhất 6 tiếng trước ngày hiến máu.</span></li>
+                        <li class="flex gap-2"><span>•</span> <span>Ngủ đủ ít nhất 6 tiếng trước ngày hiến máu.</span>
+                        </li>
                         <li class="flex gap-2"><span>•</span> <span>Không uống rượu bia trong vòng 24 giờ.</span></li>
-                        <li class="flex gap-2"><span>•</span> <span>Ăn nhẹ, tránh các thực phẩm nhiều dầu mỡ.</span></li>
+                        <li class="flex gap-2"><span>•</span> <span>Ăn nhẹ, tránh các thực phẩm nhiều dầu mỡ.</span>
+                        </li>
                         <li class="flex gap-2"><span>•</span> <span>Mang theo CMND/CCCD hoặc thẻ hiến máu.</span></li>
                     </ul>
                 </div>
@@ -179,73 +211,91 @@
                         </div>
                         <div>
                             <h3 class="text-xl font-bold text-slate-800">Phiếu Khai Báo Y Tế &amp; Sức Khỏe</h3>
-                            <p class="text-xs text-slate-500 mt-1">Người hiến máu chịu trách nhiệm về tính trung thực của các thông tin khai báo.</p>
+                            <p class="text-xs text-slate-500 mt-1">Người hiến máu chịu trách nhiệm về tính trung thực
+                                của các thông tin khai báo.</p>
                         </div>
                     </div>
-                    
+
                     <form class="space-y-8">
                         <div class="grid grid-cols-2 gap-8">
                             <div class="space-y-2">
                                 <label class="block text-sm font-bold text-slate-700">Họ và tên</label>
-                                <input class="w-full h-11 border-slate-200 rounded-md text-sm bg-slate-50 focus:ring-0 focus:border-slate-200 cursor-not-allowed" readonly="" type="text" value="Lê Văn Bình"/>
+                                <input
+                                    class="w-full h-11 border-slate-200 rounded-md text-sm bg-slate-50 focus:ring-0 focus:border-slate-200 cursor-not-allowed"
+                                    readonly="" type="text" value="Lê Văn Bình" />
                             </div>
                             <div class="space-y-2">
                                 <label class="block text-sm font-bold text-slate-700">Số CCCD</label>
-                                <input class="w-full h-11 border-slate-200 rounded-md text-sm bg-slate-50 focus:ring-0 focus:border-slate-200 cursor-not-allowed" readonly="" type="text" value="048092000XXX"/>
+                                <input
+                                    class="w-full h-11 border-slate-200 rounded-md text-sm bg-slate-50 focus:ring-0 focus:border-slate-200 cursor-not-allowed"
+                                    readonly="" type="text" value="048092000XXX" />
                             </div>
                         </div>
 
                         <div class="space-y-4">
-                            <h4 class="text-sm font-bold text-slate-800 py-2.5 border-l-4 border-primary pl-4 bg-slate-50">Tình trạng sức khỏe hiện tại</h4>
+                            <h4
+                                class="text-sm font-bold text-slate-800 py-2.5 border-l-4 border-primary pl-4 bg-slate-50">
+                                Tình trạng sức khỏe hiện tại</h4>
                             <div class="space-y-1 border border-slate-100 rounded-lg overflow-hidden">
-                                <div class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                                    <p class="text-sm text-slate-700">1. Bạn có đang cảm thấy mệt mỏi, sốt hoặc đau họng không?</p>
+                                <div
+                                    class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                    <p class="text-sm text-slate-700">1. Bạn có đang cảm thấy mệt mỏi, sốt hoặc đau họng
+                                        không?</p>
                                     <div class="flex gap-6 w-32 justify-end">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input class="text-primary focus:ring-primary" name="q1" type="radio"/>
+                                            <input class="text-primary focus:ring-primary" name="q1" type="radio" onchange="if(this.checked) showToast('Cảnh báo: Tình trạng mệt mỏi/sốt có thể khiến bạn không đủ điều kiện hiến máu.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input checked class="text-primary focus:ring-primary" name="q1" type="radio"/>
+                                            <input checked class="text-primary focus:ring-primary" name="q1"
+                                                type="radio" />
                                             <span class="text-xs font-semibold text-slate-600">Không</span>
                                         </label>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                                    <p class="text-sm text-slate-700">2. Bạn có đang dùng thuốc kháng sinh hay điều trị bệnh nào không?</p>
+                                <div
+                                    class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                    <p class="text-sm text-slate-700">2. Bạn có đang dùng thuốc kháng sinh hay điều trị
+                                        bệnh nào không?</p>
                                     <div class="flex gap-6 w-32 justify-end">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input class="text-primary focus:ring-primary" name="q2" type="radio"/>
+                                            <input class="text-primary focus:ring-primary" name="q2" type="radio" onchange="if(this.checked) showToast('Lưu ý: Việc sử dụng thuốc cần được bác sĩ kiểm tra kỹ trước khi hiến.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input checked class="text-primary focus:ring-primary" name="q2" type="radio"/>
+                                            <input checked class="text-primary focus:ring-primary" name="q2"
+                                                type="radio" />
                                             <span class="text-xs font-semibold text-slate-600">Không</span>
                                         </label>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                                    <p class="text-sm text-slate-700">3. Trong 6 tháng qua, bạn có mắc bệnh truyền nhiễm hay phẫu thuật không?</p>
+                                <div
+                                    class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                    <p class="text-sm text-slate-700">3. Trong 6 tháng qua, bạn có mắc bệnh truyền nhiễm
+                                        hay phẫu thuật không?</p>
                                     <div class="flex gap-6 w-32 justify-end">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input class="text-primary focus:ring-primary" name="q3" type="radio"/>
+                                            <input class="text-primary focus:ring-primary" name="q3" type="radio" onchange="if(this.checked) showToast('Quan trọng: Tiền sử bệnh truyền nhiễm/phẫu thuật cần được khai báo chi tiết.', 'error')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input checked class="text-primary focus:ring-primary" name="q3" type="radio"/>
+                                            <input checked class="text-primary focus:ring-primary" name="q3"
+                                                type="radio" />
                                             <span class="text-xs font-semibold text-slate-600">Không</span>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
-                                    <p class="text-sm text-slate-700">4. Đối với nữ: Bạn có đang trong kỳ kinh nguyệt, mang thai hoặc cho con bú?</p>
+                                    <p class="text-sm text-slate-700">4. Đối với nữ: Bạn có đang trong kỳ kinh nguyệt,
+                                        mang thai hoặc cho con bú?</p>
                                     <div class="flex gap-6 w-32 justify-end">
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input class="text-primary focus:ring-primary" name="q4" type="radio"/>
+                                            <input class="text-primary focus:ring-primary" name="q4" type="radio" onchange="if(this.checked) showToast('Thông tin: Tình trạng thai kỳ/kinh nguyệt có thể tạm hoãn việc hiến máu.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
                                         </label>
                                         <label class="flex items-center gap-2 cursor-pointer">
-                                            <input checked class="text-primary focus:ring-primary" name="q4" type="radio"/>
+                                            <input checked class="text-primary focus:ring-primary" name="q4"
+                                                type="radio" />
                                             <span class="text-xs font-semibold text-slate-600">Không</span>
                                         </label>
                                     </div>
@@ -253,16 +303,29 @@
                             </div>
                         </div>
 
-                        <div class="p-5 bg-slate-50 border border-slate-200 rounded-md">
-                            <label class="flex items-start gap-4 cursor-pointer">
-                                <input class="mt-1 w-4 h-4 text-primary rounded focus:ring-primary border-slate-300" type="checkbox"/>
-                                <span class="text-xs text-slate-600 leading-relaxed font-medium">
-                                    Tôi cam đoan những thông tin trên là hoàn toàn đúng sự thật. Tôi tự nguyện hiến máu để cứu người và đã hiểu rõ các quyền lợi cũng như rủi ro có thể xảy ra.
+                        <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <label class="flex items-start gap-4 cursor-pointer mb-6">
+                                <input class="mt-1 w-4 h-4 text-primary rounded focus:ring-primary border-slate-300"
+                                    type="checkbox" />
+                                <span class="text-sm text-slate-600 leading-relaxed font-medium">
+                                    Tôi cam đoan những thông tin trên là hoàn toàn đúng sự thật. Tôi tự nguyện hiến máu
+                                    để cứu người và đã hiểu rõ các quyền lợi cũng như rủi ro có thể xảy ra.
                                 </span>
                             </label>
+                            
+                            <div class="pt-6 border-t border-slate-200">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Chữ ký điện tử</p>
+                                <div class="w-full h-24 border border-slate-200 bg-white rounded-xl flex items-center justify-center relative group overflow-hidden cursor-crosshair">
+                                    <span class="material-symbols-outlined text-slate-200 text-4xl group-hover:opacity-0 transition-opacity">draw</span>
+                                    <p class="absolute bottom-2 right-4 text-[10px] text-slate-400 italic">Ký tên tại đây</p>
+                                    <div class="absolute inset-0 bg-transparent" onclick="this.innerHTML='<img src=\'https://www.svgrepo.com/show/421633/signature.svg\' class=\'h-full opacity-70 invert p-2\' />'; showToast('Đã nhận diện chữ ký số', 'success')"></div>
+                                </div>
+                            </div>
                         </div>
                         <div class="flex justify-end pt-4">
-                            <button class="w-64 h-12 bg-red-700 text-white rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-lg active:scale-[0.98]" onclick="document.getElementById('qr-modal').classList.remove('hidden')" type="button">
+                            <button id="submitBtn"
+                                class="w-64 h-12 bg-red-700 text-white rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-lg active:scale-[0.98]"
+                                onclick="validateRegistration()" type="button">
                                 <span class="material-symbols-outlined text-xl">qr_code_2</span>
                                 XÁC NHẬN &amp; NHẬN MÃ QR
                             </button>
@@ -274,39 +337,84 @@
 
     </main>
 
-<!-- Modal QR Code -->
-<div class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" id="qr-modal">
-    <div class="bg-white w-[400px] rounded-lg shadow-2xl overflow-hidden flex flex-col">
-        <div class="bg-[#AF101A] h-28 flex flex-col items-center justify-center text-white px-6 text-center">
-            <h3 class="text-xl font-bold uppercase tracking-tight">Đăng ký thành công</h3>
-            <p class="text-[11px] opacity-80 mt-1 uppercase tracking-widest font-semibold">Mã định danh hiến máu của bạn</p>
-        </div>
-        <div class="p-8 flex flex-col items-center">
-            <div class="w-56 h-56 bg-white p-4 border border-slate-100 rounded-xl mb-6 shadow-sm flex items-center justify-center">
-                <img alt="Mã QR định danh" class="w-48 h-48" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsSqJOl6faJrEA5NnqLIrXAaMl-rQ-yWCLmumO1fEnxwUZqyoQ5i27ctDpsHusX8q3LiW1Jn6v_bn8oRBykgDOGQkZUeSI5ncPT5YaHBQtYALCYxEwCDlFsjaQnC5zBlnAj4BaY7Ys_D5C4BEQVjEx3O0cTh6CVQBpIKKyn-UKwZ-zKQvVuMHgqkmtzVVd0v9SYsEzNG3oere6zKzg-5MpDL3sFTMGaQlFNYIC8MWBzBFpH5rMDziz21wHjZqxR06ohCuEGCcQhxn"/>
+    <!-- Modal QR Code -->
+    <div class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+        id="qr-modal">
+        <div class="bg-white w-[400px] rounded-lg shadow-2xl overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-br from-red-700 to-red-900 h-32 flex flex-col items-center justify-center text-white px-6 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                <h3 class="text-xl font-black uppercase tracking-tight relative z-10">Đăng ký thành công</h3>
+                <p class="text-[11px] opacity-80 mt-1 uppercase tracking-widest font-bold relative z-10">Mã định danh hiến máu điện tử</p>
             </div>
-            <div class="text-center mb-8">
-                <p class="text-2xl font-black text-slate-800 tracking-[0.2em] mb-1">B-2024-8892</p>
-                <p class="text-sm font-medium text-slate-500">Người hiến: <span class="text-slate-800 font-bold">Lê Văn Bình</span></p>
-            </div>
-            <div class="w-full p-4 bg-yellow-50 border border-yellow-100 rounded-md mb-8 flex gap-3">
-                <span class="material-symbols-outlined text-yellow-600 shrink-0">tips_and_updates</span>
-                <p class="text-[11px] text-yellow-800 leading-normal font-medium">Vui lòng xuất trình mã QR này tại quầy tiếp đón để được làm thủ tục nhanh nhất.</p>
-            </div>
-            <div class="flex gap-3 w-full">
-                <button class="flex-1 h-10 border border-slate-200 rounded-md text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined text-lg">download</span> LƯU ẢNH
-                </button>
-                <button class="flex-1 h-10 bg-slate-800 text-white rounded-md text-xs font-bold hover:bg-slate-900 transition-colors" onclick="document.getElementById('qr-modal').classList.add('hidden')">
-                    ĐÓNG
-                </button>
+            <div class="p-8 flex flex-col items-center">
+                <div
+                    class="w-56 h-56 bg-white p-4 border border-slate-100 rounded-xl mb-6 shadow-sm flex items-center justify-center">
+                    <img alt="Mã QR định danh" class="w-48 h-48"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsSqJOl6faJrEA5NnqLIrXAaMl-rQ-yWCLmumO1fEnxwUZqyoQ5i27ctDpsHusX8q3LiW1Jn6v_bn8oRBykgDOGQkZUeSI5ncPT5YaHBQtYALCYxEwCDlFsjaQnC5zBlnAj4BaY7Ys_D5C4BEQVjEx3O0cTh6CVQBpIKKyn-UKwZ-zKQvVuMHgqkmtzVVd0v9SYsEzNG3oere6zKzg-5MpDL3sFTMGaQlFNYIC8MWBzBFpH5rMDziz21wHjZqxR06ohCuEGCcQhxn" />
+                </div>
+                <div class="text-center mb-8">
+                    <p class="text-2xl font-black text-slate-800 tracking-[0.2em] mb-1">B-2024-8892</p>
+                    <p class="text-sm font-medium text-slate-500">Người hiến: <span class="text-slate-800 font-bold">Lê
+                            Văn Bình</span></p>
+                </div>
+                <div class="w-full p-4 bg-yellow-50 border border-yellow-100 rounded-md mb-8 flex gap-3">
+                    <span class="material-symbols-outlined text-yellow-600 shrink-0">tips_and_updates</span>
+                    <p class="text-[11px] text-yellow-800 leading-normal font-medium">Vui lòng xuất trình mã QR này tại
+                        quầy tiếp đón để được làm thủ tục nhanh nhất.</p>
+                </div>
+                <div class="flex gap-3 w-full">
+                    <button
+                        class="flex-1 h-10 border border-slate-200 rounded-md text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-lg">download</span> LƯU ẢNH
+                    </button>
+                    <button
+                        class="flex-1 h-10 bg-slate-800 text-white rounded-md text-xs font-bold hover:bg-slate-900 transition-colors"
+                        onclick="document.getElementById('qr-modal').classList.add('hidden')">
+                        ĐÓNG
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-// File specific script
-</script>
+    <script>
+        // ── Handle Campaign URL Parameter ─────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaign = urlParams.get('campaign');
+        if (campaign) {
+            const titleEl = document.querySelector('h3.text-xl.font-bold.text-slate-800');
+            if (titleEl) titleEl.textContent = decodeURIComponent(campaign);
+            showToast("Đã chọn chiến dịch: " + decodeURIComponent(campaign), "info");
+        }
+    });
+
+    function validateRegistration() {
+            // Check terms checkbox
+            const terms = document.querySelector('input[type="checkbox"]');
+            if (!terms.checked) {
+                showToast("Vui lòng xác nhận cam đoan thông tin trước khi đăng ký.", "warning");
+                return;
+            }
+
+            // Check health questions (Simulate exclusion logic)
+            // q1, q2, q3, q4 are radio groups. If any is 'Có' (Yes), warn user.
+            const answers = document.querySelectorAll('input[type="radio"]:checked');
+            let hasIssue = false;
+            answers.forEach(ans => {
+                if (ans.nextElementSibling.textContent.trim() === "Có") {
+                    hasIssue = true;
+                }
+            });
+
+            if (hasIssue) {
+                showToast("Dựa trên khai báo, bạn có thể không đủ điều kiện. Bác sĩ sẽ tư vấn chi tiết cho bạn.", "warning");
+            }
+
+            // Show success modal
+            document.getElementById('qr-modal').classList.remove('hidden');
+        }
+    </script>
 </body>
+
 </html>

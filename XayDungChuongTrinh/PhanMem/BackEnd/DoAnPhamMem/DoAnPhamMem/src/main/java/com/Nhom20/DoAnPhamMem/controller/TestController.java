@@ -9,4 +9,9 @@ public class TestController {
     public String sayHello() {
         return "Hello Minh Huy";
     }
+
+    @GetMapping("/api/test/secure")
+    public String secureHello() {
+        return "This is a secure message. You are authenticated!";
+    }
 }
