@@ -1,4 +1,4 @@
-package com.Nhom20.DoAnPhamMem.dto;
+package com.Nhom20.DoAnPhamMem.dto.request;
 
 import lombok.Data;
 

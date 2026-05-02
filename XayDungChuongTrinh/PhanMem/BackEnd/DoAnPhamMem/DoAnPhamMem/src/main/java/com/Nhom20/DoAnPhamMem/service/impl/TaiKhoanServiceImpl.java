@@ -1,7 +1,7 @@
 package com.Nhom20.DoAnPhamMem.service.impl;
 
-import com.Nhom20.DoAnPhamMem.dto.LoginRequest;
-import com.Nhom20.DoAnPhamMem.dto.LoginResponse;
+import com.Nhom20.DoAnPhamMem.dto.request.LoginRequest;
+import com.Nhom20.DoAnPhamMem.dto.response.LoginResponse;
 import com.Nhom20.DoAnPhamMem.dto.RegisterRequest;
 import com.Nhom20.DoAnPhamMem.entity.InvalidatedTokenEntity;
 import com.Nhom20.DoAnPhamMem.entity.TaiKhoanEntity;
@@ -58,16 +58,22 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(authentication);
+
+        // Tạo 2 token (access + refresh)
+        String accessToken = tokenProvider.generateAccessToken(authentication);
+        String refreshToken = tokenProvider.generateRefreshToken(authentication);
+        Long expiresIn = tokenProvider.getAccessTokenExpiresIn();
 
         TaiKhoanEntity taiKhoan = taiKhoanRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return LoginResponse.builder()
-                .token(jwt)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .expiresIn(expiresIn)
+                .userId(taiKhoan.getMaTaiKhoan())
                 .email(taiKhoan.getEmail())
-                .vaiTro(taiKhoan.getVaiTro().getTenVaiTro())
-                .maTaiKhoan(taiKhoan.getMaTaiKhoan())
                 .build();
     }
 
@@ -96,11 +102,11 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
             throw new RuntimeException("Email already exists");
         }
 
-        VaiTroEntity vaiTro = vaiTroRepository.findByTenVaiTro("VOLUNTEER") // Mặc định là Tình nguyện viên
+        VaiTroEntity vaiTro = vaiTroRepository.findByTenVaiTro("TNV") // Mặc định là Tình nguyện viên
                 .orElseGet(() -> {
                     VaiTroEntity newRole = new VaiTroEntity();
-                    newRole.setMaVaiTro("ROLE_VOL");
-                    newRole.setTenVaiTro("VOLUNTEER");
+                    newRole.setMaVaiTro("TNV");
+                    newRole.setTenVaiTro("Tình nguyện viên");
                     return vaiTroRepository.save(newRole);
                 });
 

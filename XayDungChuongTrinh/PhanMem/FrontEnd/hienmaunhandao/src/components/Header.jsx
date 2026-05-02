@@ -53,8 +53,8 @@ export default function Header() {
           <nav className="flex items-center gap-1">
             <Link className={navLinkClass('/')} to="/">Trang chủ</Link>
             <Link className={navLinkClass('/about')} to="/about">Giới thiệu</Link>
-            <Link className={navLinkClass('/register-donation')} to="#">Đăng ký hiến máu</Link>
-            <Link className={navLinkClass('/campaigns')} to="#">Chiến dịch</Link>
+            <Link className={navLinkClass('/register')} to="/register">Đăng ký hiến máu</Link>
+            <Link className={navLinkClass('/chiendich')} to="/chiendich">Chiến dịch</Link>
           </nav>
 
           <div className="flex items-center gap-4">
