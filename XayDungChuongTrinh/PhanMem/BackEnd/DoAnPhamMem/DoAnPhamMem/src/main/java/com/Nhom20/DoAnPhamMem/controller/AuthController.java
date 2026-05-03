@@ -1,7 +1,7 @@
 package com.Nhom20.DoAnPhamMem.controller;
 
-import com.Nhom20.DoAnPhamMem.dto.LoginRequest;
-import com.Nhom20.DoAnPhamMem.dto.LoginResponse;
+import com.Nhom20.DoAnPhamMem.dto.request.LoginRequest;
+import com.Nhom20.DoAnPhamMem.dto.response.LoginResponse;
 import com.Nhom20.DoAnPhamMem.dto.RegisterRequest;
 import com.Nhom20.DoAnPhamMem.service.TaiKhoanService;
 import com.Nhom20.DoAnPhamMem.service.OtpService;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function HomePage() {
+    const navigate = useNavigate();
   return (
     <main className="flex-1 w-full">
         {/* Emergency Alert Banner */}
@@ -23,7 +23,7 @@ export default function HomePage() {
                         <p className="text-lg text-white/90 mb-8 font-light leading-relaxed">Đồng hành cùng cộng đồng Đà Nẵng trong hành trình nhân ái. Đăng ký hiến máu nhanh chóng, theo dõi hồ sơ an toàn và bảo mật.</p>
                         <div className="flex gap-4">
                             <button
-                                onClick={() => document.getElementById('chien-dich-noi-bat').scrollIntoView({ behavior: 'smooth' })}
+                                onClick={() => navigate('/ChienDich')}
                                 className="h-14 px-8 bg-white text-primary rounded-xl font-black text-sm hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-black/10">
                                 <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>search</span>
                                 Tìm chiến dịch gần bạn
@@ -70,7 +70,7 @@ export default function HomePage() {
                     <div className="w-1.5 h-8 bg-primary rounded-full"></div>
                     <h2 className="text-3xl font-black text-slate-900 tracking-tight">Chiến Dịch Đang Diễn Ra</h2>
                 </div>
-                <Link className="text-primary font-bold text-sm uppercase tracking-widest flex items-center gap-2 hover:underline" to="/campaigns">
+                <Link className="text-primary font-bold text-sm uppercase tracking-widest flex items-center gap-2 hover:underline" to="/ChienDich">
                     Xem tất cả chiến dịch <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </Link>
             </div>
