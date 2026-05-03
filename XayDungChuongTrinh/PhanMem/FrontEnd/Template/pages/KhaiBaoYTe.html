@@ -77,7 +77,7 @@
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
                     href="GioiThieu.html">Giới thiệu</a>
                 <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm"
-                    href="DangKy.html">Đăng ký hiến máu</a>
+                    href="DangKyTinhNguyenVien.html">Đăng ký hiến máu</a>
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
                     href="TimKiemChienDich.html">Chiến dịch</a>
             </nav>
@@ -139,7 +139,7 @@
 
         <div class="mb-8">
             <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">KHAI BÁO Y TẾ & SỨC KHỎE</h1>
-            <p class="text-slate-500 text-sm mt-1">Vui lòng hoàn thành thông tin khai báo để nhận mã định danh hiến máu.
+            <p class="text-slate-500 text-sm mt-1">Vui lòng hoàn thành thông tin khai báo để hoàn tất đăng ký hiến máu.
             </p>
         </div>
 
@@ -185,12 +185,12 @@
                         Lưu ý trước khi hiến
                     </h4>
                     <ul class="text-[13px] text-slate-700 space-y-3 leading-relaxed">
-                        <li class="flex gap-2"><span>•</span> <span>Ngủ đủ ít nhất 6 tiếng trước ngày hiến máu.</span>
+                        <li class="flex gap-2"><span>⬢</span> <span>Ngủ đủ ít nhất 6 tiếng trước ngày hiến máu.</span>
                         </li>
-                        <li class="flex gap-2"><span>•</span> <span>Không uống rượu bia trong vòng 24 giờ.</span></li>
-                        <li class="flex gap-2"><span>•</span> <span>Ăn nhẹ, tránh các thực phẩm nhiều dầu mỡ.</span>
+                        <li class="flex gap-2"><span>⬢</span> <span>Không uống rượu bia trong vòng 24 giờ.</span></li>
+                        <li class="flex gap-2"><span>⬢</span> <span>Ăn nhẹ, tránh các thực phẩm nhiều dầu mỡ.</span>
                         </li>
-                        <li class="flex gap-2"><span>•</span> <span>Mang theo CMND/CCCD hoặc thẻ hiến máu.</span></li>
+                        <li class="flex gap-2"><span>⬢</span> <span>Mang theo CMND/CCCD hoặc thẻ hiến máu.</span></li>
                     </ul>
                 </div>
             </div>
@@ -210,7 +210,7 @@
                             </div>
                         </div>
                         <button class="text-sm font-bold text-slate-500 hover:text-primary transition-colors flex items-center gap-1"
-                            onclick="window.location.href='DangKy.html'">
+                            onclick="window.location.href='DangKyTinhNguyenVien.html'">
                             <span class="material-symbols-outlined text-[16px]">edit</span> Sửa thông tin cá nhân
                         </button>
                     </div>
@@ -324,15 +324,15 @@
                         <div class="flex justify-between items-center pt-4">
                             <button
                                 class="w-32 h-12 bg-white text-slate-600 border border-slate-200 rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-all active:scale-[0.98]"
-                                onclick="window.location.href='DangKy.html'; return false;" type="button">
+                                onclick="window.location.href='DangKyTinhNguyenVien.html'; return false;" type="button">
                                 <span class="material-symbols-outlined text-xl">arrow_back</span>
                                 QUAY LẠI
                             </button>
                             <button id="submitBtn"
                                 class="w-64 h-12 bg-red-700 text-white rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-lg active:scale-[0.98]"
                                 onclick="validateRegistration()" type="button">
-                                <span class="material-symbols-outlined text-xl">qr_code_2</span>
-                                XÁC NHẬN &amp; NHẬN MÃ QR
+                                <span class="material-symbols-outlined text-xl">check_circle</span>
+                                XÁC NHẬN ĐĂNG KÝ
                             </button>
                         </div>
                     </form>
@@ -366,7 +366,7 @@
             }
 
             // Redirect to QR page
-            window.location.href = 'MaQR.html';
+            window.location.href = 'DaDangKy.html';
         }
     </script>
 </body>
