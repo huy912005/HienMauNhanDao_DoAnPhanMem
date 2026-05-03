@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Đăng ký hiến máu &amp; Khai báo y tế - Hệ thống Hiến máu Đà Nẵng</title>
+    <title>Khai báo y tế - Hệ thống Hiến máu Đà Nẵng</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap"
         rel="stylesheet" />
@@ -77,7 +77,7 @@
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
                     href="GioiThieu.html">Giới thiệu</a>
                 <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm"
-                    href="DangKyVaKhaiBaoYTe.html">Đăng ký hiến máu</a>
+                    href="DangKyTinhNguyenVien.html">Đăng ký hiến máu</a>
                 <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
                     href="TimKiemChienDich.html">Chiến dịch</a>
             </nav>
@@ -120,9 +120,26 @@
 
     <main class="flex-1 w-[1200px] mx-auto p-8 mt-8 bg-white border border-slate-200 rounded-2xl shadow-sm mb-16">
 
+        <!-- Progress Steps -->
+        <div class="mb-8 max-w-2xl mx-auto">
+            <div class="flex items-center justify-between relative">
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-primary -z-10"></div>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-md ring-4 ring-white">
+                        <span class="material-symbols-outlined text-[16px]">check</span>
+                    </div>
+                    <span class="text-xs font-bold text-primary">Thông tin cá nhân</span>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-md ring-4 ring-white">2</div>
+                    <span class="text-xs font-bold text-primary">Khai báo y tế</span>
+                </div>
+            </div>
+        </div>
+
         <div class="mb-8">
-            <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">ĐĂNG KÝ HIẾN MÁU VÀ KHAI BÁO Y TẾ</h1>
-            <p class="text-slate-500 text-sm mt-1">Vui lòng hoàn thành thông tin khai báo để nhận mã định danh hiến máu.
+            <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">KHAI BÁO Y TẾ & SỨC KHỎE</h1>
+            <p class="text-slate-500 text-sm mt-1">Vui lòng hoàn thành thông tin khai báo để hoàn tất đăng ký hiến máu.
             </p>
         </div>
 
@@ -159,30 +176,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-8 pt-6 border-t border-slate-100">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Mức độ tồn kho
-                                hiện tại</h4>
-                            <div class="space-y-4">
-                                <div>
-                                    <div class="flex justify-between text-[10px] mb-1.5">
-                                        <span class="font-bold text-slate-700 uppercase">Nhóm máu O+</span>
-                                        <span class="text-red-600 font-bold italic">Cần gấp</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-primary-container h-full w-[15%]"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between text-[10px] mb-1.5">
-                                        <span class="font-bold text-slate-700 uppercase">Nhóm máu A+</span>
-                                        <span class="text-slate-500">Ổn định</span>
-                                    </div>
-                                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                                        <div class="bg-tertiary-container h-full w-[65%]"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -192,12 +185,12 @@
                         Lưu ý trước khi hiến
                     </h4>
                     <ul class="text-[13px] text-slate-700 space-y-3 leading-relaxed">
-                        <li class="flex gap-2"><span>•</span> <span>Ngủ đủ ít nhất 6 tiếng trước ngày hiến máu.</span>
+                        <li class="flex gap-2"><span>⬢</span> <span>Ngủ đủ ít nhất 6 tiếng trước ngày hiến máu.</span>
                         </li>
-                        <li class="flex gap-2"><span>•</span> <span>Không uống rượu bia trong vòng 24 giờ.</span></li>
-                        <li class="flex gap-2"><span>•</span> <span>Ăn nhẹ, tránh các thực phẩm nhiều dầu mỡ.</span>
+                        <li class="flex gap-2"><span>⬢</span> <span>Không uống rượu bia trong vòng 24 giờ.</span></li>
+                        <li class="flex gap-2"><span>⬢</span> <span>Ăn nhẹ, tránh các thực phẩm nhiều dầu mỡ.</span>
                         </li>
-                        <li class="flex gap-2"><span>•</span> <span>Mang theo CMND/CCCD hoặc thẻ hiến máu.</span></li>
+                        <li class="flex gap-2"><span>⬢</span> <span>Mang theo CMND/CCCD hoặc thẻ hiến máu.</span></li>
                     </ul>
                 </div>
             </div>
@@ -205,15 +198,21 @@
             <!-- Registration Form -->
             <div class="col-span-8">
                 <div class="w-full bg-white border border-slate-200 rounded-md p-10 h-full shadow-sm">
-                    <div class="flex items-center gap-4 mb-8 pb-6 border-b border-slate-100">
-                        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
-                            <span class="material-symbols-outlined text-primary text-3xl">fact_check</span>
+                    <div class="flex items-center justify-between mb-8 pb-6 border-b border-slate-100">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary text-3xl">fact_check</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-800">Phiếu Khai Báo Y Tế &amp; Sức Khỏe</h3>
+                                <p class="text-xs text-slate-500 mt-1">Người hiến máu chịu trách nhiệm về tính trung thực
+                                    của các thông tin khai báo.</p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-slate-800">Phiếu Khai Báo Y Tế &amp; Sức Khỏe</h3>
-                            <p class="text-xs text-slate-500 mt-1">Người hiến máu chịu trách nhiệm về tính trung thực
-                                của các thông tin khai báo.</p>
-                        </div>
+                        <button class="text-sm font-bold text-slate-500 hover:text-primary transition-colors flex items-center gap-1"
+                            onclick="window.location.href='DangKyTinhNguyenVien.html'">
+                            <span class="material-symbols-outlined text-[16px]">edit</span> Sửa thông tin cá nhân
+                        </button>
                     </div>
 
                     <form class="space-y-8">
@@ -221,13 +220,13 @@
                             <div class="space-y-2">
                                 <label class="block text-sm font-bold text-slate-700">Họ và tên</label>
                                 <input
-                                    class="w-full h-11 border-slate-200 rounded-md text-sm bg-slate-50 focus:ring-0 focus:border-slate-200 cursor-not-allowed"
+                                    class="w-full h-11 border-slate-200 rounded-md text-sm bg-slate-50 focus:ring-0 focus:border-slate-200 cursor-not-allowed text-slate-500 font-semibold"
                                     readonly="" type="text" value="Lê Văn Bình" />
                             </div>
                             <div class="space-y-2">
                                 <label class="block text-sm font-bold text-slate-700">Số CCCD</label>
                                 <input
-                                    class="w-full h-11 border-slate-200 rounded-md text-sm bg-slate-50 focus:ring-0 focus:border-slate-200 cursor-not-allowed"
+                                    class="w-full h-11 border-slate-200 rounded-md text-sm bg-slate-50 focus:ring-0 focus:border-slate-200 cursor-not-allowed text-slate-500 font-semibold"
                                     readonly="" type="text" value="048092000XXX" />
                             </div>
                         </div>
@@ -239,9 +238,9 @@
                             <div class="space-y-1 border border-slate-100 rounded-lg overflow-hidden">
                                 <div
                                     class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                                    <p class="text-sm text-slate-700">1. Bạn có đang cảm thấy mệt mỏi, sốt hoặc đau họng
+                                    <p class="text-sm text-slate-700 pr-4">1. Bạn có đang cảm thấy mệt mỏi, sốt hoặc đau họng
                                         không?</p>
-                                    <div class="flex gap-6 w-32 justify-end">
+                                    <div class="flex gap-6 w-32 justify-end shrink-0">
                                         <label class="flex items-center gap-2 cursor-pointer">
                                             <input class="text-primary focus:ring-primary" name="q1" type="radio" onchange="if(this.checked) showToast('Cảnh báo: Tình trạng mệt mỏi/sốt có thể khiến bạn không đủ điều kiện hiến máu.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
@@ -255,9 +254,9 @@
                                 </div>
                                 <div
                                     class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                                    <p class="text-sm text-slate-700">2. Bạn có đang dùng thuốc kháng sinh hay điều trị
+                                    <p class="text-sm text-slate-700 pr-4">2. Bạn có đang dùng thuốc kháng sinh hay điều trị
                                         bệnh nào không?</p>
-                                    <div class="flex gap-6 w-32 justify-end">
+                                    <div class="flex gap-6 w-32 justify-end shrink-0">
                                         <label class="flex items-center gap-2 cursor-pointer">
                                             <input class="text-primary focus:ring-primary" name="q2" type="radio" onchange="if(this.checked) showToast('Lưu ý: Việc sử dụng thuốc cần được bác sĩ kiểm tra kỹ trước khi hiến.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
@@ -271,9 +270,9 @@
                                 </div>
                                 <div
                                     class="flex items-center justify-between p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
-                                    <p class="text-sm text-slate-700">3. Trong 6 tháng qua, bạn có mắc bệnh truyền nhiễm
+                                    <p class="text-sm text-slate-700 pr-4">3. Trong 6 tháng qua, bạn có mắc bệnh truyền nhiễm
                                         hay phẫu thuật không?</p>
-                                    <div class="flex gap-6 w-32 justify-end">
+                                    <div class="flex gap-6 w-32 justify-end shrink-0">
                                         <label class="flex items-center gap-2 cursor-pointer">
                                             <input class="text-primary focus:ring-primary" name="q3" type="radio" onchange="if(this.checked) showToast('Quan trọng: Tiền sử bệnh truyền nhiễm/phẫu thuật cần được khai báo chi tiết.', 'error')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
@@ -286,9 +285,9 @@
                                     </div>
                                 </div>
                                 <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
-                                    <p class="text-sm text-slate-700">4. Đối với nữ: Bạn có đang trong kỳ kinh nguyệt,
+                                    <p class="text-sm text-slate-700 pr-4">4. Đối với nữ: Bạn có đang trong kỳ kinh nguyệt,
                                         mang thai hoặc cho con bú?</p>
-                                    <div class="flex gap-6 w-32 justify-end">
+                                    <div class="flex gap-6 w-32 justify-end shrink-0">
                                         <label class="flex items-center gap-2 cursor-pointer">
                                             <input class="text-primary focus:ring-primary" name="q4" type="radio" onchange="if(this.checked) showToast('Thông tin: Tình trạng thai kỳ/kinh nguyệt có thể tạm hoãn việc hiến máu.', 'warning')" />
                                             <span class="text-xs font-semibold text-slate-600">Có</span>
@@ -322,12 +321,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex justify-end pt-4">
+                        <div class="flex justify-between items-center pt-4">
+                            <button
+                                class="w-32 h-12 bg-white text-slate-600 border border-slate-200 rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-all active:scale-[0.98]"
+                                onclick="window.location.href='DangKyTinhNguyenVien.html'; return false;" type="button">
+                                <span class="material-symbols-outlined text-xl">arrow_back</span>
+                                QUAY LẠI
+                            </button>
                             <button id="submitBtn"
                                 class="w-64 h-12 bg-red-700 text-white rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-lg active:scale-[0.98]"
                                 onclick="validateRegistration()" type="button">
-                                <span class="material-symbols-outlined text-xl">qr_code_2</span>
-                                XÁC NHẬN &amp; NHẬN MÃ QR
+                                <span class="material-symbols-outlined text-xl">check_circle</span>
+                                XÁC NHẬN ĐĂNG KÝ
                             </button>
                         </div>
                     </form>
@@ -337,59 +342,8 @@
 
     </main>
 
-    <!-- Modal QR Code -->
-    <div class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm"
-        id="qr-modal">
-        <div class="bg-white w-[400px] rounded-lg shadow-2xl overflow-hidden flex flex-col">
-            <div class="bg-gradient-to-br from-red-700 to-red-900 h-32 flex flex-col items-center justify-center text-white px-6 text-center relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                <h3 class="text-xl font-black uppercase tracking-tight relative z-10">Đăng ký thành công</h3>
-                <p class="text-[11px] opacity-80 mt-1 uppercase tracking-widest font-bold relative z-10">Mã định danh hiến máu điện tử</p>
-            </div>
-            <div class="p-8 flex flex-col items-center">
-                <div
-                    class="w-56 h-56 bg-white p-4 border border-slate-100 rounded-xl mb-6 shadow-sm flex items-center justify-center">
-                    <img alt="Mã QR định danh" class="w-48 h-48"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwsSqJOl6faJrEA5NnqLIrXAaMl-rQ-yWCLmumO1fEnxwUZqyoQ5i27ctDpsHusX8q3LiW1Jn6v_bn8oRBykgDOGQkZUeSI5ncPT5YaHBQtYALCYxEwCDlFsjaQnC5zBlnAj4BaY7Ys_D5C4BEQVjEx3O0cTh6CVQBpIKKyn-UKwZ-zKQvVuMHgqkmtzVVd0v9SYsEzNG3oere6zKzg-5MpDL3sFTMGaQlFNYIC8MWBzBFpH5rMDziz21wHjZqxR06ohCuEGCcQhxn" />
-                </div>
-                <div class="text-center mb-8">
-                    <p class="text-2xl font-black text-slate-800 tracking-[0.2em] mb-1">B-2024-8892</p>
-                    <p class="text-sm font-medium text-slate-500">Người hiến: <span class="text-slate-800 font-bold">Lê
-                            Văn Bình</span></p>
-                </div>
-                <div class="w-full p-4 bg-yellow-50 border border-yellow-100 rounded-md mb-8 flex gap-3">
-                    <span class="material-symbols-outlined text-yellow-600 shrink-0">tips_and_updates</span>
-                    <p class="text-[11px] text-yellow-800 leading-normal font-medium">Vui lòng xuất trình mã QR này tại
-                        quầy tiếp đón để được làm thủ tục nhanh nhất.</p>
-                </div>
-                <div class="flex gap-3 w-full">
-                    <button
-                        class="flex-1 h-10 border border-slate-200 rounded-md text-xs font-bold text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined text-lg">download</span> LƯU ẢNH
-                    </button>
-                    <button
-                        class="flex-1 h-10 bg-slate-800 text-white rounded-md text-xs font-bold hover:bg-slate-900 transition-colors"
-                        onclick="document.getElementById('qr-modal').classList.add('hidden')">
-                        ĐÓNG
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // ── Handle Campaign URL Parameter ─────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const campaign = urlParams.get('campaign');
-        if (campaign) {
-            const titleEl = document.querySelector('h3.text-xl.font-bold.text-slate-800');
-            if (titleEl) titleEl.textContent = decodeURIComponent(campaign);
-            showToast("Đã chọn chiến dịch: " + decodeURIComponent(campaign), "info");
-        }
-    });
-
-    function validateRegistration() {
+        function validateRegistration() {
             // Check terms checkbox
             const terms = document.querySelector('input[type="checkbox"]');
             if (!terms.checked) {
@@ -411,8 +365,8 @@
                 showToast("Dựa trên khai báo, bạn có thể không đủ điều kiện. Bác sĩ sẽ tư vấn chi tiết cho bạn.", "warning");
             }
 
-            // Show success modal
-            document.getElementById('qr-modal').classList.remove('hidden');
+            // Redirect to QR page
+            window.location.href = 'DaDangKy.html';
         }
     </script>
 </body>

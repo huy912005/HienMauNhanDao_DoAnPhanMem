@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Đăng ký thành công - Hệ thống Hiến máu Đà Nẵng</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: "#af101a", "primary-container": "#d32f2f", "tertiary-container": "#00799c" },
+                    fontFamily: { sans: ["Public Sans", "sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <script src="../js/toast.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden flex flex-col min-h-screen">
+
+    <!-- Top Info Bar -->
+    <div class="w-full bg-slate-800 text-white text-[11px] font-medium py-1.5 px-8 flex justify-between items-center">
+        <div class="flex gap-6">
+            <span class="flex items-center gap-2"><span
+                    class="material-symbols-outlined text-[14px]">location_on</span>Địa chỉ: 123 Lê Lợi, Hải Châu, Đà
+                Nẵng</span>
+            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">call</span>Đường
+                dây nóng: 1900 1234</span>
+        </div>
+        <div class="flex gap-4 items-center">
+            <div class="flex gap-2">
+                <a href="#" class="hover:text-primary transition-colors">Facebook</a>
+                <a href="#" class="hover:text-primary transition-colors">Zalo</a>
+            </div>
+            <div class="h-3 w-[1px] bg-slate-600"></div>
+            <a href="#" class="hover:text-primary transition-colors">Hỗ trợ</a>
+        </div>
+    </div>
+
+    <!-- Header & Horizontal Navigation -->
+    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="w-[1200px] mx-auto h-24 flex items-center justify-between px-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='TrangChu.html'">
+                <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shrink-0">
+                    <span class="material-symbols-outlined text-3xl"
+                        style="font-variation-settings: 'FILL' 1;">bloodtype</span>
+                </div>
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-black tracking-tight text-red-700 leading-tight">HỆ THỐNG HIẾN MÁU</h1>
+                    <p class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">TP. Đà Nẵng</p>
+                </div>
+            </div>
+
+            <!-- Horizontal Nav -->
+            <nav class="flex items-center gap-1">
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="TrangChu.html">Trang chủ</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="GioiThieu.html">Giới thiệu</a>
+                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm"
+                    href="DangKyTinhNguyenVien.html">Đăng ký hiến máu</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm"
+                    href="TimKiemChienDich.html">Chiến dịch</a>
+            </nav>
+
+            <!-- User Profile -->
+            <div class="flex items-center gap-4">
+                <button
+                    class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full"></span>
+                </button>
+                <div class="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer relative group py-2">
+                    <div class="text-right hidden md:block">
+                        <p class="text-sm font-bold text-slate-900 leading-none mb-1">Lê Văn Bình</p>
+                        <p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Tình nguyện viên</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border-2 border-primary-container/20 shrink-0">
+                        <span class="material-symbols-outlined text-slate-500">person</span>
+                    </div>
+
+                    <!-- Dropdown Menu -->
+                    <div
+                        class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="py-2">
+                            <a href="HoSoVaLichSu.html"
+                                class="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">person</span>Hồ sơ & Lịch sử
+                            </a>
+                            <div class="h-[1px] bg-slate-100 my-1"></div>
+                            <a href="#" onclick="logout(); return false;"
+                                class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">logout</span>Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 w-[1200px] mx-auto p-8 mt-8 mb-16 flex justify-center">
+
+        <div class="bg-white w-[700px] border border-slate-200 rounded-2xl shadow-xl overflow-hidden flex flex-col">
+            <div class="bg-gradient-to-br from-green-600 to-green-800 h-36 flex flex-col items-center justify-center text-white px-6 text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mb-2 z-10 backdrop-blur-sm">
+                    <span class="material-symbols-outlined text-2xl text-white">check_circle</span>
+                </div>
+                <h3 class="text-xl font-black uppercase tracking-tight relative z-10">ĐĂNG KÝ THÀNH CÔNG</h3>
+                <p class="text-[11px] opacity-80 mt-1 uppercase tracking-widest font-bold relative z-10">Chi tiết phiếu đăng ký hiến máu</p>
+            </div>
+            
+            <div class="p-8 flex flex-col items-center">
+                
+                <!-- Registration Code -->
+                <div class="text-center mb-6">
+                    <p class="text-sm font-medium text-slate-500 mb-1">Mã đăng ký của bạn</p>
+                    <p class="text-3xl font-black text-primary tracking-[0.2em] bg-red-50 px-6 py-2 rounded-xl border border-red-100">B-2024-8892</p>
+                </div>
+
+                <div class="w-full p-4 bg-yellow-50 border border-yellow-100 rounded-md mb-8 flex gap-3">
+                    <span class="material-symbols-outlined text-yellow-600 shrink-0">tips_and_updates</span>
+                    <p class="text-[12px] text-yellow-800 leading-normal font-medium">Vui lòng chụp màn hình hoặc ghi lại mã đăng ký này và xuất trình tại quầy tiếp đón để được làm thủ tục nhanh nhất.</p>
+                </div>
+
+                <!-- Registration Form Summary -->
+                <div class="w-full bg-slate-50 border border-slate-100 rounded-xl p-6 mb-8 relative">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6 pb-4 border-b border-slate-200 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">description</span>
+                        Thông Tin Đăng Ký
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 gap-y-4 gap-x-8">
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Họ và tên</span>
+                            <p class="text-sm font-bold text-slate-800">Lê Văn Bình</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Số CCCD</span>
+                            <p class="text-sm font-bold text-slate-800">048092000XXX</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Ngày sinh</span>
+                            <p class="text-sm font-bold text-slate-800">15/05/1995</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Giới tính</span>
+                            <p class="text-sm font-bold text-slate-800">Nam</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Số điện thoại</span>
+                            <p class="text-sm font-bold text-slate-800">0905 123 456</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Email</span>
+                            <p class="text-sm font-bold text-slate-800">levanbinh@example.com</p>
+                        </div>
+                        <div class="col-span-2 space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Địa chỉ cư trú</span>
+                            <p class="text-sm font-bold text-slate-800">123 Lê Lợi, Hải Châu, Đà Nẵng</p>
+                        </div>
+                        
+                        <div class="col-span-2 my-2"><div class="h-px w-full bg-slate-200"></div></div>
+                        
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Chiến dịch</span>
+                            <p class="text-sm font-bold text-slate-800">Giọt Máu Hồng - Hè 2024</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Dung tích hiến</span>
+                            <p class="text-sm font-bold text-primary bg-red-100 inline-block px-2 py-0.5 rounded-md">350 ml</p>
+                        </div>
+                        <div class="col-span-2 space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Thời gian</span>
+                            <p class="text-sm font-semibold text-slate-700">07:30 - 11:30 | 15/05/2024</p>
+                        </div>
+                        <div class="col-span-2 space-y-1">
+                            <span class="text-xs font-bold text-slate-400 uppercase">Địa điểm</span>
+                            <p class="text-sm font-semibold text-slate-700">Trung tâm Hành chính TP. Đà Nẵng</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 w-full justify-center">
+                    <button
+                        class="w-48 h-12 border border-slate-200 bg-white rounded-md text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 shadow-sm"
+                        onclick="window.print()">
+                        <span class="material-symbols-outlined text-lg">print</span> IN PHIẾU
+                    </button>
+                    <button
+                        class="w-48 h-12 bg-slate-800 text-white rounded-md text-sm font-bold hover:bg-slate-900 transition-colors flex items-center justify-center gap-2 shadow-md"
+                        onclick="window.location.href='TrangChu.html'">
+                        VỀ TRANG CHỦ
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</body>
+
+</html>
