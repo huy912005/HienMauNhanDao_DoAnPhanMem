@@ -79,7 +79,8 @@ CREATE TABLE CHIENDICHHIENMAU (
     thoiGianKT DATETIME NOT NULL,
     soLuongDuKien INT,
     trangThai VARCHAR(50) NOT NULL,
-    maQR VARCHAR(255)
+    maQR VARCHAR(255),
+    imageUrl VARCHAR(255) 
 );
 
 CREATE TABLE DONDANGKY (
@@ -429,10 +430,10 @@ INSERT INTO TINHNGUYENVIEN VALUES
 -- =============================================================
 -- 5. CHIẾN DỊCH HIẾN MÁU
 -- =============================================================
-INSERT INTO CHIENDICHHIENMAU VALUES 
-('CD_XH26','DD06','NV01','Lễ hội Xuân Hồng UTE 2026','2026-02-10 07:00','2026-02-12 17:00',500,'Đã kết thúc','QR_XH26'),
-('CD_CN26','DD07','NV02','Chủ Nhật Đỏ Đại học Đông Á','2026-03-15 07:00','2026-03-15 11:30',300,'Đã phê duyệt','QR_CN26'),
-('CD_TX26','DD05','NV15','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26');
+INSERT INTO CHIENDICHHIENMAU(maChienDich, maDiaDiem, maNhanVien, tenChienDich, thoiGianBD, thoiGianKT, soLuongDuKien, trangThai, maQR, imageUrl)
+VALUES ('CD_XH26','DD06','NV01','Lễ hội Xuân Hồng UTE 2026','2026-02-10 07:00','2026-02-12 17:00',500,'Đã kết thúc','QR_XH26','xuanhong2026.jpg'),
+('CD_CN26','DD07','NV02','Chủ Nhật Đỏ Đại học Đông Á','2026-03-15 07:00','2026-03-15 11:30',300,'Đã phê duyệt','QR_CN26','chunhatdo2026.jpg'),
+('CD_TX26','DD05','NV15','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26','hienmau.jpg');
 
 -- =============================================================
 -- 6. ĐƠN ĐĂNG KÝ (3 LUỒNG HOẠT ĐỘNG RÕ RÀNG)
