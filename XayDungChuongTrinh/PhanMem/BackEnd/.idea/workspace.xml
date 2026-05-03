@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="8dca7c28-1cac-498b-a8bc-59306930a361" name="Changes" comment="" />
+=======
+    <list default="true" id="8dca7c28-1cac-498b-a8bc-59306930a361" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/hienmaunhandao/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/hienmaunhandao/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/hienmaunhandao/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/hienmaunhandao/package.json" afterDir="false" />
+    </list>
+>>>>>>> develop
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,7 +34,11 @@
     "Application.Unnamed.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+<<<<<<< HEAD
     "git-widget-placeholder": "feature/Template__Update__DangKyHienMau__Vuong",
+=======
+    "git-widget-placeholder": "main",
+>>>>>>> develop
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/HK_225/CNPM/HienMauNhanDao_DoAnPhanMem/XayDungChuongTrinh/PhanMem/BackEnd",
     "settings.editor.selected.configurable": "com.poratu.idea.plugins.tomcat.setting.TomcatServersConfigurable"
