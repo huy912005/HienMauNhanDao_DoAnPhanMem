@@ -35,4 +35,6 @@ public class ChienDichHienMauEntity {
     private TrangThaiChienDich trangThai;
     @Column(name = "maQR")
     private String maQR;
+    @Column(name = "imageUrl")
+    private String imageUrl;
 }

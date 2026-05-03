@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChiendichHienMauResponse {
     private String maChienDich;
-    private String maDiaDiem;
+    private DiaDiemResponse diaDiem;
     private String maNhanVien;
     private String tenChienDich;
 
@@ -25,4 +25,5 @@ public class ChiendichHienMauResponse {
     private String trangThai;
     private String maQR;
     private String imageUrl;
+    private Integer luongMauDaThu;
 }
