@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Tiếp nhận Tình nguyện viên tại quầy - Hệ thống Hiến máu Đà Nẵng</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: "#af101a", "primary-container": "#d32f2f", "tertiary-container": "#00799c" },
+                    fontFamily: { sans: ["Public Sans", "sans-serif"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <script src="../js/auth.js"></script>
+    <script src="../js/toast.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body class="bg-slate-50 text-slate-800 antialiased overflow-x-hidden flex flex-col min-h-screen">
+
+    <!-- Top Info Bar -->
+    <div class="w-full bg-slate-800 text-white text-[11px] font-medium py-1.5 px-8 flex justify-between items-center">
+        <div class="flex gap-6">
+            <span class="flex items-center gap-2"><span
+                    class="material-symbols-outlined text-[14px]">location_on</span>Cơ sở tiếp nhận: Bệnh viện Đà Nẵng</span>
+            <span class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px]">call</span>Hotline y tế: 1900 1234</span>
+        </div>
+        <div class="flex gap-4 items-center">
+            <span class="text-green-400 font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-400 inline-block"></span> Hệ thống đang hoạt động</span>
+        </div>
+    </div>
+
+    <!-- Header & Horizontal Navigation -->
+    <header class="w-full bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="w-full max-w-[1400px] mx-auto h-24 flex items-center justify-between px-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-4 cursor-pointer" onclick="window.location.href='TrangChu.html'">
+                <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shrink-0">
+                    <span class="material-symbols-outlined text-3xl"
+                        style="font-variation-settings: 'FILL' 1;">bloodtype</span>
+                </div>
+                <div class="flex flex-col whitespace-nowrap">
+                    <h1 class="text-xl font-black tracking-tight text-red-700 leading-tight">HỆ THỐNG HIẾN MÁU</h1>
+                    <p class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Phân hệ Y tế</p>
+                </div>
+            </div>
+
+            <!-- Horizontal Nav -->
+            <nav class="flex items-center gap-1">
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm whitespace-nowrap"
+                    href="TrangChu.html">Trang chủ</a>
+                <a class="px-4 py-2 text-primary font-bold border-b-2 border-primary transition-colors uppercase text-sm whitespace-nowrap"
+                    href="DangKyVaKhaiBaoYTe_NVYT.html">Tiếp nhận Tình nguyện viên</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm whitespace-nowrap"
+                    href="KhamSangLoc.html">Khám sàng lọc</a>
+                <a class="px-4 py-2 text-slate-700 hover:text-primary font-bold border-b-2 border-transparent hover:border-primary transition-colors uppercase text-sm whitespace-nowrap"
+                    href="KhoMau.html">Quản lý kho máu</a>
+            </nav>
+
+            <!-- User Profile (NVYT) -->
+            <div class="flex items-center gap-4">
+                <button
+                    class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative shrink-0">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full"></span>
+                </button>
+                <div class="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer relative group py-2">
+                    <div class="text-right hidden md:block whitespace-nowrap">
+                        <p class="text-sm font-bold text-slate-900 leading-none mb-1">Nguyễn Thị Lan</p>
+                        <p class="text-[10px] text-blue-600 uppercase font-bold tracking-tight">Nhân viên sàng lọc</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center border-2 border-blue-200 shrink-0">
+                        <span class="material-symbols-outlined text-blue-500">local_hospital</span>
+                    </div>
+
+                    <!-- Dropdown Menu -->
+                    <div
+                        class="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                        <div class="py-2">
+                            <a href="#" onclick="logout(); return false;"
+                                class="flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">logout</span>Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 w-full max-w-[1400px] mx-auto p-8 mt-8 bg-white border border-slate-200 rounded-2xl shadow-sm mb-16">
+
+        <div class="mb-8">
+            <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">TIẾP NHẬN ĐĂNG KÝ TẠI QUẦY</h1>
+            <p class="text-slate-500 text-sm mt-1">Giao diện dành riêng cho Cán bộ y tế thực hiện thủ tục đăng ký cho tình nguyện viên đến hiến máu trực tiếp.</p>
+        </div>
+
+        <div class="grid grid-cols-12 gap-8">
+            <!-- Campaign Info -->
+            <div class="col-span-4 space-y-6">
+                <div
+                    class="w-full bg-white border border-slate-200 rounded-md p-6 relative overflow-hidden h-fit shadow-sm">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                        <span class="material-symbols-outlined text-8xl">campaign</span>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="mb-4">
+                            <span
+                                class="inline-block px-2 py-1 bg-red-100 text-red-700 text-[10px] font-bold rounded uppercase">Chiến
+                                dịch hiện tại</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-6">Giọt Máu Hồng - Hè 2024</h3>
+                        <div class="space-y-5">
+                            <div class="flex items-start gap-4">
+                                <span class="material-symbols-outlined text-primary shrink-0">calendar_month</span>
+                                <div>
+                                    <p class="text-[11px] text-slate-500 font-bold uppercase">Thời gian</p>
+                                    <p class="text-sm font-semibold text-slate-700">07:30 - 11:30 | 15/05/2024</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <span class="material-symbols-outlined text-primary shrink-0">location_on</span>
+                                <div>
+                                    <p class="text-[11px] text-slate-500 font-bold uppercase">Địa điểm</p>
+                                    <p class="text-sm font-semibold text-slate-700">Trung tâm Hành chính TP. Đà Nẵng</p>
+                                    <p class="text-xs text-slate-400 mt-1 italic leading-relaxed">24 Trần Phú, Thạch
+                                        Thang, Hải Châu, Đà Nẵng</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full bg-blue-50 border border-blue-100 rounded-md p-6 h-fit">
+                    <h4 class="font-bold text-blue-700 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+                        Quy trình tại quầy
+                    </h4>
+                    <ul class="text-[13px] text-slate-700 space-y-3 leading-relaxed">
+                        <li class="flex gap-2"><span>1.</span> <span>Hỏi và xác nhận tình nguyện viên đã có tài khoản hay chưa.</span>
+                        </li>
+                        <li class="flex gap-2"><span>2.</span> <span>Kiểm tra CMND/CCCD bản gốc của tình nguyện viên.</span></li>
+                        <li class="flex gap-2"><span>3.</span> <span>Nhập/Kiểm tra thông tin cá nhân và khai báo y tế.</span>
+                        </li>
+                        <li class="flex gap-2"><span>4.</span> <span>Bấm "Chuyển sang khám sàng lọc". Không cần tạo mã QR.</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <div class="col-span-8">
+                <div class="w-full bg-white border border-slate-200 rounded-md p-10 h-full shadow-sm">
+                    <form class="space-y-8">
+                        
+                        <!-- 1. Thông tin tiếp nhận -->
+                        <div>
+                            <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-2">
+                                <span class="material-symbols-outlined text-blue-600">assignment_ind</span>
+                                <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">1. THÔNG TIN TIẾP NHẬN</h3>
+                            </div>
+                            <div class="grid grid-cols-2 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                                <div class="space-y-3 col-span-2">
+                                    <label class="block text-sm font-bold text-slate-700">Tình trạng tài khoản Tình nguyện viên <span class="text-red-500">*</span></label>
+                                    <div class="flex gap-8">
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="accountStatus" type="radio" checked onchange="toggleAccountFields(true)" />
+                                            <span class="text-sm font-semibold text-slate-800">Đã có tài khoản hệ thống</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="accountStatus" type="radio" onchange="toggleAccountFields(false)" />
+                                            <span class="text-sm font-semibold text-slate-800">Khách vãng lai (Chưa có tài khoản)</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 relative" id="searchCccdBlock">
+                                    <label class="block text-sm font-bold text-slate-700">Tìm kiếm bằng Số CCCD</label>
+                                    <div class="flex gap-2">
+                                        <input id="cccdSearch" class="w-full h-11 border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary placeholder-slate-400" type="text" placeholder="Nhập số CCCD..." />
+                                        <button type="button" onclick="searchTNV()" class="px-4 bg-slate-800 text-white rounded-md text-sm font-bold hover:bg-slate-900 transition-colors flex items-center justify-center shrink-0">
+                                            <span class="material-symbols-outlined text-lg">search</span>
+                                        </button>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 mt-1 italic">Dữ liệu sẽ được tự động điền nếu tìm thấy.</p>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-bold text-slate-700">Nhân viên y tế thực hiện</label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <span class="material-symbols-outlined text-blue-500 text-[18px]">badge</span>
+                                        </div>
+                                        <input class="w-full h-11 pl-10 border-slate-200 rounded-md text-sm bg-blue-50 font-bold text-blue-700 cursor-not-allowed" readonly type="text" value="Nguyễn Thị Lan (NV_SL)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Thông tin cá nhân -->
+                        <div>
+                            <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-2">
+                                <span class="material-symbols-outlined text-primary">person</span>
+                                <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">2. THÔNG TIN CÁ NHÂN</h3>
+                            </div>
+                            <div class="grid grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-bold text-slate-700">Họ và tên <span class="text-red-500">*</span></label>
+                                    <input id="hoTen" class="w-full h-11 border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary" type="text" placeholder="Nhập họ và tên đầy đủ" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-bold text-slate-700">Số CCCD <span class="text-red-500">*</span></label>
+                                    <input id="cccd" class="w-full h-11 border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary" type="text" placeholder="Nhập CCCD" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-bold text-slate-700">Ngày sinh <span class="text-red-500">*</span></label>
+                                    <input id="ngaySinh" class="w-full h-11 border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary" type="date" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-bold text-slate-700">Giới tính <span class="text-red-500">*</span></label>
+                                    <select id="gioiTinh" class="w-full h-11 border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary">
+                                        <option value="Nam">Nam</option>
+                                        <option value="Nữ">Nữ</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-bold text-slate-700">Số điện thoại <span class="text-red-500">*</span></label>
+                                    <input id="sdt" class="w-full h-11 border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary" type="tel" placeholder="Nhập số điện thoại" />
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="block text-sm font-bold text-slate-700">Email</label>
+                                    <input id="email" class="w-full h-11 border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary" type="email" placeholder="example@email.com" />
+                                </div>
+                                <div class="space-y-2 col-span-2">
+                                    <label class="block text-sm font-bold text-slate-700">Địa chỉ cư trú <span class="text-red-500">*</span></label>
+                                    <input id="diaChi" class="w-full h-11 border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary" type="text" placeholder="Số nhà, phường/xã, quận/huyện..." />
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8">
+                                <h4 class="text-sm font-bold text-slate-800 py-2.5 border-l-4 border-primary pl-4 bg-slate-50 mb-4">
+                                    Dung tích máu dự kiến hiến <span class="text-red-500">*</span>
+                                </h4>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <label class="relative flex flex-col p-4 border border-slate-200 cursor-pointer rounded-xl hover:bg-slate-50 transition-colors [&:has(:checked)]:border-primary [&:has(:checked)]:bg-red-50 [&:has(:checked)]:ring-1 [&:has(:checked)]:ring-primary">
+                                        <input type="radio" name="volume" value="250" class="sr-only" />
+                                        <span class="text-lg font-bold text-slate-800 mb-1">250 ml</span>
+                                        <span class="text-xs text-slate-500 font-medium">Từ 42kg - 45kg</span>
+                                    </label>
+                                    <label class="relative flex flex-col p-4 border border-slate-200 cursor-pointer rounded-xl hover:bg-slate-50 transition-colors [&:has(:checked)]:border-primary [&:has(:checked)]:bg-red-50 [&:has(:checked)]:ring-1 [&:has(:checked)]:ring-primary">
+                                        <input type="radio" name="volume" value="350" class="sr-only" checked />
+                                        <span class="text-lg font-bold text-slate-800 mb-1">350 ml</span>
+                                        <span class="text-xs text-slate-500 font-medium">Trên 45kg</span>
+                                    </label>
+                                    <label class="relative flex flex-col p-4 border border-slate-200 cursor-pointer rounded-xl hover:bg-slate-50 transition-colors [&:has(:checked)]:border-primary [&:has(:checked)]:bg-red-50 [&:has(:checked)]:ring-1 [&:has(:checked)]:ring-primary">
+                                        <input type="radio" name="volume" value="450" class="sr-only" />
+                                        <span class="text-lg font-bold text-slate-800 mb-1">450 ml</span>
+                                        <span class="text-xs text-slate-500 font-medium">Trên 50kg</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Khai báo y tế -->
+                        <div>
+                            <div class="flex items-center gap-3 mb-6 border-b border-slate-100 pb-2">
+                                <span class="material-symbols-outlined text-primary">health_and_safety</span>
+                                <h3 class="text-lg font-black text-slate-800 uppercase tracking-tight">3. KHAI BÁO Y TẾ</h3>
+                            </div>
+                            <div class="space-y-1 border border-slate-200 rounded-lg overflow-hidden bg-white">
+                                <div class="flex items-center justify-between p-4 border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                    <p class="text-sm font-medium text-slate-700 pr-4">1. Có đang cảm thấy mệt mỏi, sốt hoặc đau họng không?</p>
+                                    <div class="flex gap-6 w-32 justify-end shrink-0">
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="q1" type="radio" />
+                                            <span class="text-xs font-semibold text-slate-600">Có</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input checked class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="q1" type="radio" />
+                                            <span class="text-xs font-semibold text-slate-600">Không</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-4 border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                    <p class="text-sm font-medium text-slate-700 pr-4">2. Có đang dùng thuốc kháng sinh hay điều trị bệnh không?</p>
+                                    <div class="flex gap-6 w-32 justify-end shrink-0">
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="q2" type="radio" />
+                                            <span class="text-xs font-semibold text-slate-600">Có</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input checked class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="q2" type="radio" />
+                                            <span class="text-xs font-semibold text-slate-600">Không</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-4 border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                    <p class="text-sm font-medium text-slate-700 pr-4">3. Trong 6 tháng qua có mắc bệnh truyền nhiễm/phẫu thuật?</p>
+                                    <div class="flex gap-6 w-32 justify-end shrink-0">
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="q3" type="radio" />
+                                            <span class="text-xs font-semibold text-slate-600">Có</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input checked class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="q3" type="radio" />
+                                            <span class="text-xs font-semibold text-slate-600">Không</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
+                                    <p class="text-sm font-medium text-slate-700 pr-4">4. Đối với nữ: Đang trong kỳ kinh nguyệt, mang thai/cho con bú?</p>
+                                    <div class="flex gap-6 w-32 justify-end shrink-0">
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="q4" type="radio" />
+                                            <span class="text-xs font-semibold text-slate-600">Có</span>
+                                        </label>
+                                        <label class="flex items-center gap-2 cursor-pointer">
+                                            <input checked class="w-4 h-4 text-primary focus:ring-primary border-slate-300" name="q4" type="radio" />
+                                            <span class="text-xs font-semibold text-slate-600">Không</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Xác nhận và Ký tên -->
+                        <div class="p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <label class="flex items-start gap-4 cursor-pointer mb-6">
+                                <input id="camDoan" class="mt-1 w-4 h-4 text-primary rounded focus:ring-primary border-slate-300" type="checkbox" />
+                                <span class="text-sm text-slate-700 leading-relaxed font-semibold">
+                                    Tình nguyện viên đã đọc, đồng ý và tự chịu trách nhiệm về thông tin khai báo. Ký tên điện tử xác nhận.
+                                </span>
+                            </label>
+                            
+                            <div class="pt-6 border-t border-slate-200">
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Chữ ký điện tử Tình Nguyện Viên</p>
+                                <div class="w-full h-24 border border-slate-200 bg-white rounded-xl flex items-center justify-center relative group overflow-hidden cursor-crosshair hover:border-primary transition-colors">
+                                    <span class="material-symbols-outlined text-slate-200 text-4xl group-hover:opacity-0 transition-opacity">draw</span>
+                                    <p class="absolute bottom-2 right-4 text-[10px] text-slate-400 italic">Yêu cầu TNV ký tên tại đây</p>
+                                    <div class="absolute inset-0 bg-transparent" onclick="this.innerHTML='<img src=\'https://www.svgrepo.com/show/421633/signature.svg\' class=\'h-full opacity-70 invert p-2\' />'; showToast('Đã nhận diện chữ ký số', 'success')"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-4">
+                            <button class="w-80 h-14 bg-red-700 text-white rounded-md font-bold text-[15px] flex items-center justify-center gap-2 hover:bg-red-800 transition-all shadow-xl active:scale-[0.98]"
+                                onclick="submitForm()" type="button">
+                                <span class="material-symbols-outlined text-2xl">arrow_forward_ios</span>
+                                CHUYỂN SANG KHÁM SÀNG LỌC
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function toggleAccountFields(hasAccount) {
+            const searchBlock = document.getElementById('searchCccdBlock');
+            if(hasAccount) {
+                searchBlock.style.opacity = '1';
+                searchBlock.style.pointerEvents = 'auto';
+                document.getElementById('cccdSearch').focus();
+            } else {
+                searchBlock.style.opacity = '0.5';
+                searchBlock.style.pointerEvents = 'none';
+                
+                // Clear all fields for new registration
+                document.getElementById('hoTen').value = '';
+                document.getElementById('cccd').value = '';
+                document.getElementById('ngaySinh').value = '';
+                document.getElementById('sdt').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('diaChi').value = '';
+            }
+        }
+
+        function searchTNV() {
+            const cccd = document.getElementById('cccdSearch').value;
+            if(!cccd) {
+                showToast('Vui lòng nhập CCCD để tìm kiếm', 'error');
+                return;
+            }
+            
+            // Giả lập tìm thấy dữ liệu từ CSDL cho "Lê Văn Bình"
+            showToast('Đã tìm thấy thông tin Tình nguyện viên', 'success');
+            document.getElementById('hoTen').value = 'Lê Văn Bình';
+            document.getElementById('cccd').value = cccd;
+            document.getElementById('ngaySinh').value = '1995-05-15';
+            document.getElementById('gioiTinh').value = 'Nam';
+            document.getElementById('sdt').value = '0905123456';
+            document.getElementById('email').value = 'levanbinh@example.com';
+            document.getElementById('diaChi').value = '123 Lê Lợi, Hải Châu, Đà Nẵng';
+        }
+
+        function submitForm() {
+            const camDoan = document.getElementById('camDoan');
+            if(!camDoan.checked) {
+                showToast("Tình nguyện viên cần xác nhận và ký tên trước khi tiếp tục.", "warning");
+                return;
+            }
+            
+            showToast("Đã lưu hồ sơ thành công! Đang chuyển hướng sang Khám sàng lọc...", "success");
+            
+            // Redirect sau 1.5s
+            setTimeout(() => {
+                window.location.href = 'TrangChu.html'; // Tạm thời link về trang chủ do chưa có KhamSangLoc.html
+            }, 1500);
+        }
+
+        // Initialize state
+        document.addEventListener('DOMContentLoaded', () => {
+            // Focus vào tìm kiếm mặc định
+            document.getElementById('cccdSearch').focus();
+        });
+    </script>
+</body>
+
+</html>

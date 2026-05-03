@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Xác thực OTP - Hệ thống Quản lý Hiến máu Nhân đạo TP. Đà Nẵng</title>
+    
+    <!-- Tailwind CSS & Fonts -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#af101a',
+                        'primary-dark': '#8b0d15',
+                        'primary-light': '#d32f2f',
+                        'primary-surface': '#fff2f0',
+                    },
+                    fontFamily: { sans: ['Public Sans', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .otp-input {
+            transition: all 0.2s ease-in-out;
+        }
+        .otp-input:focus {
+            border-color: #d32f2f;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15);
+        }
+    </style>
+</head>
+<body class="bg-[#F3F4F6] text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-50 bg-white border-b border-slate-200 shadow-sm">
+        <div class="flex justify-between items-center h-16 px-16 max-w-[1440px] mx-auto">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='DangNhap.html'">
+                <div class="w-10 h-10 bg-primary rounded flex items-center justify-center text-white">
+                    <span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">bloodtype</span>
+                </div>
+                <span class="text-lg font-black tracking-tight text-primary uppercase">Hệ thống Hiến máu</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <span class="material-symbols-outlined text-slate-400 hover:text-primary cursor-pointer transition-colors">help</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex items-center justify-center px-4 py-20 mt-16 relative">
+        <!-- Decorative background elements -->
+        <div class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-[0.03] overflow-hidden">
+            <div class="absolute top-1/4 left-10 w-64 h-64 border-[10px] border-primary rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-10 w-96 h-96 border-[10px] border-primary rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-[1440px] w-full flex justify-center relative z-10">
+            <div class="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-10 shadow-xl shadow-red-900/5">
+                
+                <!-- Title & Email info -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-red-50 rounded-2xl mb-6 shadow-inner border border-red-100">
+                        <span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">mark_email_read</span>
+                    </div>
+                    <h1 class="text-2xl font-black text-slate-900 mb-2 tracking-tight">Xác thực OTP</h1>
+                    <p class="text-slate-500 text-sm">Mã OTP gồm 6 chữ số đã được gửi về email của bạn</p>
+                    <div class="inline-block mt-3 px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-100">
+                        <p class="text-primary font-bold text-sm" id="user-email">h***@gmail.com</p>
+                    </div>
+                </div>
+
+                <!-- OTP Form -->
+                <form id="otp-form" class="space-y-8">
+                    <!-- 6 Input Fields -->
+                    <div class="flex justify-between gap-2" id="otp-container">
+                        <input class="otp-input w-12 h-14 text-center text-2xl font-black text-slate-800 border border-slate-300 rounded-xl bg-white" maxlength="1" type="text" autocomplete="off" />
+                        <input class="otp-input w-12 h-14 text-center text-2xl font-black text-slate-800 border border-slate-300 rounded-xl bg-white" maxlength="1" type="text" autocomplete="off" />
+                        <input class="otp-input w-12 h-14 text-center text-2xl font-black text-slate-800 border border-slate-300 rounded-xl bg-white" maxlength="1" type="text" autocomplete="off" />
+                        <input class="otp-input w-12 h-14 text-center text-2xl font-black text-slate-800 border border-slate-300 rounded-xl bg-white" maxlength="1" type="text" autocomplete="off" />
+                        <input class="otp-input w-12 h-14 text-center text-2xl font-black text-slate-800 border border-slate-300 rounded-xl bg-white" maxlength="1" type="text" autocomplete="off" />
+                        <input class="otp-input w-12 h-14 text-center text-2xl font-black text-slate-800 border border-slate-300 rounded-xl bg-white" maxlength="1" type="text" autocomplete="off" />
+                    </div>
+
+                    <!-- Resend Timer -->
+                    <div class="text-center">
+                        <p class="text-sm text-slate-500" id="resend-container">
+                            Gửi lại mã sau <span id="timer" class="text-primary font-bold ml-1">60s</span>
+                        </p>
+                        <button type="button" id="btn-resend" class="text-sm font-bold text-primary hover:underline hidden">
+                            Gửi lại mã OTP
+                        </button>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="btn-verify" class="w-full py-4 bg-primary hover:bg-primary-dark text-white font-bold rounded-xl transition-all duration-200 active:scale-[0.98] shadow-lg shadow-red-500/20 flex items-center justify-center gap-2" type="submit">
+                        <span id="btn-text">Xác nhận OTP</span>
+                        <span id="btn-spinner" class="hidden w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    </button>
+
+                    <!-- Back Link -->
+                    <div class="pt-6 border-t border-slate-100 text-center">
+                        <a href="DangNhap.html" class="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-primary transition-colors group">
+                            <span class="material-symbols-outlined text-[18px] group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                            Quay lại trang đăng nhập
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-white py-6 border-t border-slate-200 mt-auto z-10 relative">
+        <div class="max-w-[1440px] mx-auto px-16 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-slate-50 rounded border border-slate-200 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-slate-400 text-[18px]">medical_services</span>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-slate-700 uppercase tracking-wide">TT Huyết học - Truyền máu</p>
+                    <p class="text-[10px] text-slate-500 font-medium mt-0.5">Thành phố Đà Nẵng</p>
+                </div>
+            </div>
+            <div class="flex gap-8 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <a class="hover:text-primary transition-colors" href="#">Điều khoản</a>
+                <a class="hover:text-primary transition-colors" href="#">Bảo mật</a>
+                <a class="hover:text-primary transition-colors" href="#">Hỗ trợ</a>
+            </div>
+        </div>
+    </footer>
+    <div class="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-primary-dark to-red-900 z-50"></div>
+
+    <!-- JavaScript Logic for OTP -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = document.querySelectorAll('.otp-input');
+            const form = document.getElementById('otp-form');
+            const timerSpan = document.getElementById('timer');
+            const resendContainer = document.getElementById('resend-container');
+            const btnResend = document.getElementById('btn-resend');
+            
+            // Focus first input
+            inputs[0].focus();
+
+            // Handle Input behavior
+            inputs.forEach((input, index) => {
+                // Prevent non-numeric characters
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace') {
+                        input.value = '';
+                        if (index > 0) inputs[index - 1].focus();
+                        return;
+                    }
+                    if (e.key === 'ArrowLeft' && index > 0) {
+                        inputs[index - 1].focus();
+                        return;
+                    }
+                    if (e.key === 'ArrowRight' && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                        return;
+                    }
+                    if (e.key.length === 1 && !/^[0-9]$/.test(e.key)) {
+                        e.preventDefault(); // allow only numbers
+                    }
+                });
+
+                // Auto advance
+                input.addEventListener('input', (e) => {
+                    if (input.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+
+                // Handle Paste
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+                    if (!pastedData) return;
+                    
+                    for (let i = 0; i < pastedData.length; i++) {
+                        if (i < inputs.length) {
+                            inputs[i].value = pastedData[i];
+                            if (i < inputs.length - 1) {
+                                inputs[i + 1].focus();
+                            } else {
+                                inputs[i].focus();
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Countdown Timer Logic
+            let timeLeft = 60;
+            let timerInterval;
+
+            function startTimer() {
+                timeLeft = 60;
+                resendContainer.classList.remove('hidden');
+                btnResend.classList.add('hidden');
+                timerSpan.textContent = timeLeft + 's';
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerSpan.textContent = timeLeft + 's';
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        resendContainer.classList.add('hidden');
+                        btnResend.classList.remove('hidden');
+                    }
+                }, 1000);
+            }
+
+            btnResend.addEventListener('click', () => {
+                // TODO: Call API to resend OTP
+                alert('Mã OTP mới đã được gửi!');
+                startTimer();
+                // Clear inputs
+                inputs.forEach(i => i.value = '');
+                inputs[0].focus();
+            });
+
+            // Start timer initially
+            startTimer();
+
+            // Form Submit Logic
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Collect OTP
+                let otp = '';
+                inputs.forEach(i => otp += i.value);
+                
+                if (otp.length < 6) {
+                    alert('Vui lòng nhập đủ 6 chữ số mã OTP!');
+                    // Focus first empty
+                    for(let i=0; i<inputs.length; i++) {
+                        if(!inputs[i].value) { inputs[i].focus(); break; }
+                    }
+                    return;
+                }
+
+                const btnText = document.getElementById('btn-text');
+                const btnSpinner = document.getElementById('btn-spinner');
+
+                // UI Loading state
+                btnText.textContent = 'Đang xác thực...';
+                btnSpinner.classList.remove('hidden');
+
+                // Simulate API Call
+                setTimeout(() => {
+                    // Logic xác thực thành công => điều hướng đến cập nhật mật khẩu mới hoặc đăng nhập
+                    window.location.href = 'DangNhap.html?verified=true';
+                }, 1500);
+            });
+            
+            // Lấy email từ localStorage hoặc url (Giả lập hiển thị)
+            // document.getElementById('user-email').textContent = localStorage.getItem('reset_email') || 'user@example.com';
+        });
+    </script>
+</body>
+</html>
