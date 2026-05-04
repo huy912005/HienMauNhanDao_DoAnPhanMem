@@ -101,10 +101,12 @@ CREATE TABLE DONDANGKY (
 CREATE TABLE HOSOSUCKHOE (
     maHoSo CHAR(10) PRIMARY KEY,
     maDon CHAR(10),
-    benhLyNen VARCHAR(255),
-    moTaKhac VARCHAR(255)
+    khangSinh BOOLEAN DEFAULT FALSE,  -- Có đang dùng kháng sinh không
+    truyenNhiem BOOLEAN DEFAULT FALSE, -- Có bệnh truyền nhiễm (HIV, Gan B...) không
+    dauHong BOOLEAN DEFAULT FALSE,     -- Có bị đau họng/sốt không
+    coThai BOOLEAN DEFAULT FALSE,      -- Có đang mang thai/nuôi con nhỏ không
+    moTaKhac NVARCHAR(255)             -- Ghi chú các bệnh lý nền khác
 );
-
 -- 1.4. Nhóm Y tế & Kho máu
 CREATE TABLE KETQUALAMSANG (
     maKQ CHAR(10) PRIMARY KEY,
@@ -513,57 +515,57 @@ VALUES
 -- 7. ĐỒNG BỘ 100%: HỒ SƠ SỨC KHỎE & KHÁM LÂM SÀNG
 -- (D15 Sốt, D28 Xăm mình, D45 Thiếu cân bị đánh rớt)
 -- =============================================================
-INSERT INTO HOSOSUCKHOE VALUES 
-('HS01','D01','Không','Huyết áp bình thường'), 
-('HS02','D02','Không','Ngủ 8 tiếng'), 
-('HS03','D03','Không','Đã ăn sáng'), 
-('HS04','D04','Không','Khỏe mạnh'), 
-('HS05','D05','Không','Tốt'),
-('HS06','D06','Không','Tốt'), 
-('HS07','D07','Không','Đã uống đủ nước'), 
-('HS08','D08','Không','Tốt'), 
-('HS09','D09','Không','Tốt'), 
-('HS10','D10','Không','Tốt'),
-('HS11','D11','Không','Tốt'), 
-('HS12','D12','Không','Tốt'), 
-('HS13','D13','Không','Tốt'), 
-('HS14','D14','Không','Tốt'), 
-('HS15','D15','Sốt','Viêm họng 2 ngày nay'),
-('HS16','D16','Không','Tốt'), 
-('HS17','D17','Không','Tốt'), 
-('HS18','D18','Không','Tốt'), 
-('HS19','D19','Không','Tốt'), 
-('HS20','D20','Không','Tốt'),
-('HS21','D21','Không','Tốt'), 
-('HS22','D22','Không','Tốt'), 
-('HS23','D23','Không','Tốt'), 
-('HS24','D24','Không','Tốt'), 
-('HS25','D25','Không','Tốt'),
-('HS26','D26','Không','Tốt'), 
-('HS27','D27','Không','Tốt'), 
-('HS28','D28','Không','Mới xăm hình tháng trước'), 
-('HS29','D29','Không','Tốt'), 
-('HS30','D30','Không','Tốt'),
-('HS31','D31','Không','Tốt'), 
-('HS32','D32','Không','Tốt'), 
-('HS33','D33','Không','Tốt'), 
-('HS34','D34','Không','Tốt'), 
-('HS35','D35','Không','Tốt'),
-('HS36','D36','Không','Tốt'), 
-('HS37','D37','Không','Tốt'), 
-('HS38','D38','Không','Tốt'), 
-('HS39','D39','Không','Tốt'), 
-('HS40','D40','Không','Tốt'),
-('HS41','D41','Không','Tốt'), 
-('HS42','D42','Không','Tốt'), 
-('HS43','D43','Không','Tốt'), 
-('HS44','D44','Không','Tốt'), 
-('HS45','D45','Không','Nhẹ cân, gầy'),
-('HS46','D46','Không','Tốt'), 
-('HS47','D47','Không','Tốt'), 
-('HS48','D48','Không','Tốt'), 
-('HS49','D49','Không','Tốt'), 
-('HS50','D50','Không','Tốt');
+INSERT INTO HOSOSUCKHOE (maHoSo, maDon, khangSinh, truyenNhiem, dauHong, coThai, moTaKhac) VALUES 
+('HS01','D01',0,0,0,0,N'Cảm thấy khỏe mạnh'), 
+('HS02','D02',0,0,0,0,N'Ngủ đủ giấc trên 6 tiếng'), 
+('HS03','D03',0,0,0,0,N'Đã ăn sáng trước khi đến'), 
+('HS04','D04',0,0,0,0,N'Tinh thần thoải mái'), 
+('HS05','D05',0,0,0,0,N'Không có tiền sử dị ứng'),
+('HS06','D06',0,0,0,0,N'Lần đầu tham gia hiến máu'), 
+('HS07','D07',0,0,0,0,N'Đã uống nhiều nước trong sáng nay'), 
+('HS08','D08',0,0,0,0,N'Sẵn sàng hiến máu'), 
+('HS09','D09',0,0,0,0,N'Sức khỏe ổn định'), 
+('HS10','D10',0,0,0,0,N'Cảm thấy hơi hồi hộp'),
+('HS11','D11',0,0,0,0,N'Đã nghỉ ngơi đầy đủ'), 
+('HS12','D12',0,0,0,0,N'Khỏe mạnh bình thường'), 
+('HS13','D13',0,0,0,0,N'Chế độ ăn uống ổn định'), 
+('HS14','D14',0,0,0,0,N'Không dùng thuốc trong 1 tuần qua'), 
+('HS15','D15',0,0,1,0,N'Đang bị viêm họng, người mệt mỏi'), -- Khớp lý do rớt D15
+('HS16','D16',0,0,0,0,N'Tốt'), 
+('HS17','D17',0,0,0,0,N'Cảm thấy bình thường'), 
+('HS18','D18',0,0,0,0,N'Đã tìm hiểu quy trình hiến máu'), 
+('HS19','D19',0,0,0,0,N'Khỏe mạnh'), 
+('HS20','D20',0,0,0,0,N'Tốt'),
+('HS21','D21',0,0,0,0,N'Sức khỏe tốt'), 
+('HS22','D22',0,0,0,0,N'Nghỉ ngơi tốt đêm qua'), 
+('HS23','D23',0,0,0,0,N'Tốt'), 
+('HS24','D24',0,0,0,0,N'Sẵn sàng hiến'), 
+('HS25','D25',0,0,0,0,N'Khỏe mạnh'),
+('HS26','D26',0,0,0,0,N'Tinh thần tốt'), 
+('HS27','D27',0,0,0,0,N'Đã ăn uống đầy đủ'), 
+('HS28','D28',0,1,0,0,N'Mới thực hiện xăm mình gần đây'), -- Khớp lý do rớt D28
+('HS29','D29',0,0,0,0,N'Tốt'), 
+('HS30','D30',0,0,0,0,N'Sức khỏe ổn định'),
+('HS31','D31',0,0,0,0,N'Cảm thấy khỏe'), 
+('HS32','D32',0,0,0,0,N'Tốt'), 
+('HS33','D33',0,0,0,0,N'Đã uống nước đầy đủ'), 
+('HS34','D34',0,0,0,0,N'Sẵn sàng'), 
+('HS35','D35',0,0,0,0,N'Khỏe mạnh'),
+('HS36','D36',0,0,0,0,N'Tốt'), 
+('HS37','D37',0,0,0,0,N'Nghỉ ngơi ổn định'), 
+('HS38','D38',0,0,0,0,N'Bình thường'), 
+('HS39','D39',0,0,0,0,N'Tốt'), 
+('HS40','D40',0,0,0,0,N'Khỏe mạnh'),
+('HS41','D41',0,0,0,0,N'Sẵn sàng hiến máu'), 
+('HS42','D42',0,0,0,0,N'Tốt'), 
+('HS43','D43',0,0,0,0,N'Đã ăn nhẹ'), 
+('HS44','D44',0,0,0,0,N'Tinh thần ổn định'), 
+('HS45','D45',0,0,0,0,N'Cơ thể cảm thấy hơi yếu'), -- Khớp lý do rớt D45
+('HS46','D46',0,0,0,0,N'Khỏe mạnh'), 
+('HS47','D47',0,0,0,0,N'Tốt'), 
+('HS48','D48',0,0,0,0,N'Bình thường'), 
+('HS49','D49',0,0,0,0,N'Sức khỏe tốt'), 
+('HS50','D50',0,0,0,0,N'Sẵn sàng');
 
 INSERT INTO KETQUALAMSANG VALUES 
 ('KQ01','D01','NV03','120/80',75,65,36.5,1,NULL), 
