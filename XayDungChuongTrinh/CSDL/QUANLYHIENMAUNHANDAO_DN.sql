@@ -85,13 +85,17 @@ CREATE TABLE CHIENDICHHIENMAU (
 
 CREATE TABLE DONDANGKY (
     maDon CHAR(10) PRIMARY KEY,
-    maTNV CHAR(10),
+    maTNV CHAR(10) NULL,
     maChienDich CHAR(10),
     maNhanVien CHAR(10) DEFAULT NULL,
     maQR VARCHAR(255),
     thoiGianDangKy DATETIME DEFAULT CURRENT_TIMESTAMP,
     trangThai VARCHAR(50) NOT NULL,
-    theTich INT CHECK (theTich IN (250, 350, 450))
+    theTich INT,
+    CONSTRAINT chk_theTich CHECK (
+        (trangThai = 'Đã hiến' AND theTich IN (250,350,450)) OR
+        (trangThai = 'Chưa hiến' AND theTich = 0)
+    )
 );
 
 CREATE TABLE HOSOSUCKHOE (
@@ -436,7 +440,7 @@ INSERT INTO CHIENDICHHIENMAU(maChienDich, maDiaDiem, maNhanVien, tenChienDich, t
 VALUES ('CD_XH26','DD06','NV01','Lễ hội Xuân Hồng UTE 2026','2026-02-10 07:00','2026-02-12 17:00',500,'Đã kết thúc','QR_XH26','xuanhong2026.jpg'),
 ('CD_CN26','DD07','NV02','Chủ Nhật Đỏ Đại học Đông Á','2026-03-15 07:00','2026-03-15 11:30',300,'Đã phê duyệt','QR_CN26','chunhatdo2026.jpg'),
 ('CD_TX26','DD05','NV15','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26','hienmau.jpg'),
-VALUES ('CD00004', 'DD08', 'NV01', 'Hiến máu tình nguyện tại Bệnh viện Đà Nẵng', '2026-05-03 07:00:00', '2026-06-30 17:00:00', 100, 'Đang diễn ra', 'QR_BVDN_2024', 'HienMauTinhNguyenBVDM.png');
+('CD00004', 'DD08', 'NV01', 'Hiến máu tình nguyện tại Bệnh viện Đà Nẵng', '2026-05-03 07:00:00', '2026-06-30 17:00:00', 100, 'Đang diễn ra', 'QR_BVDN_2024', 'HienMauTinhNguyenBVDM.png');
 
 -- =============================================================
 -- 6. ĐƠN ĐĂNG KÝ (3 LUỒNG HOẠT ĐỘNG RÕ RÀNG)
@@ -465,40 +469,45 @@ INSERT INTO DONDANGKY (maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDang
 ('D20','TNV20','CD_XH26',NULL,'QR_20','2026-02-05','Đã hiến', 250);
 
 -- Trường hợp 2: Không có tài khoản, đến hiến trực tiếp (NV03, NV04 nhập giúp).
-INSERT INTO DONDANGKY VALUES 
-('D21','TNV31','CD_XH26','NV03','QR_21','2026-02-10','Đã hiến'), 
-('D22','TNV32','CD_XH26','NV04','QR_22','2026-02-10','Đã hiến'),
-('D23','TNV33','CD_XH26','NV03','QR_23','2026-02-10','Đã hiến'), 
-('D24','TNV34','CD_XH26','NV04','QR_24','2026-02-10','Đã hiến'),
-('D25','TNV35','CD_XH26','NV03','QR_25','2026-02-10','Đã hiến'), 
-('D26','TNV36','CD_XH26','NV04','QR_26','2026-02-10','Đã hiến'),
-('D27','TNV37','CD_XH26','NV03','QR_27','2026-02-10','Đã hiến'), 
-('D28','TNV38','CD_XH26','NV04','QR_28','2026-02-10','Chưa hiến'),
-('D29','TNV39','CD_XH26','NV03','QR_29','2026-02-10','Đã hiến'), 
-('D30','TNV40','CD_XH26','NV04','QR_30','2026-02-10','Đã hiến'),
-('D31','TNV41','CD_XH26','NV03','QR_31','2026-02-10','Đã hiến'), 
-('D32','TNV42','CD_XH26','NV04','QR_32','2026-02-10','Đã hiến'),
-('D33','TNV43','CD_XH26','NV03','QR_33','2026-02-10','Đã hiến'), 
-('D34','TNV44','CD_XH26','NV04','QR_34','2026-02-10','Đã hiến'),
-('D35','TNV45','CD_XH26','NV03','QR_35','2026-02-10','Đã hiến'), 
-('D36','TNV46','CD_XH26','NV04','QR_36','2026-02-10','Đã hiến'),
-('D37','TNV47','CD_XH26','NV03','QR_37','2026-02-10','Đã hiến'), 
-('D38','TNV48','CD_XH26','NV04','QR_38','2026-02-10','Đã hiến'),
-('D39','TNV49','CD_XH26','NV03','QR_39','2026-02-10','Đã hiến'), 
-('D40','TNV50','CD_XH26','NV04','QR_40','2026-02-10','Đã hiến');
+INSERT INTO DONDANGKY 
+(maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDangKy, trangThai, theTich)
+VALUES 
+('D21','TNV31','CD_XH26','NV03','QR_21','2026-02-10','Đã hiến',250), 
+('D22','TNV32','CD_XH26','NV04','QR_22','2026-02-10','Đã hiến',350),
+('D23','TNV33','CD_XH26','NV03','QR_23','2026-02-10','Đã hiến',450), 
+('D24','TNV34','CD_XH26','NV04','QR_24','2026-02-10','Đã hiến',250),
+('D25','TNV35','CD_XH26','NV03','QR_25','2026-02-10','Đã hiến',350), 
+('D26','TNV36','CD_XH26','NV04','QR_26','2026-02-10','Đã hiến',450),
+('D27','TNV37','CD_XH26','NV03','QR_27','2026-02-10','Đã hiến',250), 
+('D28','TNV38','CD_XH26','NV04','QR_28','2026-02-10','Chưa hiến',0),
+('D29','TNV39','CD_XH26','NV03','QR_29','2026-02-10','Đã hiến',350), 
+('D30','TNV40','CD_XH26','NV04','QR_30','2026-02-10','Đã hiến',450),
+('D31','TNV41','CD_XH26','NV03','QR_31','2026-02-10','Đã hiến',250), 
+('D32','TNV42','CD_XH26','NV04','QR_32','2026-02-10','Đã hiến',350),
+('D33','TNV43','CD_XH26','NV03','QR_33','2026-02-10','Đã hiến',450), 
+('D34','TNV44','CD_XH26','NV04','QR_34','2026-02-10','Đã hiến',250),
+('D35','TNV45','CD_XH26','NV03','QR_35','2026-02-10','Đã hiến',350), 
+('D36','TNV46','CD_XH26','NV04','QR_36','2026-02-10','Đã hiến',450),
+('D37','TNV47','CD_XH26','NV03','QR_37','2026-02-10','Đã hiến',250), 
+('D38','TNV48','CD_XH26','NV04','QR_38','2026-02-10','Đã hiến',350),
+('D39','TNV49','CD_XH26','NV03','QR_39','2026-02-10','Đã hiến',450), 
+('D40','TNV50','CD_XH26','NV04','QR_40','2026-02-10','Đã hiến',250);
 
--- Trường hợp 3: Đã có tài khoản nhưng đến trực tiếp nhờ NV03, NV04 hỗ trợ nhập.
-INSERT INTO DONDANGKY VALUES 
-('D41','TNV21','CD_XH26','NV03','QR_41','2026-02-10','Đã hiến'), 
-('D42','TNV22','CD_XH26','NV04','QR_42','2026-02-10','Đã hiến'),
-('D43','TNV23','CD_XH26','NV03','QR_43','2026-02-10','Đã hiến'), 
-('D44','TNV24','CD_XH26','NV04','QR_44','2026-02-10','Đã hiến'),
-('D45','TNV25','CD_XH26','NV03','QR_45','2026-02-10','Chưa hiến'), 
-('D46','TNV26','CD_XH26','NV04','QR_46','2026-02-10','Đã hiến'),
-('D47','TNV27','CD_XH26','NV03','QR_47','2026-02-10','Đã hiến'), 
-('D48','TNV28','CD_XH26','NV04','QR_48','2026-02-10','Đã hiến'),
-('D49','TNV29','CD_XH26','NV03','QR_49','2026-02-10','Đã hiến'), 
-('D50','TNV30','CD_XH26','NV04','QR_50','2026-02-10','Đã hiến');
+
+-- Trường hợp 3
+INSERT INTO DONDANGKY 
+(maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDangKy, trangThai, theTich)
+VALUES 
+('D41','TNV21','CD_XH26','NV03','QR_41','2026-02-10','Đã hiến',350), 
+('D42','TNV22','CD_XH26','NV04','QR_42','2026-02-10','Đã hiến',450),
+('D43','TNV23','CD_XH26','NV03','QR_43','2026-02-10','Đã hiến',250), 
+('D44','TNV24','CD_XH26','NV04','QR_44','2026-02-10','Đã hiến',350),
+('D45','TNV25','CD_XH26','NV03','QR_45','2026-02-10','Chưa hiến',0), 
+('D46','TNV26','CD_XH26','NV04','QR_46','2026-02-10','Đã hiến',450),
+('D47','TNV27','CD_XH26','NV03','QR_47','2026-02-10','Đã hiến',250), 
+('D48','TNV28','CD_XH26','NV04','QR_48','2026-02-10','Đã hiến',350),
+('D49','TNV29','CD_XH26','NV03','QR_49','2026-02-10','Đã hiến',450), 
+('D50','TNV30','CD_XH26','NV04','QR_50','2026-02-10','Đã hiến',250);
 
 -- =============================================================
 -- 7. ĐỒNG BỘ 100%: HỒ SƠ SỨC KHỎE & KHÁM LÂM SÀNG
@@ -1111,4 +1120,3 @@ DELIMITER ;
 
 -- [TEST] Thống kê lượng máu thu nhận trong tháng 2 năm 2026
 CALL sp_ThongKeThuNhanTheoThang(2, 2026);
-
