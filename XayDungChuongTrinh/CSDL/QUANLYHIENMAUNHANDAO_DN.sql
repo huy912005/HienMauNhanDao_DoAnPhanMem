@@ -90,7 +90,8 @@ CREATE TABLE DONDANGKY (
     maNhanVien CHAR(10) DEFAULT NULL,
     maQR VARCHAR(255),
     thoiGianDangKy DATETIME DEFAULT CURRENT_TIMESTAMP,
-    trangThai VARCHAR(50) NOT NULL
+    trangThai VARCHAR(50) NOT NULL,
+    theTich INT CHECK (theTich IN (250, 350, 450))
 );
 
 CREATE TABLE HOSOSUCKHOE (
@@ -282,7 +283,8 @@ INSERT INTO DIADIEM VALUES
 ('DD04','Bệnh viện Phụ sản - Nhi','402 Lê Văn Hiến','NHS01','Bệnh viện'),
 ('DD05','Hội Chữ thập đỏ TP Đà Nẵng','522 Ông Ích Khiêm','HC03','Điểm cố định'),
 ('DD06','ĐH Sư phạm Kỹ thuật (UTE)','48 Cao Thắng','HC01','Điểm lưu động'),
-('DD07','Đại học Đông Á','33 Xô Viết Nghệ Tĩnh','HC02','Điểm lưu động');
+('DD07','Đại học Đông Á','33 Xô Viết Nghệ Tĩnh','HC02','Điểm lưu động'),
+('DD08', 'Khoa Huyết học - Truyền máu (BV Đà Nẵng)', '103 Quang Trung', 'HC01', 'Bệnh viện');
 
 INSERT INTO KHOACONGTAC VALUES 
 ('KHH_DN','Khoa Huyết học - BV Đà Nẵng'), 
@@ -433,34 +435,34 @@ INSERT INTO TINHNGUYENVIEN VALUES
 INSERT INTO CHIENDICHHIENMAU(maChienDich, maDiaDiem, maNhanVien, tenChienDich, thoiGianBD, thoiGianKT, soLuongDuKien, trangThai, maQR, imageUrl)
 VALUES ('CD_XH26','DD06','NV01','Lễ hội Xuân Hồng UTE 2026','2026-02-10 07:00','2026-02-12 17:00',500,'Đã kết thúc','QR_XH26','xuanhong2026.jpg'),
 ('CD_CN26','DD07','NV02','Chủ Nhật Đỏ Đại học Đông Á','2026-03-15 07:00','2026-03-15 11:30',300,'Đã phê duyệt','QR_CN26','chunhatdo2026.jpg'),
-('CD_TX26','DD05','NV15','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26','hienmau.jpg');
+('CD_TX26','DD05','NV15','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26','hienmau.jpg'),
+VALUES ('CD00004', 'DD08', 'NV01', 'Hiến máu tình nguyện tại Bệnh viện Đà Nẵng', '2026-05-03 07:00:00', '2026-06-30 17:00:00', 100, 'Đang diễn ra', 'QR_BVDN_2024', 'HienMauTinhNguyenBVDM.png');
 
 -- =============================================================
 -- 6. ĐƠN ĐĂNG KÝ (3 LUỒNG HOẠT ĐỘNG RÕ RÀNG)
 -- =============================================================
 
--- Trường hợp 1: Đăng ký trước qua mạng (maNhanVien = NULL). Gồm 20 TNV đầu tiên.
-INSERT INTO DONDANGKY VALUES 
-('D01','TNV01','CD_XH26',NULL,'QR_01','2026-02-05','Đã hiến'), 
-('D02','TNV02','CD_XH26',NULL,'QR_02','2026-02-05','Đã hiến'),
-('D03','TNV03','CD_XH26',NULL,'QR_03','2026-02-05','Đã hiến'), 
-('D04','TNV04','CD_XH26',NULL,'QR_04','2026-02-05','Đã hiến'),
-('D05','TNV05','CD_XH26',NULL,'QR_05','2026-02-05','Đã hiến'), 
-('D06','TNV06','CD_XH26',NULL,'QR_06','2026-02-05','Đã hiến'),
-('D07','TNV07','CD_XH26',NULL,'QR_07','2026-02-05','Đã hiến'), 
-('D08','TNV08','CD_XH26',NULL,'QR_08','2026-02-05','Đã hiến'),
-('D09','TNV09','CD_XH26',NULL,'QR_09','2026-02-05','Đã hiến'), 
-('D10','TNV10','CD_XH26',NULL,'QR_10','2026-02-05','Đã hiến'),
-('D11','TNV11','CD_XH26',NULL,'QR_11','2026-02-05','Đã hiến'), 
-('D12','TNV12','CD_XH26',NULL,'QR_12','2026-02-05','Đã hiến'),
-('D13','TNV13','CD_XH26',NULL,'QR_13','2026-02-05','Đã hiến'), 
-('D14','TNV14','CD_XH26',NULL,'QR_14','2026-02-05','Đã hiến'),
-('D15','TNV15','CD_XH26',NULL,'QR_15','2026-02-05','Chưa hiến'), 
-('D16','TNV16','CD_XH26',NULL,'QR_16','2026-02-05','Đã hiến'),
-('D17','TNV17','CD_XH26',NULL,'QR_17','2026-02-05','Đã hiến'), 
-('D18','TNV18','CD_XH26',NULL,'QR_18','2026-02-05','Đã hiến'),
-('D19','TNV19','CD_XH26',NULL,'QR_19','2026-02-05','Đã hiến'), 
-('D20','TNV20','CD_XH26',NULL,'QR_20','2026-02-05','Đã hiến');
+INSERT INTO DONDANGKY (maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDangKy, trangThai, theTich) VALUES 
+('D01','TNV01','CD_XH26',NULL,'QR_01','2026-02-05','Đã hiến', 250), 
+('D02','TNV02','CD_XH26',NULL,'QR_02','2026-02-05','Đã hiến', 350),
+('D03','TNV03','CD_XH26',NULL,'QR_03','2026-02-05','Đã hiến', 450), 
+('D04','TNV04','CD_XH26',NULL,'QR_04','2026-02-05','Đã hiến', 250),
+('D05','TNV05','CD_XH26',NULL,'QR_05','2026-02-05','Đã hiến', 350), 
+('D06','TNV06','CD_XH26',NULL,'QR_06','2026-02-05','Đã hiến', 450),
+('D07','TNV07','CD_XH26',NULL,'QR_07','2026-02-05','Đã hiến', 250), 
+('D08','TNV08','CD_XH26',NULL,'QR_08','2026-02-05','Đã hiến', 350),
+('D09','TNV09','CD_XH26',NULL,'QR_09','2026-02-05','Đã hiến', 450), 
+('D10','TNV10','CD_XH26',NULL,'QR_10','2026-02-05','Đã hiến', 250),
+('D11','TNV11','CD_XH26',NULL,'QR_11','2026-02-05','Đã hiến', 350), 
+('D12','TNV12','CD_XH26',NULL,'QR_12','2026-02-05','Đã hiến', 450),
+('D13','TNV13','CD_XH26',NULL,'QR_13','2026-02-05','Đã hiến', 250), 
+('D14','TNV14','CD_XH26',NULL,'QR_14','2026-02-05','Đã hiến', 350),
+('D15','TNV15','CD_XH26',NULL,'QR_15','2026-02-05','Chưa hiến', 0),
+('D16','TNV16','CD_XH26',NULL,'QR_16','2026-02-05','Đã hiến', 450),
+('D17','TNV17','CD_XH26',NULL,'QR_17','2026-02-05','Đã hiến', 250), 
+('D18','TNV18','CD_XH26',NULL,'QR_18','2026-02-05','Đã hiến', 350),
+('D19','TNV19','CD_XH26',NULL,'QR_19','2026-02-05','Đã hiến', 450), 
+('D20','TNV20','CD_XH26',NULL,'QR_20','2026-02-05','Đã hiến', 250);
 
 -- Trường hợp 2: Không có tài khoản, đến hiến trực tiếp (NV03, NV04 nhập giúp).
 INSERT INTO DONDANGKY VALUES 
@@ -1109,3 +1111,4 @@ DELIMITER ;
 
 -- [TEST] Thống kê lượng máu thu nhận trong tháng 2 năm 2026
 CALL sp_ThongKeThuNhanTheoThang(2, 2026);
+

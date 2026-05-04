@@ -313,18 +313,21 @@
                             </label>
                             
                             <div class="pt-6 border-t border-slate-200">
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Chữ ký điện tử</p>
-                                <div class="w-full h-24 border border-slate-200 bg-white rounded-xl flex items-center justify-center relative group overflow-hidden cursor-crosshair">
-                                    <span class="material-symbols-outlined text-slate-200 text-4xl group-hover:opacity-0 transition-opacity">draw</span>
-                                    <p class="absolute bottom-2 right-4 text-[10px] text-slate-400 italic">Ký tên tại đây</p>
-                                    <div class="absolute inset-0 bg-transparent" onclick="this.innerHTML='<img src=\'https://www.svgrepo.com/show/421633/signature.svg\' class=\'h-full opacity-70 invert p-2\' />'; showToast('Đã nhận diện chữ ký số', 'success')"></div>
-                                </div>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+                                    Mô tả khác
+                                </p>
+
+                                <textarea 
+                                    placeholder="Mô tả khác..."
+                                    class="w-full h-24 border border-slate-200 bg-white rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+                                ></textarea>
                             </div>
                         </div>
                         <div class="flex justify-between items-center pt-4">
                             <button
                                 class="w-32 h-12 bg-white text-slate-600 border border-slate-200 rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-all active:scale-[0.98]"
-                                onclick="window.location.href='DangKyTinhNguyenVien.html'; return false;" type="button">
+                                onclick="window.location.href='../DangKyTinhNguyenVien.html'; return false;"
+                                type="button">
                                 <span class="material-symbols-outlined text-xl">arrow_back</span>
                                 QUAY LẠI
                             </button>
