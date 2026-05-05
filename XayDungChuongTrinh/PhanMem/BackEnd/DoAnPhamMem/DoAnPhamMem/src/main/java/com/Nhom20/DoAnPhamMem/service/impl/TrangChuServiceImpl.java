@@ -43,8 +43,8 @@ public class TrangChuServiceImpl implements TrangChuService {
                 .collect(Collectors.toList());
 
         int tongLuongMau = tuiMauRepository.findAll().stream()
-                .filter(tm -> tm.getTrangThai() != null && ("Nhập kho".equals(tm.getTrangThai().name()) || "Đã xuất".equals(tm.getTrangThai().name())))
-                .mapToInt(tm -> tm.getTheTich() != null ? tm.getTheTich().getMl() : 0)
+                .filter(tm -> tm.getTrangThai() != null && ("Nhập kho".equals(tm.getTrangThai()) || "Đã xuất".equals(tm.getTrangThai())))
+                .mapToInt(tm -> tm.getTheTich() != null ? tm.getTheTich() : 0)
                 .sum();
 
         List<KhoMauDto> tonKho = khoMauRepository.findAll().stream()

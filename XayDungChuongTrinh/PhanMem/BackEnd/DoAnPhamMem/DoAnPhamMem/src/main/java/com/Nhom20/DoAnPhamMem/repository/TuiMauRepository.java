@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TuiMauRepository extends JpaRepository<TuiMauEntity,String> {
+public interface TuiMauRepository extends JpaRepository<TuiMauEntity, String> {
 }

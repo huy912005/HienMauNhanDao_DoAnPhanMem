@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface KetQuaLamSangRepository extends JpaRepository<KetQuaLamSangEntity,String> {
+public interface KetQuaLamSangRepository extends JpaRepository<KetQuaLamSangEntity, String> {
 }

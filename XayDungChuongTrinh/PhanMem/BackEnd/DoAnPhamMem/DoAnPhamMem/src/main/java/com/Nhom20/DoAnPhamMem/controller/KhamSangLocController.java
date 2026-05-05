@@ -1,10 +1,9 @@
 package com.Nhom20.DoAnPhamMem.controller;
 
 import com.Nhom20.DoAnPhamMem.common.ApiResponse;
-import com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest;
-import com.Nhom20.DoAnPhamMem.dto.response.TuiMauResponse;
-import com.Nhom20.DoAnPhamMem.service.TuiMauService;
-import jakarta.validation.Valid;
+import com.Nhom20.DoAnPhamMem.dto.request.KhamSangLocRequest;
+import com.Nhom20.DoAnPhamMem.dto.response.KhamSangLocResponse;
+import com.Nhom20.DoAnPhamMem.service.KhamSangLocService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,30 +11,30 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tuimau")
+@RequestMapping("/api/khamsangloc")
 @CrossOrigin(origins = "*") 
 @RequiredArgsConstructor
-public class TuiMauController {
+public class KhamSangLocController {
 
-    private final TuiMauService service;
+    private final KhamSangLocService service;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<TuiMauResponse>>> getAll() {
+    public ResponseEntity<ApiResponse<List<KhamSangLocResponse>>> getAll() {
         return ResponseEntity.ok(service.getAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<TuiMauResponse>> getById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<KhamSangLocResponse>> getById(@PathVariable String id) {
         return ResponseEntity.ok(service.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<TuiMauResponse>> create(@Valid @RequestBody TuiMauRequest request) {
+    public ResponseEntity<ApiResponse<KhamSangLocResponse>> create(@RequestBody KhamSangLocRequest request) {
         return ResponseEntity.ok(service.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<TuiMauResponse>> update(@PathVariable String id, @Valid @RequestBody TuiMauRequest request) {
+    public ResponseEntity<ApiResponse<KhamSangLocResponse>> update(@PathVariable String id, @RequestBody KhamSangLocRequest request) {
         return ResponseEntity.ok(service.update(id, request));
     }
 

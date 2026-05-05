@@ -8,20 +8,37 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class KetQuaLamSangEntity {
+
     @Id
-    @Column(name = "maKQ", length = 10)
+    @Column(name = "maKQ", length = 7)
     private String maKQ;
-    @OneToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maDon")
     private DonDangKyEntity donDangKy;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maNhanVien")
-    private NhanVienEntity bacSiKham;
+    private NhanVienEntity nhanVien;
+
+    @Column(name = "huyetAp", length = 20)
     private String huyetAp;
+
+    @Column(name = "nhipTim")
     private Integer nhipTim;
+
+    @Column(name = "canNang")
     private Double canNang;
+
+    @Column(name = "nhietDo")
     private Double nhietDo;
+
+    @Column(name = "ketQua")
     private Boolean ketQua;
+
+    @Column(name = "lyDoTuChoi")
     private String lyDoTuChoi;
 }

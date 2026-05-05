@@ -1,7 +1,5 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
-import com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau;
-import com.Nhom20.DoAnPhamMem.enums.TheTichTuiMau;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,20 +9,31 @@ import java.time.LocalDateTime;
 @Table(name = "TUIMAU")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TuiMauEntity {
+
     @Id
-    @Column(name = "maTuiMau", length = 15)
+    @Column(name = "maTuiMau", length = 7)
     private String maTuiMau;
-    @OneToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maDon")
     private DonDangKyEntity donDangKy;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maKho")
-    private KhoMauEntity khoMau;
-    @Column(name = "theTich")
-    private TheTichTuiMau theTich;
-    @Column(name = "thoiGianLayMau")
+    @JoinColumn(name = "maNhanVien")
+    private NhanVienEntity nhanVien;
+
+    @Column(name = "maKho", length = 7)
+    private String maKho;
+
+    private Integer theTich;
+
     private LocalDateTime thoiGianLayMau;
-    @Column(name = "trangThai", length = 50)
-    private TrangThaiTuiMau trangThai;
+
+    private String trangThai;
+
+    private Double nhietDoVanChuyen;
 }
