@@ -133,8 +133,9 @@ CREATE TABLE TUIMAU (
     maDon CHAR(7),
     maNhanVien CHAR(7),
     maKho CHAR(7),
+    maVach VARCHAR(50) UNIQUE, -- BỔ SUNG CỘT NÀY 
     theTich INT,
-    thoiGianLayMau DATETIME,
+    thoiGianLayMau DATETIME DEFAULT CURRENT_TIMESTAMP, -- Nên để tự động lấy giờ hiện tại
     trangThai VARCHAR(50) NOT NULL,
     nhietDoVanChuyen DOUBLE
 );
@@ -968,3 +969,88 @@ END //
 DELIMITER ;
 -- [TEST] Thống kê lượng máu thu nhận trong tháng 2 năm 2026
 CALL sp_ThongKeThuNhanTheoThang(2, 2026);
+
+-- -------------------------------------------------------------
+-- UC3: KHÁM SÀNG LỌC VÀ THU NHẬN ĐƠN VỊ MÁU
+-- -------------------------------------------------------------
+
+-- Thêm ràng buộc mới có trạng thái 'Không đạt'
+ALTER TABLE DONDANGKY ADD CONSTRAINT chk_tt_don CHECK (
+    trangThai IN ('Đã đăng ký', 'Đã hiến', 'Đã nhận chứng nhận', 'Chưa hiến', 'Không đạt')
+);
+
+-- Sửa lại logic check thể tích cho phù hợp với trạng thái mới
+ALTER TABLE DONDANGKY ADD CONSTRAINT chk_theTich CHECK (
+    (trangThai = 'Đã hiến' AND theTich IN (250,350,450)) OR
+    (trangThai IN ('Chưa hiến', 'Không đạt', 'Đã đăng ký') AND (theTich = 0 OR theTich IS NULL))
+);
+
+DELIMITER //
+CREATE TRIGGER trg_SauKhiKhamLamSang
+AFTER INSERT ON KETQUALAMSANG
+FOR EACH ROW
+BEGIN
+    -- Nếu bác sĩ đánh rớt (ketQua = 0)
+    IF NEW.ketQua = 0 THEN
+        UPDATE DONDANGKY 
+        SET trangThai = 'Không đạt' 
+        WHERE maDon = NEW.maDon;
+    END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_SauKhiThuNhanMau
+AFTER INSERT ON TUIMAU
+FOR EACH ROW
+BEGIN
+    -- Cập nhật đơn đăng ký thành 'Đã hiến' và ghi nhận thể tích
+    UPDATE DONDANGKY 
+    SET trangThai = 'Đã hiến', 
+        theTich = NEW.theTich 
+    WHERE maDon = NEW.maDon;
+END //
+DELIMITER ;
+
+-- View 1: DANH SÁCH CHỜ KHÁM LÂM SÀNG
+-- Gồm những người có trạng thái 'Chưa hiến' và chưa có kết quả lâm sàng
+CREATE VIEW v_DanhSachChoKhamLamSang AS
+SELECT 
+    d.maDon, 
+    t.hoTen, 
+    t.CCCD, 
+    t.gioiTinh, 
+    t.ngaySinh, 
+    d.thoiGianDangKy
+FROM DONDANGKY d
+JOIN TINHNGUYENVIEN t ON d.maTNV = t.maTNV
+WHERE d.trangThai = 'Chưa hiến' 
+  AND d.maDon NOT IN (SELECT maDon FROM KETQUALAMSANG);
+
+-- View 2: DANH SÁCH CHỜ LẤY MÁU
+-- Gồm những người đã khám lâm sàng (ketQua = 1) nhưng chưa có túi máu
+CREATE VIEW v_DanhSachChoLayMau AS
+SELECT 
+    d.maDon, 
+    t.hoTen, 
+    t.nhomMau, 
+    k.canNang, 
+    k.huyetAp,
+    k.nhipTim
+FROM DONDANGKY d
+JOIN TINHNGUYENVIEN t ON d.maTNV = t.maTNV
+JOIN KETQUALAMSANG k ON d.maDon = k.maDon
+WHERE k.ketQua = 1 
+  AND d.trangThai = 'Chưa hiến' 
+  AND d.maDon NOT IN (SELECT maDon FROM TUIMAU);
+  
+  -- Thêm ràng buộc mới có trạng thái 'Không đạt'
+ALTER TABLE DONDANGKY ADD CONSTRAINT chk_tt_don CHECK (
+    trangThai IN ('Đã đăng ký', 'Đã hiến', 'Đã nhận chứng nhận', 'Chưa hiến', 'Không đạt')
+);
+
+-- Sửa lại logic check thể tích cho phù hợp với trạng thái mới
+ALTER TABLE DONDANGKY ADD CONSTRAINT chk_theTich CHECK (
+    (trangThai = 'Đã hiến' AND theTich IN (250,350,450)) OR
+    (trangThai IN ('Chưa hiến', 'Không đạt', 'Đã đăng ký') AND (theTich = 0 OR theTich IS NULL))
+);
