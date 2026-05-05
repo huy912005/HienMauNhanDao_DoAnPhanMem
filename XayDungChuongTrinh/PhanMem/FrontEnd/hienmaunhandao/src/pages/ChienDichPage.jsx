@@ -314,7 +314,10 @@ export default function ChienDichPage() {
                                     ) : (
                                         <button 
                                             disabled={status.status === "Đã kết thúc"}
-                                            onClick={() => navigate(`/register?campaign=${campaign.id}`)}
+                                            onClick={() => {
+                                                localStorage.setItem('selectedCampaign', JSON.stringify(campaign));
+                                                navigate('/khai-bao-thong-tin-ca-nhan');
+                                            }}
                                             className="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98] 
                                                     disabled:bg-slate-400 disabled:cursor-not-allowed disabled:hover:bg-slate-400"
                                         >

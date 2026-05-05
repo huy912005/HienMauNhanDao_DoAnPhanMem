@@ -34900,8 +34900,8 @@
 									},
 									"font": "Arial;26;1",
 									"parentStyle": true,
-									"left": 1880,
-									"top": 1485,
+									"left": 1864,
+									"top": 1477,
 									"width": 330.0029296875,
 									"height": 26,
 									"text": "VAITRO"
@@ -34927,8 +34927,8 @@
 											},
 											"font": "Arial;26;0",
 											"parentStyle": true,
-											"left": 1885,
-											"top": 1521,
+											"left": 1869,
+											"top": 1513,
 											"width": 320.0029296875,
 											"height": 26
 										},
@@ -34943,24 +34943,24 @@
 											},
 											"font": "Arial;26;0",
 											"parentStyle": true,
-											"left": 1885,
-											"top": 1549,
+											"left": 1869,
+											"top": 1541,
 											"width": 320.0029296875,
 											"height": 26
 										}
 									],
 									"font": "Arial;26;0",
 									"parentStyle": true,
-									"left": 1880,
-									"top": 1516,
+									"left": 1864,
+									"top": 1508,
 									"width": 330.0029296875,
 									"height": 64
 								}
 							],
 							"font": "Arial;26;0",
 							"parentStyle": false,
-							"left": 1880,
-							"top": 1480,
+							"left": 1864,
+							"top": 1472,
 							"width": 330.0029296875,
 							"height": 288,
 							"nameLabel": {
@@ -37014,7 +37014,7 @@
 									"font": "Arial;13;0",
 									"parentStyle": false,
 									"left": 1993,
-									"top": 1369,
+									"top": 1365,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -37032,7 +37032,7 @@
 									"font": "Arial;13;0",
 									"parentStyle": false,
 									"left": 1993,
-									"top": 1448,
+									"top": 1440,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 30,
@@ -37068,7 +37068,7 @@
 								"$ref": "AAAAAAGdhMHlmwTR4wY="
 							},
 							"lineStyle": 2,
-							"points": "2008:1480;2008:1272",
+							"points": "2008:1472;2008:1272",
 							"nameLabel": {
 								"$ref": "AAAAAAGdhNbx0DccPS4="
 							},

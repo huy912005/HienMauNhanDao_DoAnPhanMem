@@ -20,7 +20,6 @@ public class HoSoSucKhoeEntity {
     @JoinColumn(name = "maDon")
     private DonDangKyEntity donDangKy;
 
-    // Thay thế benhLyNen bằng các trường Boolean theo ERD mới
     @Column(name = "khangSinh")
     private Boolean khangSinh;
 
