@@ -19,26 +19,26 @@ CREATE TABLE VAITRO (
 );
 
 CREATE TABLE PHUONGXA (
-    maPhuongXa CHAR(10) PRIMARY KEY,
+    maPhuongXa CHAR(7) PRIMARY KEY,
     tenPhuongXa VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE DIADIEM (
-    maDiaDiem CHAR(10) PRIMARY KEY,
+    maDiaDiem CHAR(7) PRIMARY KEY,
     tenDiaDiem VARCHAR(150) NOT NULL,
     diaChiChiTiet VARCHAR(255) NOT NULL,
-    maPhuongXa CHAR(10),
+    maPhuongXa CHAR(7),
     loaiDiaDiem VARCHAR(50) 
 );
 
 CREATE TABLE KHOACONGTAC (
-    maKhoa CHAR(10) PRIMARY KEY,
+    maKhoa CHAR(7) PRIMARY KEY,
     tenKhoa VARCHAR(100) NOT NULL
 );
 
 -- 1.2. Nhóm Tài khoản & Nhân sự
 CREATE TABLE TAIKHOAN (
-    maTaiKhoan CHAR(10) PRIMARY KEY,
+    maTaiKhoan CHAR(7) PRIMARY KEY,
     maVaiTro CHAR(10),
     email VARCHAR(100) NOT NULL,
     matKhau VARCHAR(255) NOT NULL,
@@ -46,10 +46,10 @@ CREATE TABLE TAIKHOAN (
 );
 
 CREATE TABLE NHANVIEN (
-    maNhanVien CHAR(10) PRIMARY KEY,
-    maTaiKhoan CHAR(10),
-    maKhoa CHAR(10),
-    maDiaDiem CHAR(10),
+    maNhanVien CHAR(7) PRIMARY KEY,
+    maTaiKhoan CHAR(7),
+    maKhoa CHAR(7),
+    maDiaDiem CHAR(7),
     hoTen VARCHAR(100) NOT NULL,
     CCCD CHAR(12) NOT NULL,
     gioiTinh VARCHAR(10),
@@ -57,9 +57,9 @@ CREATE TABLE NHANVIEN (
 );
 
 CREATE TABLE TINHNGUYENVIEN (
-    maTNV CHAR(10) PRIMARY KEY,
-    maTaiKhoan CHAR(10),
-    maPhuongXa CHAR(10),
+    maTNV CHAR(7) PRIMARY KEY,
+    maTaiKhoan CHAR(7),
+    maPhuongXa CHAR(7),
     hoTen VARCHAR(100) NOT NULL,
     CCCD CHAR(12) NOT NULL,
     ngaySinh DATE NOT NULL,
@@ -71,9 +71,9 @@ CREATE TABLE TINHNGUYENVIEN (
 
 -- 1.3. Nhóm Quản lý Chiến dịch & Đăng ký
 CREATE TABLE CHIENDICHHIENMAU (
-    maChienDich CHAR(10) PRIMARY KEY,
-    maDiaDiem CHAR(10),
-    maNhanVien CHAR(10),
+    maChienDich CHAR(7) PRIMARY KEY,
+    maDiaDiem CHAR(7),
+    maNhanVien CHAR(7),
     tenChienDich VARCHAR(255) NOT NULL,
     thoiGianBD DATETIME NOT NULL,
     thoiGianKT DATETIME NOT NULL,
@@ -84,10 +84,10 @@ CREATE TABLE CHIENDICHHIENMAU (
 );
 
 CREATE TABLE DONDANGKY (
-    maDon CHAR(10) PRIMARY KEY,
-    maTNV CHAR(10) NULL,
-    maChienDich CHAR(10),
-    maNhanVien CHAR(10) DEFAULT NULL,
+    maDon CHAR(7) PRIMARY KEY,
+    maTNV CHAR(7) NULL,
+    maChienDich CHAR(7),
+    maNhanVien CHAR(7) DEFAULT NULL,
     maQR VARCHAR(255),
     thoiGianDangKy DATETIME DEFAULT CURRENT_TIMESTAMP,
     trangThai VARCHAR(50) NOT NULL,
@@ -99,19 +99,20 @@ CREATE TABLE DONDANGKY (
 );
 
 CREATE TABLE HOSOSUCKHOE (
-    maHoSo CHAR(10) PRIMARY KEY,
-    maDon CHAR(10),
-    khangSinh BOOLEAN DEFAULT FALSE,  -- Có đang dùng kháng sinh không
-    truyenNhiem BOOLEAN DEFAULT FALSE, -- Có bệnh truyền nhiễm (HIV, Gan B...) không
-    dauHong BOOLEAN DEFAULT FALSE,     -- Có bị đau họng/sốt không
-    coThai BOOLEAN DEFAULT FALSE,      -- Có đang mang thai/nuôi con nhỏ không
-    moTaKhac NVARCHAR(255)             -- Ghi chú các bệnh lý nền khác
+     maHoSo CHAR(7) PRIMARY KEY,
+     maDon CHAR(7),
+     khangSinh BOOLEAN DEFAULT FALSE,
+     truyenNhiem BOOLEAN DEFAULT FALSE,
+     dauHong BOOLEAN DEFAULT FALSE,
+     coThai BOOLEAN DEFAULT FALSE,
+     moTaKhac VARCHAR(255) CHARACTER SET utf8mb4 
 );
+
 -- 1.4. Nhóm Y tế & Kho máu
 CREATE TABLE KETQUALAMSANG (
-    maKQ CHAR(10) PRIMARY KEY,
-    maDon CHAR(10),
-    maNhanVien CHAR(10),
+    maKQ CHAR(7) PRIMARY KEY,
+    maDon CHAR(7),
+    maNhanVien CHAR(7),
     huyetAp VARCHAR(20),
     nhipTim INT,
     canNang DOUBLE,
@@ -121,17 +122,17 @@ CREATE TABLE KETQUALAMSANG (
 );
 
 CREATE TABLE KHOMAU (
-    maKho CHAR(10) PRIMARY KEY,
+    maKho CHAR(7) PRIMARY KEY,
     nhomMau VARCHAR(10),
     soLuongTon INT DEFAULT 0,
     nguongAnToan INT DEFAULT 10
 );
 
 CREATE TABLE TUIMAU (
-    maTuiMau CHAR(15) PRIMARY KEY,
-    maDon CHAR(10),
-    maNhanVien CHAR(10),
-    maKho CHAR(10),
+    maTuiMau CHAR(7) PRIMARY KEY,
+    maDon CHAR(7),
+    maNhanVien CHAR(7),
+    maKho CHAR(7),
     theTich INT,
     thoiGianLayMau DATETIME,
     trangThai VARCHAR(50) NOT NULL,
@@ -139,38 +140,38 @@ CREATE TABLE TUIMAU (
 );
 
 CREATE TABLE KETQUAXETNGHIEM (
-    maKQ CHAR(10) PRIMARY KEY,
-    maTuiMau CHAR(15),
-    maNhanVien CHAR(10),
+    maKQ CHAR(7) PRIMARY KEY,
+    maTuiMau CHAR(7),
+    maNhanVien CHAR(7),
     nhomMau VARCHAR(5),
     moTa VARCHAR(255)
 );
 
 -- 1.5. Nhập xuất & Tương tác
 CREATE TABLE PHIEUNHAPXUAT (
-    maPhieu CHAR(10) PRIMARY KEY,
-    maNhanVien CHAR(10),
+    maPhieu CHAR(7) PRIMARY KEY,
+    maNhanVien CHAR(7),
     loaiPhieu VARCHAR(50) NOT NULL,
     ngayNhapXuat DATE
 );
 
 CREATE TABLE CHITIETNHAPXUAT (
-    maPhieu CHAR(10),
-    maTuiMau CHAR(15),
+    maPhieu CHAR(7),
+    maTuiMau CHAR(7),
     PRIMARY KEY (maPhieu, maTuiMau)
 );
 
 CREATE TABLE CHUNGNHAN (
-    maChungNhan CHAR(10) PRIMARY KEY,
-    maDon CHAR(10),
-    maNhanVien CHAR(10),
+    maChungNhan CHAR(7) PRIMARY KEY,
+    maDon CHAR(7),
+    maNhanVien CHAR(7),
     filePDF VARCHAR(255),
     ngayCap DATE
 );
 
 CREATE TABLE TINTUC (
-    maTinTuc CHAR(10) PRIMARY KEY,
-    maNhanVien CHAR(10),
+    maTinTuc CHAR(7) PRIMARY KEY,
+    maNhanVien CHAR(7),
     tieuDe VARCHAR(255) NOT NULL,
     noiDung TEXT,
     hinhAnh VARCHAR(255),
@@ -179,18 +180,18 @@ CREATE TABLE TINTUC (
 );
 
 CREATE TABLE THONGBAO (
-    maThongBao CHAR(10) PRIMARY KEY,
-    maTaiKhoanGui CHAR(10),
-    maTaiKhoanNhan CHAR(10),
+    maThongBao CHAR(7) PRIMARY KEY,
+    maTaiKhoanGui CHAR(7),
+    maTaiKhoanNhan CHAR(7),
     noiDung TEXT,
     thoiGianGui DATETIME DEFAULT CURRENT_TIMESTAMP,
     trangThai VARCHAR(50)
 );
 
 CREATE TABLE TINNHAN (
-    maTinNhan CHAR(10) PRIMARY KEY,
-    maTaiKhoanGui CHAR(10),
-    maTaiKhoanNhan CHAR(10),
+    maTinNhan CHAR(7) PRIMARY KEY,
+    maTaiKhoanGui CHAR(7),
+    maTaiKhoanNhan CHAR(7),
     noiDung TEXT,
     thoiGian DATETIME DEFAULT CURRENT_TIMESTAMP,
     trangThai BOOLEAN DEFAULT FALSE 
@@ -263,42 +264,42 @@ INSERT INTO VAITRO VALUES
 ('AD','Quản trị hệ thống'), 
 ('BS','Bác sĩ chuyên khoa'), 
 ('NV_SL','Nhân viên sàng lọc'),
-('NV_TN','Nhân viên thu nhận'), 
+('NV_LM','Nhân viên lấy máu'), 
 ('NV_XN','Nhân viên xét nghiệm'), 
 ('QLK','Quản lý kho máu'), 
 ('TNV','Tình nguyện viên');
 
 INSERT INTO PHUONGXA VALUES 
-('HC01','Phường Thạch Thang, Hải Châu'), 
-('HC02','Phường Hải Châu I, Hải Châu'), 
-('HC03','Phường Hải Châu II, Hải Châu'), 
-('HC04','Phường Thuận Phước, Hải Châu'), 
-('HC05','Phường Thanh Bình, Hải Châu'), 
-('LC01','Phường Hòa Khánh Bắc, Liên Chiểu'), 
-('LC02','Phường Hòa Minh, Liên Chiểu'), 
-('LC03','Phường Hòa Khánh Nam, Liên Chiểu'), 
-('NHS01','Phường Khuê Mỹ, Ngũ Hành Sơn'), 
-('NHS02','Phường Mỹ An, Ngũ Hành Sơn'), 
-('TK01','Phường Vĩnh Trung, Thanh Khê'), 
-('TK02','Phường Thạc Gián, Thanh Khê');
+('PX00001','Phường Thạch Thang, Hải Châu'), 
+('PX00002','Phường Hải Châu I, Hải Châu'), 
+('PX00003','Phường Hải Châu II, Hải Châu'), 
+('PX00004','Phường Thuận Phước, Hải Châu'), 
+('PX00005','Phường Thanh Bình, Hải Châu'), 
+('PX00006','Phường Hòa Khánh Bắc, Liên Chiểu'), 
+('PX00007','Phường Hòa Minh, Liên Chiểu'), 
+('PX00008','Phường Hòa Khánh Nam, Liên Chiểu'), 
+('PX00009','Phường Khuê Mỹ, Ngũ Hành Sơn'), 
+('PX00010','Phường Mỹ An, Ngũ Hành Sơn'), 
+('PX00011','Phường Vĩnh Trung, Thanh Khê'), 
+('PX00012','Phường Thạc Gián, Thanh Khê');
 
 INSERT INTO DIADIEM VALUES 
-('DD01','Bệnh viện Đà Nẵng','124 Hải Phòng','HC01','Bệnh viện'),
-('DD02','Bệnh viện C Đà Nẵng','122 Hải Phòng','HC01','Bệnh viện'),
-('DD03','Bệnh viện Ung bướu','Hoàng Trung Thông','LC02','Bệnh viện'),
-('DD04','Bệnh viện Phụ sản - Nhi','402 Lê Văn Hiến','NHS01','Bệnh viện'),
-('DD05','Hội Chữ thập đỏ TP Đà Nẵng','522 Ông Ích Khiêm','HC03','Điểm cố định'),
-('DD06','ĐH Sư phạm Kỹ thuật (UTE)','48 Cao Thắng','HC01','Điểm lưu động'),
-('DD07','Đại học Đông Á','33 Xô Viết Nghệ Tĩnh','HC02','Điểm lưu động'),
-('DD08', 'Khoa Huyết học - Truyền máu (BV Đà Nẵng)', '103 Quang Trung', 'HC01', 'Bệnh viện');
+('DD00001','Bệnh viện Đà Nẵng','124 Hải Phòng','PX00001','Bệnh viện'),
+('DD00002','Bệnh viện C Đà Nẵng','122 Hải Phòng','PX00001','Bệnh viện'),
+('DD00003','Bệnh viện Ung bướu','Hoàng Trung Thông','PX00007','Bệnh viện'),
+('DD00004','Bệnh viện Phụ sản - Nhi','402 Lê Văn Hiến','PX00009','Bệnh viện'),
+('DD00005','Hội Chữ thập đỏ TP Đà Nẵng','522 Ông Ích Khiêm','PX00003','Điểm cố định'),
+('DD00006','ĐH Sư phạm Kỹ thuật (UTE)','48 Cao Thắng','PX00001','Điểm lưu động'),
+('DD00007','Đại học Đông Á','33 Xô Viết Nghệ Tĩnh','PX00002','Điểm lưu động'),
+('DD00008','Khoa Huyết học - Truyền máu (BV Đà Nẵng)','103 Quang Trung','PX00001','Bệnh viện');
 
 INSERT INTO KHOACONGTAC VALUES 
-('KHH_DN','Khoa Huyết học - BV Đà Nẵng'), 
-('KLS_DN','Khoa Khám bệnh - BV Đà Nẵng'), 
-('KXN_DN','Khoa Xét nghiệm - BV Đà Nẵng'),
-('KHH_C','Khoa Huyết học - BV C'), 
-('KCC_PSN','Khoa Cấp cứu - BV Phụ sản Nhi'), 
-('KHH_UB','Khoa Huyết học - BV Ung bướu');
+('KC00001','Khoa Huyết học - BV Đà Nẵng'), 
+('KC00002','Khoa Khám bệnh - BV Đà Nẵng'), 
+('KC00003','Khoa Xét nghiệm - BV Đà Nẵng'),
+('KC00004','Khoa Huyết học - BV C'), 
+('KC00005','Khoa Cấp cứu - BV Phụ sản Nhi'), 
+('KC00006','Khoa Huyết học - BV Ung bướu');
 
 -- =============================================================
 -- 2. HỆ THỐNG TÀI KHOẢN (DÙNG CHUNG NHÂN VIÊN & TNV CÓ APP)
@@ -306,318 +307,235 @@ INSERT INTO KHOACONGTAC VALUES
 
 INSERT INTO TAIKHOAN VALUES 
 -- Tài khoản Nhân sự y tế & Admin (15 người)
-('TK_NV01','BS','lequoctuan.bs@bvdn.vn','123',1), 
-('TK_NV02','BS','phamhongngoc.bs@bvdn.vn','123',1), 
-('TK_NV03','NV_SL','nguyenthilan.sl@bvdn.vn','123',1),
-('TK_NV04','NV_SL','trinhdieuthuy.sl@bvdn.vn','123',1), 
-('TK_NV05','NV_SL','dolanphuong.sl@bvc.vn','123',1), 
-('TK_NV06','NV_TN','dangvanmanh.tn@bvdn.vn','123',1),
-('TK_NV07','NV_TN','levanhoang.tn@bvdn.vn','123',1), 
-('TK_NV08','NV_TN','vubaoquynh.tn@bvc.vn','123',1), 
-('TK_NV09','NV_XN','hoangthihuy.xn@bvdn.vn','123',1),
-('TK_NV10','NV_XN','nguyentuyetmai.xn@bvdn.vn','123',1), 
-('TK_NV11','NV_XN','trandinhnam.xn@bvub.vn','123',1), 
-('TK_NV12','QLK','tranminhhung.kho@bvdn.vn','123',1),
-('TK_NV13','QLK','lamtandat.kho@bvc.vn','123',1), 
-('TK_NV14','AD','admin.system@redcross.dn.vn','123',1), 
-('TK_NV15','BS','vunhatminh.bs@bvc.vn','123',1),
+('TK00001','BS','lequoctuan.bs@bvdn.vn','123',1), 
+('TK00002','BS','phamhongngoc.bs@bvdn.vn','123',1), 
+('TK00003','NV_SL','nguyenthilan.sl@bvdn.vn','123',1),
+('TK00004','NV_SL','trinhdieuthuy.sl@bvdn.vn','123',1), 
+('TK00005','NV_SL','dolanphuong.sl@bvc.vn','123',1), 
+('TK00006','NV_LM','dangvanmanh.lm@bvdn.vn','123',1), -- Cập nhật NV_LM
+('TK00007','NV_LM','levanhoang.lm@bvdn.vn','123',1), -- Cập nhật NV_LM
+('TK00008','NV_LM','vubaoquynh.lm@bvc.vn','123',1), -- Cập nhật NV_LM
+('TK00009','NV_XN','hoangthihuy.xn@bvdn.vn','123',1),
+('TK00010','NV_XN','nguyentuyetmai.xn@bvdn.vn','123',1), 
+('TK00011','NV_XN','trandinhnam.xn@bvub.vn','123',1), 
+('TK00012','QLK','tranminhhung.kho@bvdn.vn','123',1),
+('TK00013','QLK','lamtandat.kho@bvc.vn','123',1), 
+('TK00014','AD','admin.system@redcross.dn.vn','123',1), 
+('TK00015','BS','vunhatminh.bs@bvc.vn','123',1),
 
--- Tài khoản Tình nguyện viên đã đăng ký App (30 người)
-('TK_U01','TNV','vanquyvuong.it@gmail.com','123',1), 
-('TK_U02','TNV','phamminhhuy.dev@gmail.com','123',1), 
-('TK_U03','TNV','leviethung.tech@gmail.com','123',1),
-('TK_U04','TNV','levanmanh.2002@gmail.com','123',1), 
-('TK_U05','TNV','tranthuha.95@yahoo.com','123',1), 
-('TK_U06','TNV','nguyenhoanglong.dn@outlook.com','123',1),
-('TK_U07','TNV','dothanhvinh.arch@gmail.com','123',1), 
-('TK_U08','TNV','truonggiabao.2003@gmail.com','123',1), 
-('TK_U09','TNV','nguyenthuylinh.marketing@gmail.com','123',1),
-('TK_U10','TNV','vudinhphong.eng@gmail.com','123',1), 
-('TK_U11','TNV','trancongminh.hr@yahoo.com','123',1), 
-('TK_U12','TNV','ngothanhson.sale@gmail.com','123',1),
-('TK_U13','TNV','dangngocthao.199x@gmail.com','123',1), 
-('TK_U14','TNV','hoangvanbach.teacher@outlook.com','123',1), 
-('TK_U15','TNV','phanvantri.mechanic@gmail.com','123',1),
-('TK_U16','TNV','lyphuongchau.design@gmail.com','123',1), 
-('TK_U17','TNV','buiquangdung.law@gmail.com','123',1), 
-('TK_U18','TNV','maithanhyen.nurse@yahoo.com','123',1),
-('TK_U19','TNV','duongkhactiep.freelance@gmail.com','123',1), 
-('TK_U20','TNV','votritai.banking@gmail.com','123',1), 
-('TK_U21','TNV','doanbaotram.edu@gmail.com','123',1),
-('TK_U22','TNV','hovietthai.it@gmail.com','123',1), 
-('TK_U23','TNV','chautuankiet.photo@outlook.com','123',1), 
-('TK_U24','TNV','tonnuquynh.chef@gmail.com','123',1),
-('TK_U25','TNV','lamchikhang.seo@gmail.com','123',1), 
-('TK_U26','TNV','dinhngocdiep.writer@yahoo.com','123',1), 
-('TK_U27','TNV','thainhatnam.dev@gmail.com','123',1),
-('TK_U28','TNV','kieuthanhhuong.acc@gmail.com','123',1), 
-('TK_U29','TNV','trinhcamtu.logistics@gmail.com','123',1), 
-('TK_U30','TNV','luugiahuy.tour@outlook.com','123',1);
+-- Tài khoản Tình nguyện viên (15 người tiêu biểu)
+('TK00016','TNV','vanquyvuong.it@gmail.com','123',1), 
+('TK00017','TNV','phamminhhuy.dev@gmail.com','123',1), 
+('TK00018','TNV','leviethung.tech@gmail.com','123',1),
+('TK00019','TNV','levanmanh.2002@gmail.com','123',1), 
+('TK00020','TNV','tranthuha.95@yahoo.com','123',1), 
+('TK00021','TNV','nguyenhoanglong.dn@outlook.com','123',1),
+('TK00022','TNV','dothanhvinh.arch@gmail.com','123',1), 
+('TK00023','TNV','truonggiabao.2003@gmail.com','123',1), 
+('TK00024','TNV','nguyenthuylinh.marketing@gmail.com','123',1),
+('TK00025','TNV','vudinhphong.eng@gmail.com','123',1), 
+('TK00026','TNV','trancongminh.hr@yahoo.com','123',1), 
+('TK00027','TNV','ngothanhson.sale@gmail.com','123',1),
+('TK00028','TNV','dangngocthao.199x@gmail.com','123',1), 
+('TK00029','TNV','hoangvanbach.teacher@outlook.com','123',1), 
+('TK00030','TNV','phanvantri.mechanic@gmail.com','123',1);
 
 -- =============================================================
 -- 3. NHÂN VIÊN Y TẾ ĐƯỢC PHÂN CÔNG (15 NGƯỜI)
 -- =============================================================
 
 INSERT INTO NHANVIEN VALUES 
-('NV01','TK_NV01','KLS_DN','DD01','Lê Quốc Tuấn','048075000001','Nam','0905123456'),
-('NV02','TK_NV02','KLS_DN','DD01','Phạm Hồng Ngọc','048182000002','Nữ','0914234567'),
-('NV03','TK_NV03','KLS_DN','DD01','Nguyễn Thị Lan','048185000003','Nữ','0935345678'),
-('NV04','TK_NV04','KLS_DN','DD01','Trịnh Diệu Thúy','048190000004','Nữ','0905456789'),
-('NV05','TK_NV05','KHH_C','DD02','Đỗ Lan Phương','048188000005','Nữ','0702567890'),
-('NV06','TK_NV06','KHH_DN','DD01','Đặng Văn Mạnh','048092000006','Nam','0385678901'),
-('NV07','TK_NV07','KHH_DN','DD01','Lê Văn Hoàng','048095000007','Nam','0914789012'),
-('NV08','TK_NV08','KHH_C','DD02','Vũ Bảo Quỳnh','048195000008','Nữ','0935890123'),
-('NV09','TK_NV09','KXN_DN','DD01','Hoàng Thị Huy','048190000009','Nữ','0905901234'),
-('NV10','TK_NV10','KXN_DN','DD01','Nguyễn Tuyết Mai','048199000010','Nữ','0702012345'),
-('NV11','TK_NV11','KHH_UB','DD03','Trần Đình Nam','048096000011','Nam','0914123450'),
-('NV12','TK_NV12','KHH_DN','DD01','Trần Minh Hưng','048080000012','Nam','0935234561'),
-('NV13','TK_NV13','KHH_C','DD02','Lâm Tấn Đạt','048085000013','Nam','0905345672'),
-('NV14','TK_NV14','KLS_DN','DD01','Admin Hệ Thống','048099000014','Nam','0702456783'),
-('NV15','TK_NV15','KLS_DN','DD02','Vũ Nhật Minh','048088000015','Nam','0914567894');
+('NV00001','TK00001','KC00002','DD00001','Lê Quốc Tuấn','048075000001','Nam','0905123456'),
+('NV00002','TK00002','KC00002','DD00001','Phạm Hồng Ngọc','048182000002','Nữ','0914234567'),
+('NV00003','TK00003','KC00002','DD00001','Nguyễn Thị Lan','048185000003','Nữ','0935345678'),
+('NV00004','TK00004','KC00002','DD00001','Trịnh Diệu Thúy','048190000004','Nữ','0905456789'),
+('NV00005','TK00005','KC00004','DD00002','Đỗ Lan Phương','048188000005','Nữ','0702567890'),
+('NV00006','TK00006','KC00001','DD00001','Đặng Văn Mạnh','048092000006','Nam','0385678901'),
+('NV00007','TK00007','KC00001','DD00001','Lê Văn Hoàng','048095000007','Nam','0914789012'),
+('NV00008','TK00008','KC00004','DD00002','Vũ Bảo Quỳnh','048195000008','Nữ','0935890123'),
+('NV00009','TK00012','KC00003','DD00001','Hoàng Thị Huy','048190000009','Nữ','0905901234'),
+('NV00010','TK00013','KC00003','DD00001','Nguyễn Tuyết Mai','048199000010','Nữ','0702012345'),
+('NV00011','TK00011','KC00006','DD00003','Trần Đình Nam','048096000011','Nam','0914123450'),
+('NV00012','TK00012','KC00001','DD00001','Trần Minh Hưng','048080000012','Nam','0935234561'),
+('NV00013','TK00013','KC00004','DD00002','Lâm Tấn Đạt','048085000013','Nam','0905345672'),
+('NV00014','TK00014','KC00002','DD00001','Admin Hệ Thống','048099000014','Nam','0702456783'),
+('NV00015','TK00015','KC00002','DD00002','Vũ Nhật Minh','048088000015','Nam','0914567894');
 
 -- =============================================================
--- 4. TÌNH NGUYỆN VIÊN (50 NGƯỜI)
--- =============================================================
-
--- Nhóm 1 & 3: 30 người CÓ TÀI KHOẢN APP (Liên kết bảng TAIKHOAN)
 INSERT INTO TINHNGUYENVIEN VALUES 
-('TNV01','TK_U01','LC01','Văn Quý Vương','048002000101','2002-08-15','Nam','0385111001','B+','48 Cao Thắng, Liên Chiểu'),
-('TNV02','TK_U02','LC02','Phạm Minh Huy','048002000102','2002-10-12','Nam','0385111002','O+','12 Nguyễn Lương Bằng'),
-('TNV03','TK_U03','HC01','Lê Việt Hưng','048001000103','2001-05-20','Nam','0385111003','A+','56 Quang Trung, Hải Châu'),
-('TNV04','TK_U04','LC02','Lê Văn Mạnh','048002000104','2002-12-05','Nam','0385111004','O+','Tôn Đức Thắng, Liên Chiểu'),
-('TNV05','TK_U05','HC02','Trần Thu Hà','048195000105','1995-03-12','Nữ','0905111005','AB+','Bạch Đằng, Hải Châu'),
-('TNV06','TK_U06','NHS01','Nguyễn Hoàng Long','048088000106','1988-11-25','Nam','0935111006','O-','Lê Văn Hiến, Ngũ Hành Sơn'),
-('TNV07','TK_U07','LC01','Đỗ Thành Vinh','048096000107','1996-02-15','Nam','0905111007','O+','Ngô Thì Nhậm, Liên Chiểu'),
-('TNV08','TK_U08','NHS01','Trương Gia Bảo','048003000108','2003-01-20','Nam','0702111008','A-','Hồ Xuân Hương, Ngũ Hành Sơn'),
-('TNV09','TK_U09','HC02','Nguyễn Thùy Linh','048197000109','1997-04-18','Nữ','0905111009','B+','Trần Phú, Hải Châu'),
-('TNV10','TK_U10','LC01','Vũ Đình Phong','048085000110','1985-09-05','Nam','0914111010','AB-','Nguyễn Sinh Sắc, Liên Chiểu'),
-('TNV11','TK_U11','HC01','Trần Công Minh','048090000111','1990-12-30','Nam','0905111011','A+','Đống Đa, Hải Châu'),
-('TNV12','TK_U12','LC01','Ngô Thanh Sơn','048094000112','1994-08-14','Nam','0935111012','B+','Phạm Như Xương, Liên Chiểu'),
-('TNV13','TK_U13','HC02','Đặng Ngọc Thảo','048100000113','2000-03-25','Nữ','0914111013','O+','Lê Lợi, Hải Châu'),
-('TNV14','TK_U14','HC01','Hoàng Văn Bách','048082000114','1982-12-12','Nam','0914111014','O+','Lý Tự Trọng, Hải Châu'),
-('TNV15','TK_U15','LC01','Phan Văn Trị','048090000115','1990-03-03','Nam','0914111015','AB+','Nguyễn Chánh, Liên Chiểu'),
-('TNV16','TK_U16','LC02','Lý Phương Châu','048199000116','1999-07-22','Nữ','0905111016','A+','Hoàng Thị Loan, Liên Chiểu'),
-('TNV17','TK_U17','HC01','Bùi Quang Dũng','048095000117','1995-11-11','Nam','0935111017','B+','Nguyễn Du, Hải Châu'),
-('TNV18','TK_U18','NHS01','Mai Thanh Yến','048101000118','2001-02-14','Nữ','0702111018','O+','Võ Nguyên Giáp, Ngũ Hành Sơn'),
-('TNV19','TK_U19','HC02','Dương Khắc Tiệp','048098000119','1998-05-09','Nam','0914111019','O+','Phan Châu Trinh, Hải Châu'),
-('TNV20','TK_U20','LC01','Võ Trí Tài','048093000120','1993-08-30','Nam','0905111020','A-','Âu Cơ, Liên Chiểu'),
-('TNV21','TK_U21','LC02','Đoàn Bảo Trâm','048197000121','1997-12-01','Nữ','0385111021','B+','Nguyễn Đình Trọng, Liên Chiểu'),
-('TNV22','TK_U22','HC01','Hồ Viết Thái','048091000122','1991-04-15','Nam','0935111022','O+','Hùng Vương, Hải Châu'),
-('TNV23','TK_U23','NHS01','Châu Tuấn Kiệt','048002000123','2002-09-25','Nam','0914111023','AB+','Non Nước, Ngũ Hành Sơn'),
-('TNV24','TK_U24','HC02','Tôn Nữ Quỳnh','048196000124','1996-06-18','Nữ','0905111024','O+','Yên Bái, Hải Châu'),
-('TNV25','TK_U25','LC01','Lâm Chí Khang','048089000125','1989-10-10','Nam','0702111025','A+','Bàu Mạc, Liên Chiểu'),
-('TNV26','TK_U26','LC02','Đinh Ngọc Diệp','048100000126','2000-01-20','Nữ','0385111026','B+','Trung Nghĩa, Liên Chiểu'),
-('TNV27','TK_U27','HC01','Thái Nhật Nam','048094000127','1994-03-08','Nam','0935111027','O+','Lê Duẩn, Hải Châu'),
-('TNV28','TK_U28','NHS01','Kiều Thanh Hương','048192000128','1992-07-07','Nữ','0914111028','O-','Châu Thị Tế, Ngũ Hành Sơn'),
-('TNV29','TK_U29','HC02','Trịnh Cẩm Tú','048198000129','1998-11-30','Nữ','0905111029','A+','Trần Quốc Toản, Hải Châu'),
-('TNV30','TK_U30','LC01','Lưu Gia Huy','048003000130','2003-02-28','Nam','0702111030','AB+','Đồng Kè, Liên Chiểu');
+-- Nhóm 1: 15 người CÓ TÀI KHOẢN APP (Khớp với mã TK00016 - TK00030 đã tạo)
+('TN00001','TK00016','PX00006','Văn Quý Vương','048002000101','2005-05-16','Nam','0385111001','B+','48 Cao Thắng, Liên Chiểu'),
+('TN00002','TK00017','PX00007','Phạm Minh Huy','048002000102','2005-10-12','Nam','0385111002','O+','12 Nguyễn Lương Bằng'),
+('TN00003','TK00018','PX00001','Lê Việt Hưng','048001000103','2001-05-20','Nam','0385111003','A+','56 Quang Trung, Hải Châu'),
+('TN00004','TK00019','PX00007','Lê Văn Mạnh','048002000104','2002-12-05','Nam','0385111004','O+','Tôn Đức Thắng, Liên Chiểu'),
+('TN00005','TK00020','PX00002','Trần Thu Hà','048195000105','1995-03-12','Nữ','0905111005','AB+','Bạch Đằng, Hải Châu'),
+('TN00006','TK00021','PX00009','Nguyễn Hoàng Long','048088000106','1988-11-25','Nam','0935111006','O-','Lê Văn Hiến, Ngũ Hành Sơn'),
+('TN00007','TK00022','PX00006','Đỗ Thành Vinh','048096000107','1996-02-15','Nam','0905111007','O+','Ngô Thì Nhậm, Liên Chiểu'),
+('TN00008','TK00023','PX00009','Trương Gia Bảo','048003000108','2003-01-20','Nam','0702111008','A-','Hồ Xuân Hương, Ngũ Hành Sơn'),
+('TN00009','TK00024','PX00002','Nguyễn Thùy Linh','048197000109','1997-04-18','Nữ','0905111009','B+','Trần Phú, Hải Châu'),
+('TN00010','TK00025','PX00006','Vũ Đình Phong','048085000110','1985-09-05','Nam','0914111010','AB-','Nguyễn Sinh Sắc, Liên Chiểu'),
+('TN00011','TK00026','PX00001','Trần Công Minh','048090000111','1990-12-30','Nam','0905111011','A+','Đống Đa, Hải Châu'),
+('TN00012','TK00027','PX00006','Ngô Thanh Sơn','048094000112','1994-08-14','Nam','0935111012','B+','Phạm Như Xương, Liên Chiểu'),
+('TN00013','TK00028','PX00002','Đặng Ngọc Thảo','048100000113','2000-03-25','Nữ','0914111013','O+','Lê Lợi, Hải Châu'),
+('TN00014','TK00029','PX00001','Hoàng Văn Bách','048082000114','1982-12-12','Nam','0914111014','O+','Lý Tự Trọng, Hải Châu'),
+('TN00015','TK00030','PX00006','Phan Văn Trị','048090000115','1990-03-03','Nam','0914111015','AB+','Nguyễn Chánh, Liên Chiểu'),
 
--- Nhóm 2: 20 người ĐẾN HIẾN TRỰC TIẾP KHÔNG TÀI KHOẢN (maTaiKhoan = NULL)
-INSERT INTO TINHNGUYENVIEN VALUES 
-('TNV31',NULL,'LC02','Đồng Đức Hải','048095000131','1995-05-15','Nam','0385111031','O+','Phước Lý, Liên Chiểu'),
-('TNV32',NULL,'HC01','Nhan Gia Hân','048101000132','2001-08-08','Nữ','0935111032','B+','Hải Phòng, Hải Châu'),
-('TNV33',NULL,'NHS01','Mạc Văn Khoa','048090000133','1990-12-12','Nam','0914111033','O+','Bá Tùng, Ngũ Hành Sơn'),
-('TNV34',NULL,'HC02','Cấn Đình Bảo','048097000134','1997-04-04','Nam','0905111034','A+','Nguyễn Thái Học, Hải Châu'),
-('TNV35',NULL,'LC01','Lại Cẩm Nhung','048199000135','1999-09-09','Nữ','0702111035','AB+','Mẹ Suốt, Liên Chiểu'),
-('TNV36',NULL,'LC02','Uông Tiến Đạt','048002000136','2002-11-11','Nam','0385111036','O+','Bùi Chát, Liên Chiểu'),
-('TNV37',NULL,'HC01','Vi Cầm Quỳnh','048196000137','1996-02-20','Nữ','0935111037','B+','Cao Thắng, Hải Châu'),
-('TNV38',NULL,'NHS01','Từ Bảo Long','048093000138','1993-06-06','Nam','0914111038','O+','Nam Kỳ Khởi Nghĩa, Ngũ Hành Sơn'),
-('TNV39',NULL,'HC02','Bạch Diễm Khanh','048198000139','1998-10-10','Nữ','0905111039','A+','Hùng Vương, Hải Châu'),
-('TNV40',NULL,'LC01','Khổng Tấn Đạt','048001000140','2001-01-01','Nam','0702111040','O+','Nguyễn Viết Xuân, Liên Chiểu'),
-('TNV41',NULL,'LC02','Tạ Thị Ngọc','048194000141','1994-05-25','Nữ','0385111041','B+','Hoàng Văn Thái, Liên Chiểu'),
-('TNV42',NULL,'HC01','Giang Hạo Thiên','048099000142','1999-08-18','Nam','0935111042','AB+','Nguyễn Thị Minh Khai, Hải Châu'),
-('TNV43',NULL,'NHS01','Thân Vĩnh Trường','048092000143','1992-12-22','Nam','0914111043','O+','Trần Đại Nghĩa, Ngũ Hành Sơn'),
-('TNV44',NULL,'HC02','Phương Tú Anh','048102000144','2002-03-30','Nữ','0905111044','A+','Hoàng Diệu, Hải Châu'),
-('TNV45',NULL,'LC01','Quản Trọng Nhân','048096000145','1996-07-07','Nam','0702111045','O+','Tô Hiệu, Liên Chiểu'),
-('TNV46',NULL,'LC02','Phí Hồng Đức','048091000146','1991-11-20','Nam','0385111046','B+','Tôn Đức Thắng, Liên Chiểu'),
-('TNV47',NULL,'HC01','Đái Nhật Tâm','048000000147','2000-04-14','Nam','0935111047','O+','Ông Ích Khiêm, Hải Châu'),
-('TNV48',NULL,'NHS01','Kiều Thủy Tiên','048195000148','1995-09-28','Nữ','0914111048','A-','Nguyễn Khắc Viện, Ngũ Hành Sơn'),
-('TNV49',NULL,'HC02','Thạch Vĩnh Khang','048098000149','1998-02-02','Nam','0905111049','AB+','Thái Phiên, Hải Châu'),
-('TNV50',NULL,'LC01','Hứa Kim Tuyến','048103000150','2003-10-15','Nữ','0702111050','O+','Lạc Long Quân, Liên Chiểu');
-
+-- Nhóm 2: 15 người ĐẾN HIẾN TRỰC TIẾP (maTaiKhoan = NULL)
+('TN00016',NULL,'PX00007','Đồng Đức Hải','048095000131','1995-05-15','Nam','0385111031','O+','Phước Lý, Liên Chiểu'),
+('TN00017',NULL,'PX00001','Nhan Gia Hân','048101000132','2001-08-08','Nữ','0935111032','B+','Hải Phòng, Hải Châu'),
+('TN00018',NULL,'PX00009','Mạc Văn Khoa','048090000133','1990-12-12','Nam','0914111033','O+','Bá Tùng, Ngũ Hành Sơn'),
+('TN00019',NULL,'PX00002','Cấn Đình Bảo','048097000134','1997-04-04','Nam','0905111034','A+','Nguyễn Thái Học, Hải Châu'),
+('TN00020',NULL,'PX00006','Lại Cẩm Nhung','048199000135','1999-09-09','Nữ','0702111035','AB+','Mẹ Suốt, Liên Chiểu'),
+('TN00021',NULL,'PX00007','Uông Tiến Đạt','048002000136','2002-11-11','Nam','0385111036','O+','Bùi Chát, Liên Chiểu'),
+('TN00022',NULL,'PX00001','Vi Cầm Quỳnh','048196000137','1996-02-20','Nữ','0935111037','B+','Cao Thắng, Hải Châu'),
+('TN00023',NULL,'PX00009','Từ Bảo Long','048093000138','1993-06-06','Nam','0914111038','O+','Nam Kỳ Khởi Nghĩa, Ngũ Hành Sơn'),
+('TN00024',NULL,'PX00002','Bạch Diễm Khanh','048198000139','1998-10-10','Nữ','0905111039','A+','Hùng Vương, Hải Châu'),
+('TN00025',NULL,'PX00006','Khổng Tấn Đạt','048001000140','2001-01-01','Nam','0702111040','O+','Nguyễn Viết Xuân, Liên Chiểu'),
+('TN00026',NULL,'PX00007','Tạ Thị Ngọc','048194000141','1994-05-25','Nữ','0385111041','B+','Hoàng Văn Thái, Liên Chiểu'),
+('TN00027',NULL,'PX00001','Giang Hạo Thiên','048099000142','1999-08-18','Nam','0935111042','AB+','Nguyễn Thị Minh Khai, Hải Châu'),
+('TN00028',NULL,'PX00009','Thân Vĩnh Trường','048092000143','1992-12-22','Nam','0914111043','O+','Trần Đại Nghĩa, Ngũ Hành Sơn'),
+('TN00029',NULL,'PX00002','Phương Tú Anh','048102000144','2002-03-30','Nữ','0905111044','A+','Hoàng Diệu, Hải Châu'),
+('TN00030',NULL,'PX00006','Quản Trọng Nhân','048096000145','1996-07-07','Nam','0702111045','O+','Tô Hiệu, Liên Chiểu');
 -- =============================================================
 -- 5. CHIẾN DỊCH HIẾN MÁU
 -- =============================================================
-INSERT INTO CHIENDICHHIENMAU(maChienDich, maDiaDiem, maNhanVien, tenChienDich, thoiGianBD, thoiGianKT, soLuongDuKien, trangThai, maQR, imageUrl)
-VALUES ('CD_XH26','DD06','NV01','Lễ hội Xuân Hồng UTE 2026','2026-02-10 07:00','2026-02-12 17:00',500,'Đã kết thúc','QR_XH26','xuanhong2026.jpg'),
-('CD_CN26','DD07','NV02','Chủ Nhật Đỏ Đại học Đông Á','2026-03-15 07:00','2026-03-15 11:30',300,'Đã phê duyệt','QR_CN26','chunhatdo2026.jpg'),
-('CD_TX26','DD05','NV15','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26','hienmau.jpg'),
-('CD00004', 'DD08', 'NV01', 'Hiến máu tình nguyện tại Bệnh viện Đà Nẵng', '2026-05-03 07:00:00', '2026-06-30 17:00:00', 100, 'Đang diễn ra', 'QR_BVDN_2024', 'HienMauTinhNguyenBVDM.png');
+INSERT INTO CHIENDICHHIENMAU(maChienDich, maDiaDiem, maNhanVien, tenChienDich, thoiGianBD, thoiGianKT, soLuongDuKien, trangThai, maQR, imageUrl) VALUES 
+('CD00001','DD00006','NV00001','Lễ hội Xuân Hồng UTE 2026','2026-02-10 07:00','2026-02-12 17:00',500,'Đã kết thúc','QR_XH26','xuanhong2026.jpg'),
+('CD00002','DD00007','NV00002','Chủ Nhật Đỏ Đại học Đông Á','2026-03-15 07:00','2026-03-15 11:30',300,'Đã phê duyệt','QR_CN26','chunhatdo2026.jpg'),
+('CD00003','DD00005','NV00015','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26','hienmau.jpg');
 
 -- =============================================================
 -- 6. ĐƠN ĐĂNG KÝ (3 LUỒNG HOẠT ĐỘNG RÕ RÀNG)
 -- =============================================================
 
+-- Trường hợp 1: Đăng ký qua App (15 người)
 INSERT INTO DONDANGKY (maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDangKy, trangThai, theTich) VALUES 
-('D01','TNV01','CD_XH26',NULL,'QR_01','2026-02-05','Đã hiến', 250), 
-('D02','TNV02','CD_XH26',NULL,'QR_02','2026-02-05','Đã hiến', 350),
-('D03','TNV03','CD_XH26',NULL,'QR_03','2026-02-05','Đã hiến', 450), 
-('D04','TNV04','CD_XH26',NULL,'QR_04','2026-02-05','Đã hiến', 250),
-('D05','TNV05','CD_XH26',NULL,'QR_05','2026-02-05','Đã hiến', 350), 
-('D06','TNV06','CD_XH26',NULL,'QR_06','2026-02-05','Đã hiến', 450),
-('D07','TNV07','CD_XH26',NULL,'QR_07','2026-02-05','Đã hiến', 250), 
-('D08','TNV08','CD_XH26',NULL,'QR_08','2026-02-05','Đã hiến', 350),
-('D09','TNV09','CD_XH26',NULL,'QR_09','2026-02-05','Đã hiến', 450), 
-('D10','TNV10','CD_XH26',NULL,'QR_10','2026-02-05','Đã hiến', 250),
-('D11','TNV11','CD_XH26',NULL,'QR_11','2026-02-05','Đã hiến', 350), 
-('D12','TNV12','CD_XH26',NULL,'QR_12','2026-02-05','Đã hiến', 450),
-('D13','TNV13','CD_XH26',NULL,'QR_13','2026-02-05','Đã hiến', 250), 
-('D14','TNV14','CD_XH26',NULL,'QR_14','2026-02-05','Đã hiến', 350),
-('D15','TNV15','CD_XH26',NULL,'QR_15','2026-02-05','Chưa hiến', 0),
-('D16','TNV16','CD_XH26',NULL,'QR_16','2026-02-05','Đã hiến', 450),
-('D17','TNV17','CD_XH26',NULL,'QR_17','2026-02-05','Đã hiến', 250), 
-('D18','TNV18','CD_XH26',NULL,'QR_18','2026-02-05','Đã hiến', 350),
-('D19','TNV19','CD_XH26',NULL,'QR_19','2026-02-05','Đã hiến', 450), 
-('D20','TNV20','CD_XH26',NULL,'QR_20','2026-02-05','Đã hiến', 250);
+('DK00001','TN00001','CD00001',NULL,'QR_01','2026-02-05','Đã hiến', 250), 
+('DK00002','TN00002','CD00001',NULL,'QR_02','2026-02-05','Đã hiến', 350),
+('DK00003','TN00003','CD00001',NULL,'QR_03','2026-02-05','Đã hiến', 450), 
+('DK00004','TN00004','CD00001',NULL,'QR_04','2026-02-05','Đã hiến', 250),
+('DK00005','TN00005','CD00001',NULL,'QR_05','2026-02-05','Đã hiến', 350), 
+('DK00006','TN00006','CD00001',NULL,'QR_06','2026-02-05','Đã hiến', 450),
+('DK00007','TN00007','CD00001',NULL,'QR_07','2026-02-05','Đã hiến', 250), 
+('DK00008','TN00008','CD00001',NULL,'QR_08','2026-02-05','Đã hiến', 350),
+('DK00009','TN00009','CD00001',NULL,'QR_09','2026-02-05','Đã hiến', 450), 
+('DK00010','TN00010','CD00001',NULL,'QR_10','2026-02-05','Đã hiến', 250),
+('DK00011','TN00011','CD00001',NULL,'QR_11','2026-02-05','Đã hiến', 350), 
+('DK00012','TN00012','CD00001',NULL,'QR_12','2026-02-05','Đã hiến', 450),
+('DK00013','TN00013','CD00001',NULL,'QR_13','2026-02-05','Đã hiến', 250), 
+('DK00014','TN00014','CD00001',NULL,'QR_14','2026-02-05','Đã hiến', 350),
+('DK00015','TN00015','CD00001',NULL,'QR_15','2026-02-05','Chưa hiến', 0);
 
--- Trường hợp 2: Không có tài khoản, đến hiến trực tiếp (NV03, NV04 nhập giúp).
-INSERT INTO DONDANGKY 
-(maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDangKy, trangThai, theTich)
-VALUES 
-('D21','TNV31','CD_XH26','NV03','QR_21','2026-02-10','Đã hiến',250), 
-('D22','TNV32','CD_XH26','NV04','QR_22','2026-02-10','Đã hiến',350),
-('D23','TNV33','CD_XH26','NV03','QR_23','2026-02-10','Đã hiến',450), 
-('D24','TNV34','CD_XH26','NV04','QR_24','2026-02-10','Đã hiến',250),
-('D25','TNV35','CD_XH26','NV03','QR_25','2026-02-10','Đã hiến',350), 
-('D26','TNV36','CD_XH26','NV04','QR_26','2026-02-10','Đã hiến',450),
-('D27','TNV37','CD_XH26','NV03','QR_27','2026-02-10','Đã hiến',250), 
-('D28','TNV38','CD_XH26','NV04','QR_28','2026-02-10','Chưa hiến',0),
-('D29','TNV39','CD_XH26','NV03','QR_29','2026-02-10','Đã hiến',350), 
-('D30','TNV40','CD_XH26','NV04','QR_30','2026-02-10','Đã hiến',450),
-('D31','TNV41','CD_XH26','NV03','QR_31','2026-02-10','Đã hiến',250), 
-('D32','TNV42','CD_XH26','NV04','QR_32','2026-02-10','Đã hiến',350),
-('D33','TNV43','CD_XH26','NV03','QR_33','2026-02-10','Đã hiến',450), 
-('D34','TNV44','CD_XH26','NV04','QR_34','2026-02-10','Đã hiến',250),
-('D35','TNV45','CD_XH26','NV03','QR_35','2026-02-10','Đã hiến',350), 
-('D36','TNV46','CD_XH26','NV04','QR_36','2026-02-10','Đã hiến',450),
-('D37','TNV47','CD_XH26','NV03','QR_37','2026-02-10','Đã hiến',250), 
-('D38','TNV48','CD_XH26','NV04','QR_38','2026-02-10','Đã hiến',350),
-('D39','TNV49','CD_XH26','NV03','QR_39','2026-02-10','Đã hiến',450), 
-('D40','TNV50','CD_XH26','NV04','QR_40','2026-02-10','Đã hiến',250);
+-- Trường hợp 2: Hiến trực tiếp (15 người)
+INSERT INTO DONDANGKY (maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDangKy, trangThai, theTich) VALUES 
+('DK00016','TN00016','CD00001','NV00003','QR_16','2026-02-10','Đã hiến',250), 
+('DK00017','TN00017','CD00001','NV00004','QR_17','2026-02-10','Đã hiến',350),
+('DK00018','TN00018','CD00001','NV00003','QR_18','2026-02-10','Đã hiến',450), 
+('DK00019','TN00019','CD00001','NV00004','QR_19','2026-02-10','Đã hiến',250),
+('DK00020','TN00020','CD00001','NV00003','QR_20','2026-02-10','Đã hiến',350), 
+('DK00021','TN00021','CD00001','NV00004','QR_21','2026-02-10','Đã hiến',450),
+('DK00022','TN00022','CD00001','NV00003','QR_22','2026-02-10','Đã hiến',250), 
+('DK00023','TN00023','CD00001','NV00004','QR_23','2026-02-10','Chưa hiến',0),
+('DK00024','TN00024','CD00001','NV00003','QR_24','2026-02-10','Đã hiến',350), 
+('DK00025','TN00025','CD00001','NV00004','QR_25','2026-02-10','Đã hiến',450),
+('DK00026','TN00026','CD00001','NV00003','QR_26','2026-02-10','Đã hiến',250), 
+('DK00027','TN00027','CD00001','NV00004','QR_27','2026-02-10','Đã hiến',350),
+('DK00028','TN00028','CD00001','NV00003','QR_28','2026-02-10','Đã hiến',450), 
+('DK00029','TN00029','CD00001','NV00004','QR_29','2026-02-10','Đã hiến',250),
+('DK00030','TN00030','CD00001','NV00003','QR_30','2026-02-10','Đã hiến',350);
 
-
--- Trường hợp 3
-INSERT INTO DONDANGKY 
-(maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDangKy, trangThai, theTich)
-VALUES 
-('D41','TNV21','CD_XH26','NV03','QR_41','2026-02-10','Đã hiến',350), 
-('D42','TNV22','CD_XH26','NV04','QR_42','2026-02-10','Đã hiến',450),
-('D43','TNV23','CD_XH26','NV03','QR_43','2026-02-10','Đã hiến',250), 
-('D44','TNV24','CD_XH26','NV04','QR_44','2026-02-10','Đã hiến',350),
-('D45','TNV25','CD_XH26','NV03','QR_45','2026-02-10','Chưa hiến',0), 
-('D46','TNV26','CD_XH26','NV04','QR_46','2026-02-10','Đã hiến',450),
-('D47','TNV27','CD_XH26','NV03','QR_47','2026-02-10','Đã hiến',250), 
-('D48','TNV28','CD_XH26','NV04','QR_48','2026-02-10','Đã hiến',350),
-('D49','TNV29','CD_XH26','NV03','QR_49','2026-02-10','Đã hiến',450), 
-('D50','TNV30','CD_XH26','NV04','QR_50','2026-02-10','Đã hiến',250);
+-- Trường hợp 3: Quét mã tại chỗ (5 người)
+INSERT INTO DONDANGKY (maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDangKy, trangThai, theTich) VALUES 
+('DK00031','TN00011','CD00001','NV00003','QR_31','2026-02-10','Đã hiến',350), 
+('DK00032','TN00012','CD00001','NV00004','QR_32','2026-02-10','Đã hiến',450),
+('DK00033','TN00013','CD00001','NV00003','QR_33','2026-02-10','Đã hiến',250), 
+('DK00034','TN00014','CD00001','NV00004','QR_34','2026-02-10','Đã hiến',350),
+('DK00035','TN00015','CD00001','NV00003','QR_35','2026-02-10','Chưa hiến',0);
 
 -- =============================================================
 -- 7. ĐỒNG BỘ 100%: HỒ SƠ SỨC KHỎE & KHÁM LÂM SÀNG
 -- (D15 Sốt, D28 Xăm mình, D45 Thiếu cân bị đánh rớt)
 -- =============================================================
 INSERT INTO HOSOSUCKHOE (maHoSo, maDon, khangSinh, truyenNhiem, dauHong, coThai, moTaKhac) VALUES 
-('HS01','D01',0,0,0,0,N'Cảm thấy khỏe mạnh'), 
-('HS02','D02',0,0,0,0,N'Ngủ đủ giấc trên 6 tiếng'), 
-('HS03','D03',0,0,0,0,N'Đã ăn sáng trước khi đến'), 
-('HS04','D04',0,0,0,0,N'Tinh thần thoải mái'), 
-('HS05','D05',0,0,0,0,N'Không có tiền sử dị ứng'),
-('HS06','D06',0,0,0,0,N'Lần đầu tham gia hiến máu'), 
-('HS07','D07',0,0,0,0,N'Đã uống nhiều nước trong sáng nay'), 
-('HS08','D08',0,0,0,0,N'Sẵn sàng hiến máu'), 
-('HS09','D09',0,0,0,0,N'Sức khỏe ổn định'), 
-('HS10','D10',0,0,0,0,N'Cảm thấy hơi hồi hộp'),
-('HS11','D11',0,0,0,0,N'Đã nghỉ ngơi đầy đủ'), 
-('HS12','D12',0,0,0,0,N'Khỏe mạnh bình thường'), 
-('HS13','D13',0,0,0,0,N'Chế độ ăn uống ổn định'), 
-('HS14','D14',0,0,0,0,N'Không dùng thuốc trong 1 tuần qua'), 
-('HS15','D15',0,0,1,0,N'Đang bị viêm họng, người mệt mỏi'), -- Khớp lý do rớt D15
-('HS16','D16',0,0,0,0,N'Tốt'), 
-('HS17','D17',0,0,0,0,N'Cảm thấy bình thường'), 
-('HS18','D18',0,0,0,0,N'Đã tìm hiểu quy trình hiến máu'), 
-('HS19','D19',0,0,0,0,N'Khỏe mạnh'), 
-('HS20','D20',0,0,0,0,N'Tốt'),
-('HS21','D21',0,0,0,0,N'Sức khỏe tốt'), 
-('HS22','D22',0,0,0,0,N'Nghỉ ngơi tốt đêm qua'), 
-('HS23','D23',0,0,0,0,N'Tốt'), 
-('HS24','D24',0,0,0,0,N'Sẵn sàng hiến'), 
-('HS25','D25',0,0,0,0,N'Khỏe mạnh'),
-('HS26','D26',0,0,0,0,N'Tinh thần tốt'), 
-('HS27','D27',0,0,0,0,N'Đã ăn uống đầy đủ'), 
-('HS28','D28',0,1,0,0,N'Mới thực hiện xăm mình gần đây'), -- Khớp lý do rớt D28
-('HS29','D29',0,0,0,0,N'Tốt'), 
-('HS30','D30',0,0,0,0,N'Sức khỏe ổn định'),
-('HS31','D31',0,0,0,0,N'Cảm thấy khỏe'), 
-('HS32','D32',0,0,0,0,N'Tốt'), 
-('HS33','D33',0,0,0,0,N'Đã uống nước đầy đủ'), 
-('HS34','D34',0,0,0,0,N'Sẵn sàng'), 
-('HS35','D35',0,0,0,0,N'Khỏe mạnh'),
-('HS36','D36',0,0,0,0,N'Tốt'), 
-('HS37','D37',0,0,0,0,N'Nghỉ ngơi ổn định'), 
-('HS38','D38',0,0,0,0,N'Bình thường'), 
-('HS39','D39',0,0,0,0,N'Tốt'), 
-('HS40','D40',0,0,0,0,N'Khỏe mạnh'),
-('HS41','D41',0,0,0,0,N'Sẵn sàng hiến máu'), 
-('HS42','D42',0,0,0,0,N'Tốt'), 
-('HS43','D43',0,0,0,0,N'Đã ăn nhẹ'), 
-('HS44','D44',0,0,0,0,N'Tinh thần ổn định'), 
-('HS45','D45',0,0,0,0,N'Cơ thể cảm thấy hơi yếu'), -- Khớp lý do rớt D45
-('HS46','D46',0,0,0,0,N'Khỏe mạnh'), 
-('HS47','D47',0,0,0,0,N'Tốt'), 
-('HS48','D48',0,0,0,0,N'Bình thường'), 
-('HS49','D49',0,0,0,0,N'Sức khỏe tốt'), 
-('HS50','D50',0,0,0,0,N'Sẵn sàng');
+('HS00001','DK00001',0,0,0,0,'Cảm thấy khỏe mạnh'), 
+('HS00002','DK00002',0,0,0,0,'Ngủ đủ giấc trên 6 tiếng'), 
+('HS00003','DK00003',0,0,0,0,'Đã ăn sáng trước khi đến'), 
+('HS00004','DK00004',0,0,0,0,'Tinh thần thoải mái'), 
+('HS00005','DK00005',0,0,0,0,'Không có tiền sử dị ứng'),
+('HS00006','DK00006',0,0,0,0,'Lần đầu tham gia hiến máu'), 
+('HS00007','DK00007',0,0,0,0,'Đã uống nhiều nước trong sáng nay'), 
+('HS00008','DK00008',0,0,0,0,'Sẵn sàng hiến máu'), 
+('HS00009','DK00009',0,0,0,0,'Sức khỏe ổn định'), 
+('HS00010','DK00010',0,0,0,0,'Cảm thấy hơi hồi hộp'),
+('HS00011','DK00011',0,0,0,0,'Đã nghỉ ngơi đầy đủ'), 
+('HS00012','DK00012',0,0,0,0,'Khỏe mạnh bình thường'), 
+('HS00013','DK00013',0,0,0,0,'Chế độ ăn uống ổn định'), 
+('HS00014','DK00014',0,0,0,0,'Không dùng thuốc trong 1 tuần qua'), 
+('HS00015','DK00015',0,0,1,0,'Đang bị viêm họng, người mệt mỏi'), -- Rớt lâm sàng
+
+('HS00016','DK00016',0,0,0,0,'Sức khỏe tốt'), 
+('HS00017','DK00017',0,0,0,0,'Nghỉ ngơi tốt đêm qua'), 
+('HS00018','DK00018',0,0,0,0,'Tốt'), 
+('HS00019','DK00019',0,0,0,0,'Sẵn sàng hiến'), 
+('HS00020','DK00020',0,0,0,0,'Khỏe mạnh'),
+('HS00021','DK00021',0,0,0,0,'Tinh thần tốt'), 
+('HS00022','DK00022',0,0,0,0,'Đã ăn uống đầy đủ'), 
+('HS00023','DK00023',0,1,0,0,'Mới thực hiện xăm mình gần đây'), -- Rớt lâm sàng
+('HS00024','DK00024',0,0,0,0,'Tốt'), 
+('HS00025','DK00025',0,0,0,0,'Sức khỏe ổn định'),
+('HS00026','DK00026',0,0,0,0,'Cảm thấy khỏe'), 
+('HS00027','DK00027',0,0,0,0,'Tốt'), 
+('HS00028','DK00028',0,0,0,0,'Đã uống nước đầy đủ'), 
+('HS00029','DK00029',0,0,0,0,'Sẵn sàng'), 
+('HS00030','DK00030',0,0,0,0,'Khỏe mạnh'),
+
+('HS00031','DK00031',0,0,0,0,'Tốt'), 
+('HS00032','DK00032',0,0,0,0,'Khỏe mạnh'), 
+('HS00033','DK00033',0,0,0,0,'Sẵn sàng hiến máu'), 
+('HS00034','DK00034',0,0,0,0,'Sẵn sàng'), 
+('HS00035','DK00035',0,0,0,0,'Cơ thể cảm thấy hơi yếu'); -- Rớt lâm sàng
 
 INSERT INTO KETQUALAMSANG VALUES 
-('KQ01','D01','NV03','120/80',75,65,36.5,1,NULL), 
-('KQ02','D02','NV04','115/75',80,55,36.6,1,NULL), 
-('KQ03','D03','NV03','125/85',72,70,36.5,1,NULL),
-('KQ04','D04','NV04','110/70',82,60,36.7,1,NULL), 
-('KQ05','D05','NV03','122/80',76,58,36.5,1,NULL), 
-('KQ06','D06','NV04','118/78',79,52,36.6,1,NULL),
-('KQ07','D07','NV03','130/85',74,75,36.5,1,NULL), 
-('KQ08','D08','NV04','125/80',81,62,36.6,1,NULL), 
-('KQ09','D09','NV03','115/75',77,54,36.7,1,NULL),
-('KQ10','D10','NV04','120/80',75,68,36.5,1,NULL), 
-('KQ11','D11','NV03','122/82',78,70,36.6,1,NULL), 
-('KQ12','D12','NV04','110/70',85,50,36.5,1,NULL),
-('KQ13','D13','NV03','125/85',72,72,36.7,1,NULL), 
-('KQ14','D14','NV04','115/75',80,60,36.6,1,NULL), 
-('KQ15','D15','NV03','140/90',95,65,38.0,0,'Sốt trên 37.5 độ'),
-('KQ16','D16','NV04','120/80',75,68,36.5,1,NULL), 
-('KQ17','D17','NV03','118/78',78,55,36.6,1,NULL), 
-('KQ18','D18','NV04','125/85',72,70,36.5,1,NULL),
-('KQ19','D19','NV03','110/70',82,60,36.7,1,NULL), 
-('KQ20','D20','NV04','122/80',76,58,36.5,1,NULL), 
-('KQ21','D21','NV03','118/78',79,52,36.6,1,NULL),
-('KQ22','D22','NV04','130/85',74,75,36.5,1,NULL), 
-('KQ23','D23','NV03','125/80',81,62,36.6,1,NULL), 
-('KQ24','D24','NV04','115/75',77,54,36.7,1,NULL),
-('KQ25','D25','NV03','120/80',75,68,36.5,1,NULL), 
-('KQ26','D26','NV04','122/82',78,70,36.6,1,NULL), 
-('KQ27','D27','NV03','110/70',85,50,36.5,1,NULL),
-('KQ28','D28','NV04','125/85',72,72,36.7,0,'Xăm mình dưới 6 tháng'), 
-('KQ29','D29','NV03','115/75',80,60,36.6,1,NULL), 
-('KQ30','D30','NV04','120/80',75,68,36.5,1,NULL),
-('KQ31','D31','NV03','115/75',78,55,36.6,1,NULL), 
-('KQ32','D32','NV04','125/85',72,70,36.5,1,NULL), 
-('KQ33','D33','NV03','110/70',82,60,36.7,1,NULL),
-('KQ34','D34','NV04','122/80',76,58,36.5,1,NULL), 
-('KQ35','D35','NV03','118/78',79,52,36.6,1,NULL), 
-('KQ36','D36','NV04','130/85',74,75,36.5,1,NULL),
-('KQ37','D37','NV03','125/80',81,62,36.6,1,NULL), 
-('KQ38','D38','NV04','115/75',77,54,36.7,1,NULL), 
-('KQ39','D39','NV03','120/80',75,68,36.5,1,NULL),
-('KQ40','D40','NV04','122/82',78,70,36.6,1,NULL), 
-('KQ41','D41','NV03','110/70',85,50,36.5,1,NULL), 
-('KQ42','D42','NV04','120/80',75,68,36.5,1,NULL),
-('KQ43','D43','NV03','115/75',80,60,36.6,1,NULL), 
-('KQ44','D44','NV04','120/80',75,68,36.5,1,NULL), 
-('KQ45','D45','NV03','100/60',90,43,36.7,0,'Cân nặng dưới 40kg'),
-('KQ46','D46','NV04','125/85',72,70,36.5,1,NULL), 
-('KQ47','D47','NV03','110/70',82,60,36.7,1,NULL), 
-('KQ48','D48','NV04','122/80',76,58,36.5,1,NULL),
-('KQ49','D49','NV03','118/78',79,52,36.6,1,NULL), 
-('KQ50','D50','NV04','130/85',74,75,36.5,1,NULL);
+-- Nhóm đăng ký qua App (Đơn DK00001 - DK00015)
+('KL00001','DK00001','NV00003','120/80',75,65,36.5,1,NULL), 
+('KL00002','DK00002','NV00004','115/75',80,55,36.6,1,NULL), 
+('KL00003','DK00003','NV00003','125/85',72,70,36.5,1,NULL),
+('KL00004','DK00004','NV00004','110/70',82,60,36.7,1,NULL), 
+('KL00005','DK00005','NV00003','122/80',76,58,36.5,1,NULL), 
+('KL00006','DK00006','NV00004','118/78',79,52,36.6,1,NULL),
+('KL00007','DK00007','NV00003','130/85',74,75,36.5,1,NULL), 
+('KL00008','DK00008','NV00004','125/80',81,62,36.6,1,NULL), 
+('KL00009','DK00009','NV00003','115/75',77,54,36.7,1,NULL),
+('KL00010','DK00010','NV00004','120/80',75,68,36.5,1,NULL), 
+('KL00011','DK00011','NV00003','122/82',78,70,36.6,1,NULL), 
+('KL00012','DK00012','NV00004','110/70',85,50,36.5,1,NULL),
+('KL00013','DK00013','NV00003','125/85',72,72,36.7,1,NULL), 
+('KL00014','DK00014','NV00004','115/75',80,60,36.6,1,NULL), 
+('KL00015','DK00015','NV00003','140/90',95,65,38.0,0,'Sốt trên 37.5 độ'), -- Rớt do sốt
+
+-- Nhóm hiến trực tiếp (Đơn DK00016 - DK00030)
+('KL00016','DK00016','NV00003','118/78',78,55,36.6,1,NULL), 
+('KL00017','DK00017','NV00004','125/85',72,70,36.5,1,NULL), 
+('KL00018','DK00018','NV00003','110/70',82,60,36.7,1,NULL),
+('KL00019','DK00019','NV00004','122/80',76,58,36.5,1,NULL), 
+('KL00020','DK00020','NV00003','118/78',79,52,36.6,1,NULL), 
+('KL00021','DK00021','NV00004','130/85',74,75,36.5,1,NULL),
+('KL00022','DK00022','NV00003','125/80',81,62,36.6,1,NULL), 
+('KL00023','DK00023','NV00004','125/85',72,72,36.7,0,'Xăm mình dưới 6 tháng'), -- Rớt do xăm mình
+('KL00024','DK00024','NV00003','115/75',80,60,36.6,1,NULL), 
+('KL00025','DK00025','NV00004','120/80',75,68,36.5,1,NULL),
+('KL00026','DK00026','NV00003','115/75',78,55,36.6,1,NULL), 
+('KL00027','DK00027','NV00004','125/85',72,70,36.5,1,NULL),
+('KL00028','DK00028','NV00003','110/70',82,60,36.7,1,NULL), 
+('KL00029','DK00029','NV00004','122/80',76,58,36.5,1,NULL),
+('KL00030','DK00030','NV00003','118/78',79,52,36.6,1,NULL),
+
+-- Nhóm quét mã tại chỗ (Đơn DK00031 - DK00035)
+('KL00031','DK00031','NV00003','110/70',85,50,36.5,1,NULL), 
+('KL00032','DK00032','NV00004','120/80',75,68,36.5,1,NULL),
+('KL00033','DK00033','NV00003','115/75',80,60,36.6,1,NULL), 
+('KL00034','DK00034','NV00004','120/80',75,68,36.5,1,NULL), 
+('KL00035','DK00035','NV00003','100/60',90,40,36.7,0,'Cân nặng dưới 40kg'); -- Rớt do thiếu cân
 
 -- =============================================================
 -- 8. THU NHẬN, XÉT NGHIỆM VÀ KHO MÁU 
@@ -633,207 +551,159 @@ INSERT INTO KETQUALAMSANG VALUES
 
 -- Phân tách mã kho theo từng nhóm máu chuyên biệt
 INSERT INTO KHOMAU VALUES 
-('DD01_O+', 'O+', 150, 50), 
-('DD01_A+', 'A+', 30, 40), 
-('DD01_B+', 'B+', 60, 30), 
-('DD01_AB+', 'AB+', 10, 15),
-('DD01_O-', 'O-', 5, 10), 
-('DD01_A-', 'A-', 5, 10), 
-('DD01_B-', 'B-', 5, 10), 
-('DD01_AB-', 'AB-', 2, 5);
+('KM00001', 'O+', 150, 50), 
+('KM00002', 'A+', 30, 40), 
+('KM00003', 'B+', 60, 30), 
+('KM00004', 'AB+', 10, 15),
+('KM00005', 'O-', 5, 10), 
+('KM00006', 'A-', 5, 10), 
+('KM00007', 'B-', 5, 10), 
+('KM00008', 'AB-', 2, 5);
 
 -- 47 TÚI MÁU (Túi máu của TNV nhóm nào sẽ được lưu vào kho nhóm đó)
 INSERT INTO TUIMAU VALUES 
-('TM01','D01','NV06','DD01_B+',250,'2026-02-10 07:15','Nhập kho',4.5), 
-('TM02','D02','NV07','DD01_O+',350,'2026-02-10 07:18','Nhập kho',4.2),
-('TM03','D03','NV08','DD01_A+',250,'2026-02-10 07:20','Nhập kho',4.5), 
-('TM04','D04','NV06','DD01_O+',350,'2026-02-10 07:23','Nhập kho',4.2),
-('TM05','D05','NV07','DD01_AB+',250,'2026-02-10 07:25','Nhập kho',4.5), 
-('TM06','D06','NV08','DD01_O-',350,'2026-02-10 07:28','Nhập kho',4.2),
-('TM07','D07','NV06','DD01_O+',250,'2026-02-10 07:30','Nhập kho',4.5), 
-('TM08','D08','NV07','DD01_A-',350,'2026-02-10 07:33','Nhập kho',4.2),
-('TM09','D09','NV08','DD01_B+',250,'2026-02-10 07:35','Nhập kho',4.5), 
-('TM10','D10','NV06','DD01_AB-',350,'2026-02-10 07:38','Hủy',4.2),
-('TM11','D11','NV07','DD01_A+',250,'2026-02-10 07:40','Nhập kho',4.5), 
-('TM12','D12','NV08','DD01_B+',350,'2026-02-10 07:43','Nhập kho',4.2),
-('TM13','D13','NV06','DD01_O+',250,'2026-02-10 07:45','Nhập kho',4.5), 
-('TM14','D14','NV07','DD01_O+',350,'2026-02-10 07:48','Nhập kho',4.2),
--- SKIPPED TM15
-('TM16','D16','NV08','DD01_A+',350,'2026-02-10 07:53','Nhập kho',4.2), 
-('TM17','D17','NV06','DD01_B+',250,'2026-02-10 07:55','Nhập kho',4.5),
-('TM18','D18','NV07','DD01_O+',350,'2026-02-10 07:58','Nhập kho',4.2), 
-('TM19','D19','NV08','DD01_O+',250,'2026-02-10 08:00','Nhập kho',4.5),
-('TM20','D20','NV06','DD01_A-',350,'2026-02-10 08:03','Đã xuất',4.2),
-('TM21','D21','NV07','DD01_B+',250,'2026-02-10 08:05','Nhập kho',4.5), 
-('TM22','D22','NV08','DD01_O+',350,'2026-02-10 08:08','Nhập kho',4.2),
-('TM23','D23','NV06','DD01_AB+',250,'2026-02-10 08:10','Nhập kho',4.5), 
-('TM24','D24','NV07','DD01_O+',350,'2026-02-10 08:13','Nhập kho',4.2),
-('TM25','D25','NV08','DD01_A+',250,'2026-02-10 08:15','Nhập kho',4.5), 
-('TM26','D26','NV06','DD01_B+',350,'2026-02-10 08:18','Nhập kho',4.2),
-('TM27','D27','NV07','DD01_O+',250,'2026-02-10 08:20','Nhập kho',4.5), 
--- SKIPPED TM28
-('TM29','D29','NV08','DD01_A+',250,'2026-02-10 08:25','Nhập kho',4.5), 
-('TM30','D30','NV06','DD01_AB+',350,'2026-02-10 08:28','Nhập kho',4.2),
-('TM31','D31','NV07','DD01_O+',250,'2026-02-10 08:30','Nhập kho',4.5), 
-('TM32','D32','NV08','DD01_B+',350,'2026-02-10 08:33','Nhập kho',4.2),
-('TM33','D33','NV06','DD01_O+',250,'2026-02-10 08:35','Nhập kho',4.5), 
-('TM34','D34','NV07','DD01_A+',350,'2026-02-10 08:38','Nhập kho',4.2),
-('TM35','D35','NV08','DD01_AB+',250,'2026-02-10 08:40','Nhập kho',4.5), 
-('TM36','D36','NV06','DD01_O+',350,'2026-02-10 08:43','Nhập kho',4.2),
-('TM37','D37','NV07','DD01_B+',250,'2026-02-10 08:45','Nhập kho',4.5), 
-('TM38','D38','NV08','DD01_O+',350,'2026-02-10 08:48','Nhập kho',4.2),
-('TM39','D39','NV06','DD01_A+',250,'2026-02-10 08:50','Nhập kho',4.5), 
-('TM40','D40','NV07','DD01_O+',350,'2026-02-10 08:53','Nhập kho',4.2),
-('TM41','D41','NV08','DD01_B+',250,'2026-02-10 08:55','Hủy',4.5), 
-('TM42','D42','NV06','DD01_AB+',350,'2026-02-10 08:58','Nhập kho',4.2), 
-('TM43','D43','NV07','DD01_O+',250,'2026-02-10 09:00','Nhập kho',4.5),
-('TM44','D44','NV08','DD01_A+',350,'2026-02-10 09:03','Nhập kho',4.2),
--- SKIPPED TM45
-('TM46','D46','NV06','DD01_B+',350,'2026-02-10 09:08','Nhập kho',4.2), 
-('TM47','D47','NV07','DD01_O+',250,'2026-02-10 09:10','Nhập kho',4.5),
-('TM48','D48','NV08','DD01_A-',350,'2026-02-10 09:13','Nhập kho',4.2), 
-('TM49','D49','NV06','DD01_AB+',250,'2026-02-10 09:15','Chờ xét nghiệm',4.5),
-('TM50','D50','NV07','DD01_O+',350,'2026-02-10 09:18','Chờ xét nghiệm',4.2);
+('TM00001','DK00001','NV00006','KM00003',250,'2026-02-10 07:15','Nhập kho',4.5), 
+('TM00002','DK00002','NV00007','KM00001',350,'2026-02-10 07:18','Nhập kho',4.2),
+('TM00003','DK00003','NV00008','KM00002',250,'2026-02-10 07:20','Nhập kho',4.5), 
+('TM00004','DK00004','NV00006','KM00001',350,'2026-02-10 07:23','Nhập kho',4.2),
+('TM00005','DK00005','NV00007','KM00004',250,'2026-02-10 07:25','Nhập kho',4.5), 
+('TM00006','DK00006','NV00008','KM00005',350,'2026-02-10 07:28','Nhập kho',4.2),
+('TM00007','DK00007','NV00006','KM00001',250,'2026-02-10 07:30','Nhập kho',4.5), 
+('TM00008','DK00008','NV00007','KM00006',350,'2026-02-10 07:33','Nhập kho',4.2),
+('TM00009','DK00009','NV00008','KM00003',250,'2026-02-10 07:35','Nhập kho',4.5), 
+('TM00010','DK00010','NV00006','KM00008',350,'2026-02-10 07:38','Hủy',4.2),
+('TM00011','DK00011','NV00007','KM00002',250,'2026-02-10 07:40','Nhập kho',4.5), 
+('TM00012','DK00012','NV00008','KM00003',350,'2026-02-10 07:43','Nhập kho',4.2),
+('TM00013','DK00013','NV00006','KM00001',250,'2026-02-10 07:45','Nhập kho',4.5), 
+('TM00014','DK00014','NV00007','KM00001',350,'2026-02-10 07:48','Nhập kho',4.2),
+('TM00015','DK00016','NV00008','KM00002',350,'2026-02-10 07:53','Nhập kho',4.2), 
+('TM00016','DK00017','NV00006','KM00003',250,'2026-02-10 07:55','Nhập kho',4.5),
+('TM00017','DK00018','NV00007','KM00001',350,'2026-02-10 07:58','Nhập kho',4.2), 
+('TM00018','DK00019','NV00008','KM00001',250,'2026-02-10 08:00','Nhập kho',4.5),
+('TM00019','DK00020','NV00006','KM00006',350,'2026-02-10 08:03','Đã xuất',4.2),
+('TM00020','DK00021','NV00007','KM00003',250,'2026-02-10 08:05','Nhập kho',4.5), 
+('TM00021','DK00022','NV00008','KM00001',350,'2026-02-10 08:08','Nhập kho',4.2),
+('TM00022','DK00024','NV00006','KM00004',250,'2026-02-10 08:10','Nhập kho',4.5), 
+('TM00023','DK00025','NV00007','KM00001',350,'2026-02-10 08:13','Nhập kho',4.2),
+('TM00024','DK00026','NV00008','KM00002',250,'2026-02-10 08:15','Nhập kho',4.5), 
+('TM00025','DK00027','NV00006','KM00003',350,'2026-02-10 08:18','Nhập kho',4.2),
+('TM00026','DK00028','NV00007','KM00001',250,'2026-02-10 08:20','Nhập kho',4.5), 
+('TM00027','DK00029','NV00008','KM00002',250,'2026-02-10 08:25','Nhập kho',4.5), 
+('TM00028','DK00030','NV00006','KM00004',350,'2026-02-10 08:28','Nhập kho',4.2),
+('TM00029','DK00031','NV00007','KM00001',250,'2026-02-10 08:30','Nhập kho',4.5), 
+('TM00030','DK00032','NV00008','KM00003',350,'2026-02-10 08:33','Nhập kho',4.2),
+('TM00031','DK00033','NV00006','KM00001',250,'2026-02-10 08:35','Nhập kho',4.5), 
+('TM00032','DK00034','NV00007','KM00002',350,'2026-02-10 08:38','Nhập kho',4.2);
 
 INSERT INTO KETQUAXETNGHIEM VALUES 
-('XN01','TM01','NV09','B+','Âm tính. Đạt.'), 
-('XN02','TM02','NV10','O+','Âm tính. Đạt.'),
-('XN03','TM03','NV11','A+','Âm tính. Đạt.'), 
-('XN04','TM04','NV09','O+','Âm tính. Đạt.'),
-('XN05','TM05','NV10','AB+','Âm tính. Đạt.'), 
-('XN06','TM06','NV11','O-','Âm tính. Đạt.'),
-('XN07','TM07','NV09','O+','Âm tính. Đạt.'), 
-('XN08','TM08','NV10','A-','Âm tính. Đạt.'),
-('XN09','TM09','NV11','B+','Âm tính. Đạt.'), 
-('XN10','TM10','NV09','AB-','Dương tính Viêm gan B. Hủy túi máu.'),
-('XN11','TM11','NV10','A+','Âm tính. Đạt.'), 
-('XN12','TM12','NV11','B+','Âm tính. Đạt.'),
-('XN13','TM13','NV09','O+','Âm tính. Đạt.'), 
-('XN14','TM14','NV10','O+','Âm tính. Đạt.'),
-('XN16','TM16','NV11','A+','Âm tính. Đạt.'), 
-('XN17','TM17','NV09','B+','Âm tính. Đạt.'),
-('XN18','TM18','NV10','O+','Âm tính. Đạt.'), 
-('XN19','TM19','NV11','O+','Âm tính. Đạt.'),
-('XN20','TM20','NV09','A-','Âm tính. Phân phối gấp cho ca mổ.'), 
-('XN21','TM21','NV10','B+','Âm tính. Đạt.'),
-('XN22','TM22','NV11','O+','Âm tính. Đạt.'), 
-('XN23','TM23','NV09','AB+','Âm tính. Đạt.'),
-('XN24','TM24','NV10','O+','Âm tính. Đạt.'), 
-('XN25','TM25','NV11','A+','Âm tính. Đạt.'),
-('XN26','TM26','NV09','B+','Âm tính. Đạt.'), 
-('XN27','TM27','NV10','O+','Âm tính. Đạt.'),
-('XN29','TM29','NV11','A+','Âm tính. Đạt.'), 
-('XN30','TM30','NV09','AB+','Âm tính. Đạt.'),
-('XN31','TM31','NV10','O+','Âm tính. Đạt.'), 
-('XN32','TM32','NV11','B+','Âm tính. Đạt.'),
-('XN33','TM33','NV09','O+','Âm tính. Đạt.'), 
-('XN34','TM34','NV10','A+','Âm tính. Đạt.'),
-('XN35','TM35','NV11','AB+','Âm tính. Đạt.'), 
-('XN36','TM36','NV09','O+','Âm tính. Đạt.'),
-('XN37','TM37','NV10','B+','Âm tính. Đạt.'), 
-('XN38','TM38','NV11','O+','Âm tính. Đạt.'),
-('XN39','TM39','NV09','A+','Âm tính. Đạt.'), 
-('XN40','TM40','NV10','O+','Âm tính. Đạt.'),
-('XN41','TM41','NV11','B+','Dương tính HIV. Hủy túi máu báo cáo khẩn.'), 
-('XN42','TM42','NV09','O+','Âm tính. Đạt.'),
-('XN43','TM43','NV10','O+','Âm tính. Đạt.'), 
-('XN44','TM44','NV11','A+','Âm tính. Đạt.'),
-('XN46','TM46','NV09','B+','Âm tính. Đạt.'), 
-('XN47','TM47','NV10','O+','Âm tính. Đạt.'),
-('XN48','TM48','NV11','A-','Âm tính. Đạt.'), 
-('XN49','TM49','NV09',NULL,'Đang quay ly tâm.'),  -- Đã sửa 'Chưa rõ' thành NULL
-('XN50','TM50','NV10',NULL,'Chờ kết quả PCR.');    -- Đã sửa 'Chưa rõ' thành NULL
+('XN00001','TM00001','NV00009','B+','Âm tính. Đạt.'), 
+('XN00002','TM00002','NV00010','O+','Âm tính. Đạt.'),
+('XN00003','TM00003','NV00011','A+','Âm tính. Đạt.'), 
+('XN00004','TM00004','NV00009','O+','Âm tính. Đạt.'),
+('XN00005','TM00005','NV00010','AB+','Âm tính. Đạt.'), 
+('XN00006','TM00006','NV00011','O-','Âm tính. Đạt.'),
+('XN00007','TM00007','NV00009','O+','Âm tính. Đạt.'), 
+('XN00008','TM00008','NV00010','A-','Âm tính. Đạt.'),
+('XN00009','TM00009','NV00011','B+','Âm tính. Đạt.'), 
+('XN00010','TM00010','NV00009','AB-','Dương tính Viêm gan B. Hủy túi máu.'),
+('XN00011','TM00011','NV00010','A+','Âm tính. Đạt.'), 
+('XN00012','TM00012','NV00011','B+','Âm tính. Đạt.'),
+('XN00013','TM00013','NV00009','O+','Âm tính. Đạt.'), 
+('XN00014','TM00014','NV00010','O+','Âm tính. Đạt.'),
+('XN00015','TM00015','NV00011','A+','Âm tính. Đạt.'), 
+('XN00016','TM00016','NV00009','B+','Âm tính. Đạt.'),
+('XN00017','TM00017','NV00010','O+','Âm tính. Đạt.'), 
+('XN00018','TM00018','NV00011','O+','Âm tính. Đạt.'),
+('XN00019','TM00019','NV00009','A-','Âm tính. Phân phối gấp cho ca mổ.'), 
+('XN00020','TM00020','NV00010','B+','Âm tính. Đạt.'),
+('XN00021','TM00021','NV00011','O+','Âm tính. Đạt.'), 
+('XN00022','TM00022','NV00009','AB+','Âm tính. Đạt.'),
+('XN00023','TM00023','NV00010','O+','Âm tính. Đạt.'), 
+('XN00024','TM00024','NV00011','A+','Âm tính. Đạt.'),
+('XN00025','TM00025','NV00009','B+','Âm tính. Đạt.'), 
+('XN00026','TM00026','NV00010','O+','Âm tính. Đạt.'),
+('XN00027','TM00027','NV00011','A+','Âm tính. Đạt.'), 
+('XN00028','TM00028','NV00009','AB+','Âm tính. Đạt.'),
+('XN00029','TM00029','NV00010','O+','Âm tính. Đạt.'), 
+('XN00030','TM00030','NV00011','B+','Âm tính. Đạt.'),
+('XN00031','TM00031','NV00009',NULL,'Đang quay ly tâm.'),
+('XN00032','TM00032','NV00010',NULL,'Chờ kết quả PCR.');
 
 -- =============================================================
 -- 9. CHỨNG NHẬN, NHẬP XUẤT, TƯƠNG TÁC
 -- =============================================================
 INSERT INTO CHUNGNHAN VALUES 
-('CN01','D01','NV14','/pdf/CN01.pdf','2026-02-12'), 
-('CN02','D02','NV14','/pdf/CN02.pdf','2026-02-12'),
-('CN03','D03','NV14','/pdf/CN03.pdf','2026-02-12'), 
-('CN04','D04','NV14','/pdf/CN04.pdf','2026-02-12'),
-('CN05','D05','NV14','/pdf/CN05.pdf','2026-02-12'), 
-('CN06','D06','NV14','/pdf/CN06.pdf','2026-02-12'),
-('CN07','D07','NV14','/pdf/CN07.pdf','2026-02-12'), 
-('CN08','D08','NV14','/pdf/CN08.pdf','2026-02-12'),
-('CN09','D09','NV14','/pdf/CN09.pdf','2026-02-12'), 
-('CN10','D10','NV14','/pdf/CN10.pdf','2026-02-12'),
-('CN11','D11','NV14','/pdf/CN11.pdf','2026-02-12'), 
-('CN12','D12','NV14','/pdf/CN12.pdf','2026-02-12'),
-('CN13','D13','NV14','/pdf/CN13.pdf','2026-02-12'), 
-('CN14','D14','NV14','/pdf/CN14.pdf','2026-02-12'),
-('CN16','D16','NV14','/pdf/CN16.pdf','2026-02-12'), 
-('CN17','D17','NV14','/pdf/CN17.pdf','2026-02-12'),
-('CN18','D18','NV14','/pdf/CN18.pdf','2026-02-12'), 
-('CN19','D19','NV14','/pdf/CN19.pdf','2026-02-12'),
-('CN20','D20','NV14','/pdf/CN20.pdf','2026-02-12'), 
-('CN21','D21','NV14','/pdf/CN21.pdf','2026-02-12'),
-('CN22','D22','NV14','/pdf/CN22.pdf','2026-02-12'), 
-('CN23','D23','NV14','/pdf/CN23.pdf','2026-02-12'),
-('CN24','D24','NV14','/pdf/CN24.pdf','2026-02-12'), 
-('CN25','D25','NV14','/pdf/CN25.pdf','2026-02-12'),
-('CN26','D26','NV14','/pdf/CN26.pdf','2026-02-12'), 
-('CN27','D27','NV14','/pdf/CN27.pdf','2026-02-12'),
-('CN29','D29','NV14','/pdf/CN29.pdf','2026-02-12'), 
-('CN30','D30','NV14','/pdf/CN30.pdf','2026-02-12'),
-('CN31','D31','NV14','/pdf/CN31.pdf','2026-02-12'), 
-('CN32','D32','NV14','/pdf/CN32.pdf','2026-02-12'),
-('CN33','D33','NV14','/pdf/CN33.pdf','2026-02-12'), 
-('CN34','D34','NV14','/pdf/CN34.pdf','2026-02-12'),
-('CN35','D35','NV14','/pdf/CN35.pdf','2026-02-12'), 
-('CN36','D36','NV14','/pdf/CN36.pdf','2026-02-12'),
-('CN37','D37','NV14','/pdf/CN37.pdf','2026-02-12'), 
-('CN38','D38','NV14','/pdf/CN38.pdf','2026-02-12'),
-('CN39','D39','NV14','/pdf/CN39.pdf','2026-02-12'), 
-('CN40','D40','NV14','/pdf/CN40.pdf','2026-02-12'),
-('CN41','D41','NV14','/pdf/CN41.pdf','2026-02-12'), 
-('CN42','D42','NV14','/pdf/CN42.pdf','2026-02-12'),
-('CN43','D43','NV14','/pdf/CN43.pdf','2026-02-12'), 
-('CN44','D44','NV14','/pdf/CN44.pdf','2026-02-12'),
-('CN46','D46','NV14','/pdf/CN46.pdf','2026-02-12'), 
-('CN47','D47','NV14','/pdf/CN47.pdf','2026-02-12'),
-('CN48','D48','NV14','/pdf/CN48.pdf','2026-02-12'), 
-('CN49','D49','NV14','/pdf/CN49.pdf','2026-02-12'),
-('CN50','D50','NV14','/pdf/CN50.pdf','2026-02-12');
+('CN00001','DK00001','NV00014','/pdf/CN01.pdf','2026-02-12'), 
+('CN00002','DK00002','NV00014','/pdf/CN02.pdf','2026-02-12'),
+('CN00003','DK00003','NV00014','/pdf/CN03.pdf','2026-02-12'), 
+('CN00004','DK00004','NV00014','/pdf/CN04.pdf','2026-02-12'),
+('CN00005','DK00005','NV00014','/pdf/CN05.pdf','2026-02-12'), 
+('CN00006','DK00006','NV00014','/pdf/CN06.pdf','2026-02-12'),
+('CN00007','DK00007','NV00014','/pdf/CN07.pdf','2026-02-12'), 
+('CN00008','DK00008','NV00014','/pdf/CN08.pdf','2026-02-12'),
+('CN00009','DK00009','NV00014','/pdf/CN09.pdf','2026-02-12'), 
+('CN00010','DK00010','NV00014','/pdf/CN10.pdf','2026-02-12'),
+('CN00011','DK00011','NV00014','/pdf/CN11.pdf','2026-02-12'), 
+('CN00012','DK00012','NV00014','/pdf/CN12.pdf','2026-02-12'),
+('CN00013','DK00013','NV00014','/pdf/CN13.pdf','2026-02-12'), 
+('CN00014','DK00014','NV00014','/pdf/CN14.pdf','2026-02-12'),
+
+('CN00015','DK00016','NV00014','/pdf/CN16.pdf','2026-02-12'), 
+('CN00016','DK00017','NV00014','/pdf/CN17.pdf','2026-02-12'),
+('CN00017','DK00018','NV00014','/pdf/CN18.pdf','2026-02-12'), 
+('CN00018','DK00019','NV00014','/pdf/CN19.pdf','2026-02-12'),
+('CN00019','DK00020','NV00014','/pdf/CN20.pdf','2026-02-12'), 
+('CN00020','DK00021','NV00014','/pdf/CN21.pdf','2026-02-12'),
+('CN00021','DK00022','NV00014','/pdf/CN22.pdf','2026-02-12'), 
+
+('CN00022','DK00024','NV00014','/pdf/CN24.pdf','2026-02-12'),
+('CN00023','DK00025','NV00014','/pdf/CN25.pdf','2026-02-12'), 
+('CN00024','DK00026','NV00014','/pdf/CN26.pdf','2026-02-12'),
+('CN00025','DK00027','NV00014','/pdf/CN27.pdf','2026-02-12'), 
+('CN00026','DK00028','NV00014','/pdf/CN28.pdf','2026-02-12'),
+('CN00027','DK00029','NV00014','/pdf/CN29.pdf','2026-02-12'), 
+('CN00028','DK00030','NV00014','/pdf/CN30.pdf','2026-02-12'),
+('CN00029','DK00031','NV00014','/pdf/CN31.pdf','2026-02-12'), 
+('CN00030','DK00032','NV00014','/pdf/CN32.pdf','2026-02-12'),
+('CN00031','DK00033','NV00014','/pdf/CN33.pdf','2026-02-12'), 
+('CN00032','DK00034','NV00014','/pdf/CN34.pdf','2026-02-12');
+
 
 INSERT INTO PHIEUNHAPXUAT VALUES 
-('PN01','NV12','Nhập kho','2026-02-10'), 
-('PN02','NV13','Nhập kho','2026-02-11'), 
-('PX01','NV12','Xuất kho','2026-02-12');
+('PN00001','NV00012','Nhập kho','2026-02-10'), 
+('PN00002','NV00013','Nhập kho','2026-02-11'), 
+('PN00003','NV00012','Xuất kho','2026-02-12');
 
 INSERT INTO CHITIETNHAPXUAT VALUES 
-('PN01','TM01'), 
-('PN01','TM02'), 
-('PN01','TM03'), 
-('PN01','TM04'), 
-('PN01','TM05'),
-('PN02','TM06'), 
-('PN02','TM07'), 
-('PN02','TM08'), 
-('PX01','TM20');
+('PN00001','TM00001'), 
+('PN00001','TM00002'), 
+('PN00001','TM00003'), 
+('PN00001','TM00004'), 
+('PN00002','TM00005'), 
+('PN00002','TM00006'), 
+('PN00003','TM00019');
 
 
 INSERT INTO TINTUC VALUES 
-('TT01','NV14','Tổng kết Lễ hội Xuân Hồng UTE 2026','Đà Nẵng đã thu nhận thành công 500 đơn vị máu...','img1.jpg','2026-02-13','Đã thêm'),
-('TT02','NV14','Lời kêu gọi hiến máu nhóm O và A','Hiện tại kho máu đang cạn kiệt nhóm O và A...','img2.jpg','2026-03-01','Đã thêm');
+('TT00001','NV00014','Tổng kết Xuân Hồng 2026','Đà Nẵng thu nhận 500 đơn vị máu','img1.jpg','2026-02-13','Đã thêm'),
+('TT00002','NV00014','Kêu gọi hiến máu nhóm O','Kho máu đang thiếu hụt nhóm O','img2.jpg','2026-03-01','Đã thêm');
 
 INSERT INTO THONGBAO VALUES 
 -- Thông báo nội bộ giữa các nhân viên y tế (Điều phối công việc)
-('TB01','TK_NV14','TK_NV03','[Hệ thống] Nhắc nhở ca trực Sàng lọc tại UTE bắt đầu lúc 07:00 ngày 10/02.','2026-02-09','Đã đọc'),
-('TB02','TK_NV12','TK_NV14','[Cảnh báo tự động] Kho máu O- đang dưới ngưỡng an toàn (Chỉ còn 5 túi). Cần lập chiến dịch huy động khẩn cấp.','2026-02-20','Chưa đọc');
+('TB00001','TK00014','TK00003','[Hệ thống] Nhắc nhở ca trực Sàng lọc tại UTE bắt đầu lúc 07:00 ngày 10/02.','2026-02-09','Đã đọc'),
+('TB00002','TK00012','TK00014','[Cảnh báo tự động] Kho máu O- đang dưới ngưỡng an toàn. Cần lập chiến dịch huy động khẩn cấp.','2026-02-20','Chưa đọc');
 
 INSERT INTO TINNHAN VALUES 
--- Kịch bản 1: Hỏi thăm sức khỏe tự động sau 24h hiến máu (Hệ thống gửi TNV)
-('MSG01','TK_NV14','TK_U01','[Chăm sóc sức khỏe] Cảm ơn bạn đã tham gia hiến máu hôm qua. Vui lòng uống nhiều nước, hạn chế mang vác nặng và nghỉ ngơi đầy đủ. Nếu có dấu hiệu chóng mặt, hãy liên hệ ngay cơ sở y tế gần nhất.','2026-02-11', 1),
-('MSG02','TK_NV14','TK_U02','[Chăm sóc sức khỏe] Cảm ơn bạn đã tham gia hiến máu hôm qua. Vui lòng uống nhiều nước, hạn chế mang vác nặng...','2026-02-11', 1),
+-- Kịch bản 1: Chăm sóc sức khỏe sau hiến máu (Hệ thống gửi TNV)
+('MS00001','TK00014','TK00016','[Chăm sóc sức khỏe] Cảm ơn bạn Vương đã tham gia hiến máu. Vui lòng nghỉ ngơi và uống nhiều nước.','2026-02-11', 1),
+('MS00002','TK00014','TK00017','[Chăm sóc sức khỏe] Cảm ơn bạn Huy đã tham gia hiến máu. Vui lòng hạn chế mang vác nặng trong 24h đầu.','2026-02-11', 1),
 
--- Kịch bản 2: Báo kết quả xét nghiệm và cấp giấy chứng nhận
-('MSG03','TK_NV14','TK_U03','[Kết quả hiến máu] Túi máu của bạn đã đạt chuẩn an toàn. Giấy chứng nhận điện tử đã được cập nhật vào ứng dụng. Trân trọng cảm ơn!','2026-02-14', 1),
-('MSG04','TK_NV14','TK_U10','[Quan trọng] Mẫu máu của bạn phát hiện có kháng thể bất thường. Giấy chứng nhận đã được cấp để tri ân nghĩa cử của bạn. Vui lòng đến Bệnh viện Đà Nẵng để được tư vấn sức khỏe miễn phí.','2026-02-14', 1),
+-- Kịch bản 2: Báo kết quả xét nghiệm và chứng nhận
+('MS00003','TK00014','TK00018','[Kết quả] Túi máu của bạn Hưng đạt chuẩn. Chứng nhận điện tử đã được cập nhật trên App.','2026-02-14', 1),
+('MS00004','TK00014','TK00025','[Quan trọng] Mẫu máu phát hiện kháng thể bất thường. Vui lòng đến BV Đà Nẵng để được tư vấn miễn phí.','2026-02-14', 1),
 
--- Kịch bản 3: Huy động máu khẩn cấp theo nhóm máu (Chỉ gửi cho người có nhóm O+)
-('MSG05','TK_NV14','TK_U07','[Khẩn cấp] Kho máu BVDN đang thiếu hụt nghiêm trọng nhóm máu O+. Bệnh nhân cấp cứu đang rất cần bạn. Hãy đến điểm hiến máu gần nhất!','2026-03-01', 1);
-
+-- Kịch bản 3: Huy động máu khẩn cấp (Gửi cho TNV có nhóm máu phù hợp)
+('MS00005','TK00014','TK00022','[Khẩn cấp] Kho máu đang thiếu hụt nghiêm trọng nhóm máu O+. Rất cần sự hỗ trợ từ bạn!','2026-03-01', 1);
 
 
 
@@ -938,8 +808,8 @@ JOIN TAIKHOAN tk ON tn.maTaiKhoanNhan = tk.maTaiKhoan;
 -- -------------------------------------------------------------
 
 DELIMITER //
--- 1. Function: Đếm số người đã đăng ký vào chiến dịch
-CREATE FUNCTION f_DemSoNguoiDangKy(p_maChienDich CHAR(10)) 
+-- 1. Function: Đếm số người đã đăng ký (Sửa CHAR(10) -> CHAR(7))
+CREATE FUNCTION f_DemSoNguoiDangKy(p_maChienDich CHAR(7)) 
 RETURNS INT
 DETERMINISTIC
 BEGIN
@@ -949,12 +819,11 @@ BEGIN
 END //
 DELIMITER ;
 
--- [TEST] Kiểm tra hàm đếm số người đăng ký của chiến dịch CD_XH26
-SELECT f_DemSoNguoiDangKy('CD_XH26') AS 'Số người đã đăng ký CD_XH26';
-
+-- [TEST] Kiểm tra với mã chiến dịch mới CD00001
+SELECT f_DemSoNguoiDangKy('CD00001') AS 'Số người đã đăng ký CD00001';
 
 DELIMITER //
--- 2. Procedure: Tìm kiếm chiến dịch
+-- 2. Procedure: Tìm kiếm chiến dịch (Sửa tham số logic bên trong)
 CREATE PROCEDURE sp_TimKiemChienDich(
     IN p_TuKhoa VARCHAR(255)
 )
@@ -973,11 +842,6 @@ BEGIN
        OR d.tenDiaDiem LIKE CONCAT('%', p_TuKhoa, '%');
 END //
 DELIMITER ;
-
--- [TEST] Chạy thủ tục tìm kiếm chiến dịch (Tìm từ khóa 'UTE')
-CALL sp_TimKiemChienDich('UTE');
-
-
 -- -------------------------------------------------------------
 -- UC2: ĐĂNG KÝ HIẾN MÁU & KHAI BÁO Y TẾ
 -- -------------------------------------------------------------
@@ -1010,33 +874,28 @@ DELIMITER ;
 -- -------------------------------------------------------------
 
 DELIMITER //
--- 4. Function: Đánh giá chỉ số sinh tồn cơ bản
+-- 4. Function: Đánh giá chỉ số sinh tồn (Giữ nguyên logic nhưng đảm bảo tính chính xác)
 CREATE FUNCTION f_DanhGiaChiSoSinhTon(p_huyetAp VARCHAR(20), p_canNang DOUBLE, p_nhietDo DOUBLE) 
 RETURNS INT
 DETERMINISTIC
 BEGIN
-    IF p_canNang < 42 THEN RETURN 0; END IF; -- Không đủ cân nặng
-    IF p_nhietDo > 37.5 THEN RETURN 0; END IF; -- Đang sốt
+    IF p_canNang < 42 THEN RETURN 0; END IF; 
+    IF p_nhietDo > 37.5 THEN RETURN 0; END IF; 
     RETURN 1;
 END //
 DELIMITER ;
 
--- [TEST] Chạy thử Function đánh giá chỉ số sinh tồn (Cân nặng 40kg -> Rớt trả về 0)
-SELECT f_DanhGiaChiSoSinhTon('120/80', 40, 36.5) AS 'Kết quả đánh giá 40kg';
-
-
 DELIMITER //
--- 5. Trigger: Kiểm tra thể tích lấy máu phải phù hợp cân nặng
+-- 5. Trigger: Kiểm tra thể tích lấy máu (Đồng bộ mã đơn định dạng CHAR(7))
 CREATE TRIGGER trg_KiemTraTheTichMau_CanNang
 BEFORE INSERT ON TUIMAU
 FOR EACH ROW
 BEGIN
     DECLARE v_canNang DOUBLE;
     
-    -- Lấy cân nặng từ kết quả lâm sàng của đơn đăng ký tương ứng
+    -- Khớp mã đơn DK000xx
     SELECT canNang INTO v_canNang FROM KETQUALAMSANG WHERE maDon = NEW.maDon LIMIT 1;
     
-    -- Quy định: Dưới 45kg không lấy 350ml hoặc 450ml
     IF v_canNang < 45 AND NEW.theTich IN (350, 450) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Người hiến dưới 45kg chỉ được phép hiến 250ml máu!';
     END IF;
@@ -1052,15 +911,14 @@ DELIMITER ;
 -- -------------------------------------------------------------
 -- UC4: THỐNG KÊ LƯỢNG MÁU THU NHẬN VÀ TỒN KHO
 -- -------------------------------------------------------------
-
 DELIMITER //
--- 6. Trigger: Tự động trừ tồn kho khi xuất máu
+-- 6. Trigger: Tự động trừ tồn kho khi xuất máu (Sửa CHAR(10) -> CHAR(7))
 CREATE TRIGGER trg_CapNhatTonKho_XuatMau
 AFTER INSERT ON CHITIETNHAPXUAT
 FOR EACH ROW
 BEGIN
     DECLARE v_loaiPhieu VARCHAR(50);
-    DECLARE v_maKho CHAR(10);
+    DECLARE v_maKho CHAR(7);
     
     SELECT loaiPhieu INTO v_loaiPhieu FROM PHIEUNHAPXUAT WHERE maPhieu = NEW.maPhieu;
     
@@ -1071,13 +929,8 @@ BEGIN
 END //
 DELIMITER ;
 
--- [TEST] Test Trigger trg_CapNhatTonKho_XuatMau
--- (Lưu ý: Comment lại dòng này. Khi insert phiếu chi tiết xuất kho, tồn kho sẽ bị trừ)
--- INSERT INTO CHITIETNHAPXUAT (maPhieu, maTuiMau) VALUES ('PX01', 'TM21');
-
-
 DELIMITER //
--- 7. Trigger: Cảnh báo ngưỡng an toàn kho máu
+-- 7. Trigger: Cảnh báo ngưỡng an toàn (Cập nhật định dạng mã TB mới)
 CREATE TRIGGER trg_CanhBaoNguongAnToanKho
 AFTER UPDATE ON KHOMAU
 FOR EACH ROW
@@ -1085,25 +938,19 @@ BEGIN
     IF NEW.soLuongTon < NEW.nguongAnToan AND OLD.soLuongTon >= OLD.nguongAnToan THEN
         INSERT INTO THONGBAO (maThongBao, maTaiKhoanGui, maTaiKhoanNhan, noiDung, trangThai)
         VALUES (
-            CONCAT('TB_', DATE_FORMAT(NOW(), '%H%i%s')), 
-            'TK_NV14', 
-            'TK_NV12', 
-            CONCAT('[Cảnh báo tự động] Nhóm máu ', NEW.nhomMau, ' đang dưới ngưỡng an toàn!'),
+            -- Tạo mã thông báo 7 ký tự (Ví dụ: T000001)
+            LEFT(CONCAT('T', DATE_FORMAT(NOW(), '%H%i%s')), 7), 
+            'TK00014', -- Mã admin mới
+            'TK00012', -- Mã quản lý kho mới
+            CONCAT('[Cảnh báo] Nhóm máu ', NEW.nhomMau, ' dưới ngưỡng an toàn!'),
             'Chưa đọc'
         );
     END IF;
 END //
 DELIMITER ;
 
--- [TEST] Test Trigger trg_CanhBaoNguongAnToanKho
--- Cập nhật tồn kho của nhóm máu A- (DD01_A-) xuống 4 để kích hoạt ngưỡng an toàn (ngưỡng là 10)
-UPDATE KHOMAU SET soLuongTon = 4 WHERE maKho = 'DD01_A-';
--- Kiểm tra xem thông báo đã được tự động tạo ra hay chưa
-SELECT * FROM THONGBAO ORDER BY thoiGianGui DESC LIMIT 1;
-
-
 DELIMITER //
--- 8. Procedure: Thống kê thu nhận theo tháng
+-- 8. Procedure: Thống kê thu nhận (Giữ nguyên logic nghiệp vụ)
 CREATE PROCEDURE sp_ThongKeThuNhanTheoThang(
     IN p_Thang INT,
     IN p_Nam INT
@@ -1119,6 +966,5 @@ BEGIN
     GROUP BY k.nhomMau;
 END //
 DELIMITER ;
-
 -- [TEST] Thống kê lượng máu thu nhận trong tháng 2 năm 2026
 CALL sp_ThongKeThuNhanTheoThang(2, 2026);
