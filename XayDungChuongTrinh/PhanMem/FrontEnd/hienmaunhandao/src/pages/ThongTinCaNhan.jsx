@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { phuongXaService } from '../services/phuongXaService';
+import { tinhNguyenVienService } from '../services/tinhNguyenVienService';
+import { donDangKyService } from '../services/donDangKy';
 
 export default function ThongTinCaNhan() {
   const navigate = useNavigate();
   const [selectedCampaign, setSelectedCampaign] = useState(null);
+  const [phuongXaList, setPhuongXaList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [formData, setFormData] = useState({
     hoVaTen: '',
     soCCCD: '',
     ngaySinh: '',
     gioiTinh: 'Nam',
     soDienThoai: '',
-    email: '',
     diaChi: '',
+    phuongXa: '',
     dungTichMau: '350'
   });
   const [error, setError] = useState('');
@@ -22,55 +28,118 @@ export default function ThongTinCaNhan() {
       navigate('/chiendich');
       return;
     }
-    setSelectedCampaign(JSON.parse(campaign));
+    const parsedCampaign = JSON.parse(campaign);
+    setSelectedCampaign(parsedCampaign);
 
-    // Load user info if available
-    const email = localStorage.getItem('email');
+    // Tải danh sách phường/xã
+    phuongXaService.getAll()
+      .then(data => setPhuongXaList(data))
+      .catch(err => {
+        console.error('Error fetching phường/xã:', err);
+        setError('Không thể lấy danh sách phường/xã. Vui lòng tải lại trang.');
+      });
+
+    // Pre-fill form từ dữ liệu TNV đã có trong DB
+    const email = localStorage.getItem('email') || localStorage.getItem('userEmail');
     if (email) {
-      setFormData(prev => ({
-        ...prev,
-        email: email
-      }));
+      tinhNguyenVienService.getByMaTaiKhoan(email).then(tnvData => {
+        if (tnvData) {
+          setFormData(prev => ({
+            ...prev,
+            hoVaTen: tnvData.hoTen || '',
+            soCCCD: tnvData.cccd || '',
+            ngaySinh: tnvData.ngaySinh || '',
+            gioiTinh: tnvData.gioiTinh || 'Nam',
+            soDienThoai: tnvData.soDienThoai || '',
+            diaChi: tnvData.diaChi || '',
+            phuongXa: tnvData.maPhuongXa || '',
+          }));
+        }
+      });
     }
   }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const validateForm = () => {
-    if (!formData.hoVaTen.trim()) {
-      setError('Vui lòng nhập họ và tên');
-      return false;
-    }
-    if (!formData.soCCCD.trim()) {
-      setError('Vui lòng nhập số CCCD');
-      return false;
-    }
-    if (!formData.ngaySinh) {
-      setError('Vui lòng chọn ngày sinh');
-      return false;
-    }
-    if (!formData.soDienThoai.trim()) {
-      setError('Vui lòng nhập số điện thoại');
-      return false;
-    }
-    if (!formData.diaChi.trim()) {
-      setError('Vui lòng nhập địa chỉ cư trú');
-      return false;
-    }
+    if (!formData.hoVaTen.trim()) { setError('Vui lòng nhập họ và tên'); return false; }
+    if (!formData.soCCCD.trim()) { setError('Vui lòng nhập số CCCD'); return false; }
+    if (formData.soCCCD.trim().length !== 12) { setError('CCCD phải đúng 12 số'); return false; }
+    if (!formData.ngaySinh) { setError('Vui lòng chọn ngày sinh'); return false; }
+    if (!formData.soDienThoai.trim()) { setError('Vui lòng nhập số điện thoại'); return false; }
+    if (!formData.diaChi.trim()) { setError('Vui lòng nhập địa chỉ cư trú'); return false; }
+    if (!formData.phuongXa) { setError('Vui lòng chọn phường/xã'); return false; }
     setError('');
     return true;
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (!validateForm()) return;
-    localStorage.setItem('thongTinCaNhan', JSON.stringify(formData));
-    navigate('/khai-bao-y-te');
+
+    const email = localStorage.getItem('email') || localStorage.getItem('userEmail');
+    if (!email) {
+      setError('Không tìm thấy thông tin tài khoản. Vui lòng đăng nhập lại.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError('');
+
+      // BƯỚC 1: Lưu/Cập nhật thông tin TNV
+      const tinhNguyenVienData = {
+        hoTen: formData.hoVaTen,
+        cccd: formData.soCCCD,
+        ngaySinh: formData.ngaySinh,
+        gioiTinh: formData.gioiTinh,
+        soDienThoai: formData.soDienThoai,
+        diaChi: formData.diaChi,
+        maPhuongXa: formData.phuongXa,
+        maTaiKhoan: email  // Backend sẽ resolve theo email
+      };
+
+      const tnvResponse = await tinhNguyenVienService.createOrUpdate(tinhNguyenVienData);
+      const maTNV = tnvResponse?.maTNV;
+
+      if (!maTNV) {
+        throw new Error('Không lấy được mã tình nguyện viên từ server.');
+      }
+
+      // BƯỚC 2: Tạo đơn đăng ký (với thể tích máu đã chọn)
+      const donDangKyData = {
+        maTNV: maTNV,
+        maChienDich: selectedCampaign.maChienDich,
+        theTich: parseInt(formData.dungTichMau, 10)
+      };
+
+      const donResponse = await donDangKyService.create(donDangKyData);
+      const maDon = donResponse?.maDon;
+
+      if (!maDon) {
+        throw new Error('Không lấy được mã đơn đăng ký từ server.');
+      }
+
+      // Lưu vào localStorage để các bước sau dùng
+      localStorage.setItem('thongTinCaNhan', JSON.stringify(formData));
+      localStorage.setItem('tinhNguyenVienId', maTNV);
+      localStorage.setItem('maDon', maDon);
+
+      navigate('/khai-bao-y-te');
+    } catch (err) {
+      console.error('Error in handleNext:', err);
+      // Phân biệt lỗi nghiệp vụ "đã đăng ký" với các lỗi kỹ thuật khác
+      if (err.message?.includes('đã đăng ký chiến dịch này rồi')) {
+        setAlreadyRegistered(true);
+        setError('');
+      } else {
+        setError(err.message || 'Lỗi khi lưu thông tin. Vui lòng thử lại.');
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!selectedCampaign) {
@@ -83,7 +152,6 @@ export default function ThongTinCaNhan() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-slate-50">
-      {/* Main Content */}
       <main className="flex-1 w-[1200px] mx-auto p-8 mt-8 bg-white border border-slate-200 rounded-2xl shadow-sm mb-16 self-center">
         {/* Progress Steps */}
         <div className="mb-8 max-w-2xl mx-auto">
@@ -180,7 +248,7 @@ export default function ThongTinCaNhan() {
                       name="hoVaTen"
                       value={formData.hoVaTen}
                       onChange={handleInputChange}
-                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400"
+                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400 px-3"
                       type="text"
                       placeholder="Nhập họ và tên đầy đủ"
                     />
@@ -191,9 +259,10 @@ export default function ThongTinCaNhan() {
                       name="soCCCD"
                       value={formData.soCCCD}
                       onChange={handleInputChange}
-                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400"
+                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400 px-3"
                       type="text"
                       placeholder="Nhập số CCCD 12 số"
+                      maxLength={12}
                     />
                   </div>
                   <div className="space-y-2">
@@ -202,7 +271,7 @@ export default function ThongTinCaNhan() {
                       name="ngaySinh"
                       value={formData.ngaySinh}
                       onChange={handleInputChange}
-                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none"
+                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none px-3"
                       type="date"
                     />
                   </div>
@@ -212,7 +281,7 @@ export default function ThongTinCaNhan() {
                       name="gioiTinh"
                       value={formData.gioiTinh}
                       onChange={handleInputChange}
-                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none"
+                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none px-3"
                     >
                       <option value="Nam">Nam</option>
                       <option value="Nữ">Nữ</option>
@@ -224,21 +293,26 @@ export default function ThongTinCaNhan() {
                       name="soDienThoai"
                       value={formData.soDienThoai}
                       onChange={handleInputChange}
-                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400"
+                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400 px-3"
                       type="tel"
                       placeholder="Nhập số điện thoại"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-bold text-slate-700">Email</label>
-                    <input
-                      name="email"
-                      value={formData.email}
+                    <label className="block text-sm font-bold text-slate-700">Phường/Xã <span className="text-red-500">*</span></label>
+                    <select
+                      name="phuongXa"
+                      value={formData.phuongXa}
                       onChange={handleInputChange}
-                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400"
-                      type="email"
-                      placeholder="example@email.com"
-                    />
+                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none px-3"
+                    >
+                      <option value="">-- Chọn phường/xã --</option>
+                      {phuongXaList.map(px => (
+                        <option key={px.maPhuongXa} value={px.maPhuongXa}>
+                          {px.tenPhuongXa}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
@@ -248,7 +322,7 @@ export default function ThongTinCaNhan() {
                     name="diaChi"
                     value={formData.diaChi}
                     onChange={handleInputChange}
-                    className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400"
+                    className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none placeholder-slate-400 px-3"
                     type="text"
                     placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
                   />
@@ -260,56 +334,78 @@ export default function ThongTinCaNhan() {
                     Dung tích máu dự kiến hiến <span className="text-red-500">*</span>
                   </h4>
                   <div className="grid grid-cols-3 gap-4">
-                    <label className="relative flex flex-col p-4 border border-slate-200 cursor-pointer rounded-xl hover:bg-slate-50 transition-colors has-[:checked]:border-primary has-[:checked]:bg-red-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
-                      <input
-                        type="radio"
-                        name="dungTichMau"
-                        value="250"
-                        checked={formData.dungTichMau === '250'}
-                        onChange={handleInputChange}
-                        className="sr-only"
-                      />
-                      <span className="text-lg font-bold text-slate-800 mb-1">250 ml</span>
-                      <span className="text-xs text-slate-500 font-medium">Phù hợp cho cân nặng từ 42kg - 45kg</span>
-                    </label>
-                    <label className="relative flex flex-col p-4 border border-slate-200 cursor-pointer rounded-xl hover:bg-slate-50 transition-colors has-[:checked]:border-primary has-[:checked]:bg-red-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
-                      <input
-                        type="radio"
-                        name="dungTichMau"
-                        value="350"
-                        checked={formData.dungTichMau === '350'}
-                        onChange={handleInputChange}
-                        className="sr-only"
-                      />
-                      <span className="text-lg font-bold text-slate-800 mb-1">350 ml</span>
-                      <span className="text-xs text-slate-500 font-medium">Phù hợp cho cân nặng trên 45kg</span>
-                    </label>
-                    <label className="relative flex flex-col p-4 border border-slate-200 cursor-pointer rounded-xl hover:bg-slate-50 transition-colors has-[:checked]:border-primary has-[:checked]:bg-red-50 has-[:checked]:ring-1 has-[:checked]:ring-primary">
-                      <input
-                        type="radio"
-                        name="dungTichMau"
-                        value="450"
-                        checked={formData.dungTichMau === '450'}
-                        onChange={handleInputChange}
-                        className="sr-only"
-                      />
-                      <span className="text-lg font-bold text-slate-800 mb-1">450 ml</span>
-                      <span className="text-xs text-slate-500 font-medium">Phù hợp cho cân nặng trên 50kg</span>
-                    </label>
+                    {[
+                      { value: '250', label: '250 ml', note: 'Phù hợp cho cân nặng từ 42kg - 45kg' },
+                      { value: '350', label: '350 ml', note: 'Phù hợp cho cân nặng trên 45kg' },
+                      { value: '450', label: '450 ml', note: 'Phù hợp cho cân nặng trên 50kg' },
+                    ].map(opt => (
+                      <label
+                        key={opt.value}
+                        className="relative flex flex-col p-4 border border-slate-200 cursor-pointer rounded-xl hover:bg-slate-50 transition-colors has-[:checked]:border-primary has-[:checked]:bg-red-50 has-[:checked]:ring-1 has-[:checked]:ring-primary"
+                      >
+                        <input
+                          type="radio"
+                          name="dungTichMau"
+                          value={opt.value}
+                          checked={formData.dungTichMau === opt.value}
+                          onChange={handleInputChange}
+                          className="sr-only"
+                        />
+                        <span className="text-lg font-bold text-slate-800 mb-1">{opt.label}</span>
+                        <span className="text-xs text-slate-500 font-medium">{opt.note}</span>
+                      </label>
+                    ))}
                   </div>
                 </div>
+
+                {/* === Banner: Đã đăng ký chiến dịch này rồi === */}
+                {alreadyRegistered && (
+                  <div className="mt-4 p-4 bg-green-50 border border-green-300 rounded-xl flex items-start gap-4">
+                    <span className="material-symbols-outlined text-green-600 text-2xl shrink-0 mt-0.5">check_circle</span>
+                    <div className="flex-1">
+                      <p className="font-bold text-green-800 text-sm">Bạn đã đăng ký chiến dịch này rồi!</p>
+                      <p className="text-green-700 text-xs mt-1">Bạn chỉ có thể đăng ký mỗi chiến dịch một lần. Vui lòng chọn chiến dịch khác.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => navigate('/chiendich')}
+                      className="shrink-0 px-4 py-2 bg-green-600 text-white text-xs font-bold rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                      Về trang chiến dịch
+                    </button>
+                  </div>
+                )}
+
+                {/* === Lỗi thông thường === */}
+                {error && (
+                  <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm font-medium flex items-center gap-3">
+                    <span className="material-symbols-outlined text-red-500">error</span>
+                    {error}
+                  </div>
+                )}
 
                 <div className="flex justify-end pt-4">
                   <button
                     onClick={handleNext}
-                    className="w-48 h-12 bg-slate-800 text-white rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-900 transition-all shadow-md active:scale-[0.98]"
+                    disabled={loading || alreadyRegistered}
+                    className="w-48 h-12 bg-slate-800 text-white rounded-md font-bold text-sm flex items-center justify-center gap-2 hover:bg-slate-900 transition-all shadow-md active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                     type="button"
                   >
-                    TIẾP THEO
-                    <span className="material-symbols-outlined text-xl">arrow_forward</span>
+                    {loading ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                        Đang xử lý...
+                      </>
+                    ) : (
+                      <>
+                        TIẾP THEO
+                        <span className="material-symbols-outlined text-xl">arrow_forward</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
+
             </div>
           </div>
         </div>

@@ -102,7 +102,7 @@ export default function Header() {
             ) : (
               <div className="flex gap-2">
                 <Link to="/login" className="px-4 py-2 text-primary font-bold border border-primary rounded-lg hover:bg-red-50">Đăng nhập</Link>
-                <Link to="/chiendich" className="px-4 py-2 bg-primary text-white font-bold rounded-lg hover:bg-red-800">Đăng ký</Link>
+                <Link to="/register" className="px-4 py-2 bg-primary text-white font-bold rounded-lg hover:bg-red-800">Đăng ký</Link>
               </div>
             )}
           </div>

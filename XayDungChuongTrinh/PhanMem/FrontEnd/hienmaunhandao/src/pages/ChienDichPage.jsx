@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { chienDichService } from "../services/chienDichService";
+import { donDangKyService } from "../services/donDangKy";
+import { tinhNguyenVienService } from "../services/tinhNguyenVienService";
 
 export default function ChienDichPage() {
     const navigate = useNavigate();
@@ -13,6 +15,8 @@ export default function ChienDichPage() {
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [daDangKyMap, setDaDangKyMap] = useState({}); // { maChienDich: maDon }
+    const [maTNV, setMaTNV] = useState(null);
     const itemsPerPage = 6;
     const STATUS_PRIORITY = {
         "Đang diễn ra": 1,
@@ -22,6 +26,16 @@ export default function ChienDichPage() {
     };
     const uniqueLocations = [...new Set(allCampaigns.map(item => item.diaDiem.tenDiaDiem))];
     
+    // Load maTNV từ tài khoản đang đăng nhập
+    useEffect(() => {
+        const userEmail = localStorage.getItem('email');
+        if (!userEmail) return;
+        tinhNguyenVienService.getByMaTaiKhoan(userEmail).then(tnv => {
+            if (tnv?.maTNV) setMaTNV(tnv.maTNV);
+        }).catch(() => {});
+    }, []);
+
+
     useEffect(() => {
         const fetchCampaigns = async () => {
             try {
@@ -41,6 +55,20 @@ export default function ChienDichPage() {
         }
         fetchCampaigns();   
     }, []);
+
+    // Sau khi có maTNV và danh sách chiến dịch, check từng chiến dịch
+    useEffect(() => {
+        if (!maTNV || allCampaigns.length === 0) return;
+        const checkAll = async () => {
+            const map = {};
+            await Promise.all(allCampaigns.map(async (c) => {
+                const result = await donDangKyService.checkDaDangKy(maTNV, c.maChienDich);
+                if (result) map[c.maChienDich] = result.maDon || true;
+            }));
+            setDaDangKyMap(map);
+        };
+        checkAll();
+    }, [maTNV, allCampaigns]);
     
     // Filter campaigns when search or filters change
     useEffect(() => {
@@ -236,9 +264,10 @@ export default function ChienDichPage() {
                     const status = getCampaignStatus(campaign);
                     const percentage = getProgressPercentage(campaign);
                     const isUpcoming = status.status === "Sắp diễn ra";
+                    const daDangKy = !!daDangKyMap[campaign.maChienDich];
                     
                     return (
-                        <div key={campaign.id} className="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
+                        <div key={campaign.maChienDich} className="w-full h-[520px] bg-white rounded-md border border-slate-200 overflow-hidden hover:shadow-xl transition-all flex flex-col group">
                             {/* Image */}
                             <div className="w-full h-[200px] relative bg-slate-100 overflow-hidden">
                                 <img 
@@ -305,21 +334,29 @@ export default function ChienDichPage() {
                                     
                                     {/* Button */}
                                     {isUpcoming ? (
-                                        <button 
+                                        <button
                                             disabled
                                             className="w-full h-11 bg-slate-100 border border-slate-200 text-slate-400 rounded-md font-bold uppercase tracking-wide text-sm cursor-not-allowed"
                                         >
                                             Chưa mở đăng ký
                                         </button>
+                                    ) : daDangKy ? (
+                                        // Đã đăng ký - hiển thị nút xanh lá
+                                        <button
+                                            disabled
+                                            className="w-full h-11 bg-green-600 text-white rounded-md font-bold uppercase tracking-wide text-sm cursor-not-allowed flex items-center justify-center gap-2 shadow-md"
+                                        >
+                                            <span className="material-symbols-outlined text-lg">check_circle</span>
+                                            Đã đăng ký
+                                        </button>
                                     ) : (
-                                        <button 
+                                        <button
                                             disabled={status.status === "Đã kết thúc"}
                                             onClick={() => {
                                                 localStorage.setItem('selectedCampaign', JSON.stringify(campaign));
                                                 navigate('/khai-bao-thong-tin-ca-nhan');
                                             }}
-                                            className="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98] 
-                                                    disabled:bg-slate-400 disabled:cursor-not-allowed disabled:hover:bg-slate-400"
+                                            className="w-full h-11 bg-red-700 text-white rounded-md font-bold uppercase tracking-wide text-sm hover:bg-red-800 transition-colors shadow-md active:scale-[0.98] disabled:bg-slate-400 disabled:cursor-not-allowed disabled:hover:bg-slate-400"
                                         >
                                             {status.status === "Đã kết thúc" ? "Đã kết thúc" : "Đăng ký tham gia"}
                                         </button>

@@ -111,7 +111,8 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
                 });
 
         TaiKhoanEntity taiKhoan = new TaiKhoanEntity();
-        taiKhoan.setMaTaiKhoan(UUID.randomUUID().toString().substring(0, 10)); // Giới hạn 10 ký tự như DB
+        int soDuoiMaTaiKhoan = taiKhoanRepository.findMaMax();
+        taiKhoan.setMaTaiKhoan(String.format("TK%05d", soDuoiMaTaiKhoan));
         taiKhoan.setEmail(registerRequest.getEmail());
         taiKhoan.setMatKhau(passwordEncoder.encode(registerRequest.getMatKhau()));
         taiKhoan.setVaiTro(vaiTro);

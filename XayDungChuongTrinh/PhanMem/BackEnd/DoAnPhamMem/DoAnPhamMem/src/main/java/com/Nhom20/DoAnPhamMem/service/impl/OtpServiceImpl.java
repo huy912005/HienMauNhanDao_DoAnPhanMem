@@ -24,6 +24,7 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public String generateOtp(String email) {
+        email = email.trim().toLowerCase();
         String otp = String.format("%06d", new Random().nextInt(999999));
         long expiryTime = System.currentTimeMillis() + (EXPIRE_MINS * 60 * 1000);
         otpCache.put(email, new OtpData(otp, expiryTime));
@@ -32,6 +33,8 @@ public class OtpServiceImpl implements OtpService {
 
     @Override
     public boolean validateOtp(String email, String otp) {
+        email = email.trim().toLowerCase();
+        otp = otp.trim();
         OtpData data = otpCache.get(email);
         if (data == null) {
             return false;
