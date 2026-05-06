@@ -57,15 +57,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenProvider, userDetailsService);
         
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/api/chiendich", "/", "/index.html", "/static/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/auth/**", "/api/chiendich", "/api/chiendich/**", "/api/phuongxa", "/api/phuongxa/**",
+                            // Cho phép mọi sub-path của tinhnguyenvien (bao gồm /dang-ky, /tai-khoan/**)
+                            "/api/tinhnguyenvien", "/api/tinhnguyenvien/**", "/api/hososuckhoe", "/api/hososuckhoe/**", "/api/dondangky", "/api/dondangky/**", "/", "/index.html", "/static/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated()
                 );
-
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

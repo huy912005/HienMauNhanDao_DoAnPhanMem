@@ -1,0 +1,25 @@
+package com.Nhom20.DoAnPhamMem.enums;
+
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public enum TheTich {
+    ML_250(250),
+    ML_350(350),
+    ML_450(450);
+    private final int value;
+    TheTich(int value) {
+        this.value = value;
+    }
+    @JsonValue
+    public int getValue() {
+        return value;
+    }
+    public static TheTich fromDbValue(int value) {
+        for (TheTich t : TheTich.values()) {
+            if (t.value == value) {
+                return t;
+            }
+        }
+        throw new IllegalArgumentException("Giá trị thể tích không hợp lệ: " + value + ". Chỉ chấp nhận 250, 350, 450.");
+    }
+}
