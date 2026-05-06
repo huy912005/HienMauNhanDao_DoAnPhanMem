@@ -32,4 +32,5 @@ public class LoginResponse {
     private String userId;
     
     private String email;
+    private String maVaiTro;
 }

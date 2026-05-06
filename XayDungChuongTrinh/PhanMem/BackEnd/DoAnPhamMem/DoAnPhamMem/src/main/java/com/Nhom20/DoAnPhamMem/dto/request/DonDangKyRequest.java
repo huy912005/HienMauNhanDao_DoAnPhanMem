@@ -19,7 +19,7 @@ public class DonDangKyRequest {
     private String maChienDich;
 
     // Có thể null nên không dùng @NotBlank
-    private String maNhanVien;
+    private String maNV;
 
     // Thể tích máu hiến (250, 350, 450), gửi từ frontend
     private Integer theTich;

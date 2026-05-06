@@ -15,9 +15,10 @@ import java.time.LocalDateTime;
 public class DonDangKyResponse {
 
     private String maDon;
+    private TinhNguyenVienReSponse tinhNguyenVien;
     private String maTNV;
     private String maChienDich;
-    private String maNhanVien;
+    private String maNV;
     private String maQR;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime thoiGianDangKy;

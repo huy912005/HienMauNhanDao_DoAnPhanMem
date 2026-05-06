@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {TinhNguyenVienMapper.class})
 public interface DonDangKyMapper {
 
     @Mapping(target = "maDon", ignore = true)
@@ -21,9 +21,10 @@ public interface DonDangKyMapper {
     @Mapping(target = "theTich", ignore = true)
     DonDangKyEntity toEntity(DonDangKyRequest request);
 
+    @Mapping(target = "tinhNguyenVien", source = "tinhNguyenVien")
     @Mapping(target = "maTNV", source = "tinhNguyenVien.maTNV")
     @Mapping(target = "maChienDich", source = "chienDich.maChienDich")
-    @Mapping(target = "maNhanVien", source = "nhanVienPhuTrach.maNhanVien")
+    @Mapping(target = "maNV", source = "nhanVienPhuTrach.maNhanVien")
     @Mapping(target = "trangThai", source = "trangThai.dbValue")
     DonDangKyResponse toResponse(DonDangKyEntity entity);
 

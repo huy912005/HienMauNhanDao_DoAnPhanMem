@@ -63,7 +63,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**", "/api/chiendich", "/api/chiendich/**", "/api/phuongxa", "/api/phuongxa/**",
                             // Cho phép mọi sub-path của tinhnguyenvien (bao gồm /dang-ky, /tai-khoan/**)
-                            "/api/tinhnguyenvien", "/api/tinhnguyenvien/**", "/api/hososuckhoe", "/api/hososuckhoe/**", "/api/dondangky", "/api/dondangky/**", "/", "/index.html", "/static/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated()
+                            "/api/tinhnguyenvien", "/api/tinhnguyenvien/**", "/api/hososuckhoe", "/api/hososuckhoe/**", "/api/dondangky", "/api/dondangky/**", "/api/nhanvien", "/api/nhanvien/**", "/", "/index.html", "/static/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

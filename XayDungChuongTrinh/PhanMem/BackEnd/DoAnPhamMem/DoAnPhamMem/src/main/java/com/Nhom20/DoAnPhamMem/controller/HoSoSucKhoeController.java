@@ -26,4 +26,9 @@ public class HoSoSucKhoeController {
     public ResponseEntity<ApiResponse<?>> createHoSo(@Valid @RequestBody HoSoSucKhoeRequest hoSoSucKhoeRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(hoSoSucKhoeService.createHoSo(hoSoSucKhoeRequest));
     }
+
+    @GetMapping("/don/{maDon}")
+    public ResponseEntity<ApiResponse<?>> getByMaDon(@PathVariable String maDon) {
+        return ResponseEntity.ok(hoSoSucKhoeService.getHoSoByMaDon(maDon));
+    }
 }

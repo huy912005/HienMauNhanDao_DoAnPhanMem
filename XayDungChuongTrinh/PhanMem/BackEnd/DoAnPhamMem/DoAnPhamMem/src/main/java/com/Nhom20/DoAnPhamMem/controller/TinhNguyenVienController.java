@@ -27,4 +27,17 @@ public class TinhNguyenVienController {
     public ResponseEntity<ApiResponse<?>> getByMaTaiKhoan(@PathVariable String maTaiKhoan) {
         return ResponseEntity.ok(tinhNguyenVienService.getByMaTaiKhoan(maTaiKhoan));
     }
+
+    @GetMapping("/cccd/{soCCCD}")
+    public ResponseEntity<ApiResponse<?>> getByCccd(@PathVariable String soCCCD) {
+        return ResponseEntity.ok(tinhNguyenVienService.getByCccd(soCCCD));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<?>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return ResponseEntity.ok(tinhNguyenVienService.getAll(pageable));
+    }
 }

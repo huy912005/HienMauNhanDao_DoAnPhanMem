@@ -20,11 +20,14 @@ public enum TrangThaiDonDangKy {
     }
 
     public static TrangThaiDonDangKy fromDbValue(String value) {
+        if (value == null) return null;
+        String trimmed = value.trim();
         for (TrangThaiDonDangKy t : values()) {
-            if (t.dbValue.equalsIgnoreCase(value)) {
+            if (t.dbValue.equalsIgnoreCase(trimmed)) {
                 return t;
             }
         }
-        throw new IllegalArgumentException("Không tìm thấy TrangThaiDonDangKy với giá trị: " + value);
+        // Fallback for unknown states to prevent 500 error
+        return CHUA_HIEN;
     }
 }

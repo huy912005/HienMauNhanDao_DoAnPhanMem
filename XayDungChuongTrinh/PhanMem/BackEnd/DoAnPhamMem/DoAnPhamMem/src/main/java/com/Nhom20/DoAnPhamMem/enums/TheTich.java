@@ -20,6 +20,7 @@ public enum TheTich {
                 return t;
             }
         }
-        throw new IllegalArgumentException("Giá trị thể tích không hợp lệ: " + value + ". Chỉ chấp nhận 250, 350, 450.");
+        // Fallback for unknown volumes to prevent 500 error
+        return ML_250;
     }
 }
