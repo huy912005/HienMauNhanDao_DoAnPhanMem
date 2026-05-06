@@ -15,21 +15,11 @@ public enum TrangThaiChienDich {
         this.dbValue = dbValue;
     }
 
-    /**
-     * Trả về giá trị chuỗi được lưu trong CSDL và serialize ra JSON.
-     */
     @JsonValue
     public String getDbValue() {
         return dbValue;
     }
 
-    /**
-     * Tìm enum từ giá trị chuỗi CSDL (dùng khi deserialize từ DB hoặc JSON).
-     *
-     * @param value chuỗi trạng thái
-     * @return enum tương ứng
-     * @throws IllegalArgumentException nếu không tìm thấy
-     */
     public static TrangThaiChienDich fromDbValue(String value) {
         for (TrangThaiChienDich t : values()) {
             if (t.dbValue.equalsIgnoreCase(value)) {

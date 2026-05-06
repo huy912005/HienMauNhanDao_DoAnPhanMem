@@ -6,4 +6,6 @@ import com.Nhom20.DoAnPhamMem.dto.response.DonDangKyResponse;
 
 public interface DonDangKyService {
     ApiResponse<DonDangKyResponse> createDonDangKy(DonDangKyRequest request);
+    ApiResponse<DonDangKyResponse> checkDaDangKy(String maTNV, String maChienDich);
 }
+

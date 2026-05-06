@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function Header() {
@@ -6,6 +6,12 @@ export default function Header() {
   const location = useLocation();
   const token = localStorage.getItem('token');
   const userEmail = localStorage.getItem('email');
+  const [hasCampaign, setHasCampaign] = useState(false);
+
+  useEffect(() => {
+    const campaign = localStorage.getItem('selectedCampaign');
+    setHasCampaign(!!campaign);
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -53,7 +59,15 @@ export default function Header() {
           <nav className="flex items-center gap-1">
             <Link className={navLinkClass('/')} to="/">Trang chủ</Link>
             <Link className={navLinkClass('/about')} to="/about">Giới thiệu</Link>
-            <Link className={navLinkClass('/register')} to="/register">Đăng ký hiến máu</Link>
+            {hasCampaign ? (
+              <Link className={navLinkClass('/khai-bao-thong-tin-ca-nhan')} to="/khai-bao-thong-tin-ca-nhan">
+                Đăng ký hiến máu
+              </Link>
+            ) : (
+              <span className="px-4 py-2 text-slate-400 font-bold border-b-2 border-transparent uppercase text-sm cursor-not-allowed opacity-50">
+                Đăng ký hiến máu
+              </span>
+            )}
             <Link className={navLinkClass('/chiendich')} to="/chiendich">Chiến dịch</Link>
           </nav>
 

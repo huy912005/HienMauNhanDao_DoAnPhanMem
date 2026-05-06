@@ -6,9 +6,6 @@ import { AUTH_URL } from '../constants/api';
 export default function RegisterPage() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    hoVaTen: '',
-    canCuocCongDan: '',
-    soDienThoai: '',
     email: '',
     matKhau: '',
     nhapLaiMatKhau: ''
@@ -54,27 +51,29 @@ export default function RegisterPage() {
     setError('');
     try {
       // Verify OTP
-      await axios.post(`${AUTH_URL}/verify-otp`, { email: formData.email, otp });
+      try {
+        await axios.post(`${AUTH_URL}/verify-otp`, { email: formData.email, otp });
+      } catch (otpErr) {
+        if (otpErr.response && otpErr.response.status === 400) {
+            setError('Mã OTP không hợp lệ hoặc đã hết hạn!');
+        } else {
+            setError('Lỗi xác thực OTP: ' + (otpErr.response?.data || 'Không xác định'));
+        }
+        setLoading(false);
+        return;
+      }
       
-      // Register user
+      // OTP valid, now register
       const registerPayload = {
           email: formData.email,
-          matKhau: formData.matKhau,
-          hoTen: formData.hoVaTen,
-          soDienThoai: formData.soDienThoai
+          matKhau: formData.matKhau
       };
       await axios.post(`${AUTH_URL}/register`, registerPayload);
       
       // Redirect to login
       navigate('/login');
     } catch (err) {
-      if (err.response && err.response.status === 400) {
-          setError('Mã OTP không hợp lệ hoặc đã hết hạn!');
-      } else if (err.response && err.response.data) {
-          setError(typeof err.response.data === 'string' ? err.response.data : 'Đăng ký thất bại!');
-      } else {
-          setError('Lỗi kết nối. Vui lòng thử lại.');
-      }
+      setError('Lỗi đăng ký: ' + (err.response?.data || 'Không xác định'));
     } finally {
       setLoading(false);
     }
@@ -103,26 +102,14 @@ export default function RegisterPage() {
             </div>
             <div className="flex-1 p-12 flex flex-col justify-center">
                 <div className="mb-8">
-                    <h2 className="text-2xl font-extrabold text-on-surface mb-2 tracking-tight">Đăng ký Tình nguyện viên</h2>
-                    <p className="text-slate-500 text-sm">{step === 1 ? 'Vui lòng cung cấp thông tin chính xác để hoàn tất thủ tục đăng ký.' : `Vui lòng nhập mã OTP được gửi đến ${formData.email}`}</p>
+                    <h2 className="text-2xl font-extrabold text-on-surface mb-2 tracking-tight">Đăng ký Tài khoản</h2>
+                    <p className="text-slate-500 text-sm">{step === 1 ? 'Vui lòng cung cấp email và mật khẩu để tạo tài khoản.' : `Vui lòng nhập mã OTP được gửi đến ${formData.email}`}</p>
                 </div>
                 {error && <div className="mb-4 text-red-600 text-sm font-bold">{error}</div>}
                 
                 {step === 1 ? (
                     <form onSubmit={handleSendOtp} className="space-y-6">
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-1.5">
-                                <label className="block text-sm font-semibold text-on-surface-variant">Họ và tên</label>
-                                <input name="hoVaTen" value={formData.hoVaTen} onChange={handleChange} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="Nguyễn Văn A" type="text"/>
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="block text-sm font-semibold text-on-surface-variant">Căn cước công dân (CCCD)</label>
-                                <input name="canCuocCongDan" value={formData.canCuocCongDan} onChange={handleChange} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="Số CCCD 12 chữ số" type="text"/>
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="block text-sm font-semibold text-on-surface-variant">Số điện thoại</label>
-                                <input name="soDienThoai" value={formData.soDienThoai} onChange={handleChange} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="09xx xxx xxx" type="tel"/>
-                            </div>
+                        <div className="space-y-4">
                             <div className="space-y-1.5">
                                 <label className="block text-sm font-semibold text-on-surface-variant">Email</label>
                                 <input name="email" value={formData.email} onChange={handleChange} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="example@email.com" type="email"/>
@@ -145,7 +132,7 @@ export default function RegisterPage() {
                         <div className="flex items-start gap-3 pt-2">
                             <input required className="mt-1 w-4 h-4 rounded-sm text-primary focus:ring-primary border-slate-300" id="terms" type="checkbox"/>
                             <label className="text-xs text-slate-600 leading-relaxed" htmlFor="terms">
-                                Tôi đồng ý với <Link className="text-primary font-medium underline underline-offset-2" to="#">điều khoản hiến máu</Link> và cam kết cung cấp thông tin sức khỏe trung thực theo quy định của Bộ Y Tế.
+                                Tôi đồng ý với <Link className="text-primary font-medium underline underline-offset-2" to="#">điều khoản sử dụng</Link> và chính sách bảo mật của hệ thống.
                             </label>
                         </div>
                         <button disabled={loading} className="w-full h-12 bg-primary-container text-white font-bold rounded-md hover:bg-red-800 transition-all shadow-sm active:opacity-90 flex items-center justify-center gap-2" type="submit">
