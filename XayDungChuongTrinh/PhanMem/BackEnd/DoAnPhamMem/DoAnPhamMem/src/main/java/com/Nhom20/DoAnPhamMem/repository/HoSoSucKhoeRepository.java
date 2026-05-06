@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface HoSoSucKhoeRepository extends JpaRepository<HoSoSucKhoeEntity,String> {
     @Query(value = "SELECT MAX(CAST(SUBSTRING(maHoSo, 3) AS UNSIGNED)) FROM hososuckhoe", nativeQuery = true)
     Integer findMaxMaHoSo();
+
+    java.util.Optional<HoSoSucKhoeEntity> findByDonDangKy_MaDon(String maDon);
 }

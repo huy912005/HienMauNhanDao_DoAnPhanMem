@@ -9,4 +9,5 @@ import java.util.List;
 public interface HoSoSucKhoeService {
     ApiResponse<List<HoSoSucKhoeResponse>> getAll();
     ApiResponse<HoSoSucKhoeResponse> createHoSo(HoSoSucKhoeRequest hoSoSucKhoeRequest);
+    ApiResponse<HoSoSucKhoeResponse> getHoSoByMaDon(String maDon);
 }

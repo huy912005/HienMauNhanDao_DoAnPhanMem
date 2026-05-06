@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface DonDangKyRepository extends JpaRepository<DonDangKyEntity, String> {
-    List<DonDangKyEntity> findByTrangThai(TrangThaiDonDangKy trangThai);
+    List<DonDangKyEntity> findByTrangThaiIn(List<TrangThaiDonDangKy> trangThai);
 
     // maDon có format "DK00001" => prefix 2 ký tự "DK", dùng SUBSTRING từ vị trí 3
     @Query(value = "SELECT MAX(CAST(SUBSTRING(maDon, 3) AS UNSIGNED)) FROM dondangky", nativeQuery = true)

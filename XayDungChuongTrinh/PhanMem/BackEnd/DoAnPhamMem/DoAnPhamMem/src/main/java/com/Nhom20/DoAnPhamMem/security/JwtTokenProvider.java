@@ -27,8 +27,8 @@ public class JwtTokenProvider {
     @Value("${app.jwtAccessTokenExpirationMs:900000}")
     private int accessTokenExpirationMs;
 
-    // Refresh token: 7 ngày = 604800000 ms
-    @Value("${app.jwtRefreshTokenExpirationMs:604800000}")
+    // Refresh token: 2 tiếng
+    @Value("${app.jwtRefreshTokenExpirationMs:7200000}")
     private int refreshTokenExpirationMs;
 
     private SecretKey getSigningKey() {

@@ -14,7 +14,13 @@ export default function Login() {
       const res = await authService.login({ email, matKhau });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('email', res.data.email);
-      navigate('/');
+      localStorage.setItem('role', res.data.maVaiTro);
+      // Redirect theo vai trò
+      if (res.data.maVaiTro === 'NVYT') {
+        navigate('/nvyt/don-dang-ky', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
     } catch (err) {
       setError('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
     }

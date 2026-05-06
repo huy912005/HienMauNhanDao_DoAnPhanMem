@@ -55,4 +55,19 @@ public class HoSoSucKhoeServiceImpl implements HoSoSucKhoeService {
                 .data(hoSoSucKhoeMapper.toResponse(entity))
                 .build();
     }
+
+    @Override
+    public ApiResponse<HoSoSucKhoeResponse> getHoSoByMaDon(String maDon) {
+        return hoSoSucKhoeRepository.findByDonDangKy_MaDon(maDon)
+                .map(entity -> ApiResponse.<HoSoSucKhoeResponse>builder()
+                        .status(true)
+                        .message("Lấy hồ sơ sức khỏe thành công!")
+                        .data(hoSoSucKhoeMapper.toResponse(entity))
+                        .build())
+                .orElse(ApiResponse.<HoSoSucKhoeResponse>builder()
+                        .status(false)
+                        .message("Chưa có hồ sơ sức khỏe cho đơn này.")
+                        .data(null)
+                        .build());
+    }
 }
