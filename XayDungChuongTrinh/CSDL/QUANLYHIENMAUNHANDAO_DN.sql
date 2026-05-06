@@ -263,9 +263,7 @@ ALTER TABLE TINNHAN ADD FOREIGN KEY (maTaiKhoanNhan) REFERENCES TAIKHOAN(maTaiKh
 INSERT INTO VAITRO VALUES 
 ('AD','Quản trị hệ thống'), 
 ('BS','Bác sĩ chuyên khoa'), 
-('NV_SL','Nhân viên sàng lọc'),
-('NV_LM','Nhân viên lấy máu'), 
-('NV_XN','Nhân viên xét nghiệm'), 
+('NVYT','Nhân viên y tế'), 
 ('QLK','Quản lý kho máu'), 
 ('TNV','Tình nguyện viên');
 
@@ -309,15 +307,15 @@ INSERT INTO TAIKHOAN VALUES
 -- Tài khoản Nhân sự y tế & Admin (15 người)
 ('TK00001','BS','lequoctuan.bs@bvdn.vn','123',1), 
 ('TK00002','BS','phamhongngoc.bs@bvdn.vn','123',1), 
-('TK00003','NV_SL','nguyenthilan.sl@bvdn.vn','123',1),
-('TK00004','NV_SL','trinhdieuthuy.sl@bvdn.vn','123',1), 
-('TK00005','NV_SL','dolanphuong.sl@bvc.vn','123',1), 
-('TK00006','NV_LM','dangvanmanh.lm@bvdn.vn','123',1), -- Cập nhật NV_LM
-('TK00007','NV_LM','levanhoang.lm@bvdn.vn','123',1), -- Cập nhật NV_LM
-('TK00008','NV_LM','vubaoquynh.lm@bvc.vn','123',1), -- Cập nhật NV_LM
-('TK00009','NV_XN','hoangthihuy.xn@bvdn.vn','123',1),
-('TK00010','NV_XN','nguyentuyetmai.xn@bvdn.vn','123',1), 
-('TK00011','NV_XN','trandinhnam.xn@bvub.vn','123',1), 
+('TK00003','NVYT','nguyenthilan.sl@bvdn.vn','123',1),
+('TK00004','NVYT','trinhdieuthuy.sl@bvdn.vn','123',1), 
+('TK00005','NVYT','dolanphuong.sl@bvc.vn','123',1), 
+('TK00006','NVYT','dangvanmanh.lm@bvdn.vn','123',1), -- Cập nhật NV_LM
+('TK00007','NVYT','levanhoang.lm@bvdn.vn','123',1), -- Cập nhật NV_LM
+('TK00008','NVYT','vubaoquynh.lm@bvc.vn','123',1), -- Cập nhật NV_LM
+('TK00009','NVYT','hoangthihuy.xn@bvdn.vn','123',1),
+('TK00010','NVYT','nguyentuyetmai.xn@bvdn.vn','123',1), 
+('TK00011','NVYT','trandinhnam.xn@bvub.vn','123',1), 
 ('TK00012','QLK','tranminhhung.kho@bvdn.vn','123',1),
 ('TK00013','QLK','lamtandat.kho@bvc.vn','123',1), 
 ('TK00014','AD','admin.system@redcross.dn.vn','123',1), 
