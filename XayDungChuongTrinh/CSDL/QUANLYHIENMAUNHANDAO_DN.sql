@@ -378,7 +378,7 @@ INSERT INTO TINHNGUYENVIEN VALUES
 ('TN00012','TK00027','PX00006','Ngô Thanh Sơn','048094000112','1994-08-14','Nam','0935111012','B+','Phạm Như Xương, Liên Chiểu'),
 ('TN00013','TK00028','PX00002','Đặng Ngọc Thảo','048100000113','2000-03-25','Nữ','0914111013','O+','Lê Lợi, Hải Châu'),
 ('TN00014','TK00029','PX00001','Hoàng Văn Bách','048082000114','1982-12-12','Nam','0914111014','O+','Lý Tự Trọng, Hải Châu'),
-('TN00015','TK00030','PX00006','Phan Văn Trị','048090000115','1990-03-03','Nam','0914111015','AB+','Nguyễn Chánh, Liên Chiểu'),
+('TN00015','TK00030','PX00005','Phạm Minh Huy','048090000115','2005-01-09','Nam','0914111015','AB+','24 Bắc Đẩu'),
 
 -- Nhóm 2: 15 người ĐẾN HIẾN TRỰC TIẾP (maTaiKhoan = NULL)
 ('TN00016',NULL,'PX00007','Đồng Đức Hải','048095000131','1995-05-15','Nam','0385111031','O+','Phước Lý, Liên Chiểu'),
@@ -402,7 +402,8 @@ INSERT INTO TINHNGUYENVIEN VALUES
 INSERT INTO CHIENDICHHIENMAU(maChienDich, maDiaDiem, maNhanVien, tenChienDich, thoiGianBD, thoiGianKT, soLuongDuKien, trangThai, maQR, imageUrl) VALUES 
 ('CD00001','DD00006','NV00001','Lễ hội Xuân Hồng UTE 2026','2026-02-10 07:00','2026-02-12 17:00',500,'Đã kết thúc','QR_XH26','xuanhong2026.jpg'),
 ('CD00002','DD00007','NV00002','Chủ Nhật Đỏ Đại học Đông Á','2026-03-15 07:00','2026-03-15 11:30',300,'Đã phê duyệt','QR_CN26','chunhatdo2026.jpg'),
-('CD00003','DD00005','NV00015','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26','hienmau.jpg');
+('CD00003','DD00005','NV00015','Hiến máu thường xuyên Chữ Thập Đỏ','2026-05-01 07:00','2026-05-31 17:00',200,'Đang diễn ra','QR_TX26','hienmau.jpg'),
+('CD00004', 'DD00008', 'NV00001', 'Hiến máu tình nguyện tại Bệnh viện Đà Nẵng', '2026-05-03 07:00:00', '2026-06-30 17:00:00', 100, 'Đang diễn ra', 'QR_BVDN_2024', 'HienMauTinhNguyenBVDM.png');
 
 -- =============================================================
 -- 6. ĐƠN ĐĂNG KÝ (3 LUỒNG HOẠT ĐỘNG RÕ RÀNG)
@@ -968,3 +969,21 @@ END //
 DELIMITER ;
 -- [TEST] Thống kê lượng máu thu nhận trong tháng 2 năm 2026
 CALL sp_ThongKeThuNhanTheoThang(2, 2026);
+
+USE QuanLyHienMauDN;
+SELECT MAX(CAST(SUBSTRING(maTaiKhoan, 3) AS unsigned)) as maLonNhat FROM taiKhoan;
+
+USE QuanLyHienMauDN;
+-- Xóa constraint cũ
+ALTER TABLE DONDANGKY DROP CONSTRAINT chk_theTich;
+-- Tạo lại constraint đúng: bao gồm cả trường hợp 'Đã đăng ký'
+ALTER TABLE DONDANGKY ADD CONSTRAINT chk_theTich CHECK (
+    (trangThai = 'Đã đăng ký'          AND theTich IN (250, 350, 450)) OR
+    (trangThai = 'Đã hiến'             AND theTich IN (250, 350, 450)) OR
+    (trangThai = 'Đã nhận chứng nhận'  AND theTich IN (250, 350, 450)) OR
+    (trangThai = 'Chưa hiến'           AND theTich = 0)
+);
+
+
+
+
