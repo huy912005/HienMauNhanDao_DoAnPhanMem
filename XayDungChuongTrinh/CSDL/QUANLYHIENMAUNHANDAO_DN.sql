@@ -974,6 +974,8 @@ USE QuanLyHienMauDN;
 SELECT MAX(CAST(SUBSTRING(maTaiKhoan, 3) AS unsigned)) as maLonNhat FROM taiKhoan;
 
 USE QuanLyHienMauDN;
+INSERT INTO TAIKHOAN VALUES 
+('TK00031','BS','huy@gmail.com','$2a$10$xpZsghkpkmQh4rjp3AvdwuffH2HgVl65iLDC7Xa2wyG5tyk4TCK.S',1);
 -- Xóa constraint cũ
 ALTER TABLE DONDANGKY DROP CONSTRAINT chk_theTich;
 -- Tạo lại constraint đúng: bao gồm cả trường hợp 'Đã đăng ký'

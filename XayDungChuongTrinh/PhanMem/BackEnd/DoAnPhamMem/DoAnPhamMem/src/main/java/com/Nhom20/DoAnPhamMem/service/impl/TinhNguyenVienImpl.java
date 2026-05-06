@@ -34,7 +34,7 @@ public class TinhNguyenVienImpl implements TinhNguyenVienService {
         TinhNguyenVienEntity entity = tinhNguyenVienMapper.toEntity(request);
         Integer max = tinhNguyenVienRepository.findMaxMaTNV();
         entity.setMaTNV(String.format("TN%05d", (max == null) ? 1 : max + 1));
-        entity.setTaiKhoan(resolveTaiKhoan(request.getMaTaiKhoan()));
+        entity.setTaiKhoan(resolveTaiKhoan(request.getMaTaiKhoan()!=null?request.getMaTaiKhoan():null));
         entity.setPhuongXa(phuongXaRepository.findById(request.getMaPhuongXa()).orElse(null));
         tinhNguyenVienRepository.save(entity);
         return ApiResponse.<TinhNguyenVienReSponse>builder().status(true).message("Tạo mới tình nguyện viên thành công!").data(tinhNguyenVienMapper.toResponse(entity)).build();

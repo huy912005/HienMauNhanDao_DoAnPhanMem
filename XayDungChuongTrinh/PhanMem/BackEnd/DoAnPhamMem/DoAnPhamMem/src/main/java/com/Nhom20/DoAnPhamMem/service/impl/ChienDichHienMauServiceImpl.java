@@ -25,7 +25,7 @@ public class ChienDichHienMauServiceImpl implements ChienDichHienMauService {
     @Override
     public ApiResponse<List<ChiendichHienMauResponse>> getAll() {
         List<ChienDichHienMauEntity> campaigns = chienDichHienMauRepository.findAll();
-        List<DonDangKyEntity> allDonDaHien = donDangKyRepository.findByTrangThai(TrangThaiDonDangKy.DA_HIEN);
+        List<DonDangKyEntity> allDonDaHien = donDangKyRepository.findByTrangThaiIn(List.of(TrangThaiDonDangKy.DA_HIEN,TrangThaiDonDangKy.DA_DANG_KY,TrangThaiDonDangKy.DA_NHAN_CHUNG_NHAN));
         Map<String, Long> countMap = allDonDaHien.stream()
                 .filter(don -> don.getChienDich() != null && don.getChienDich().getMaChienDich() != null)
                 .collect(Collectors.groupingBy(
