@@ -74,6 +74,7 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
                 .expiresIn(expiresIn)
                 .userId(taiKhoan.getMaTaiKhoan())
                 .email(taiKhoan.getEmail())
+                .maVaiTro(taiKhoan.getVaiTro().getMaVaiTro())
                 .build();
     }
 

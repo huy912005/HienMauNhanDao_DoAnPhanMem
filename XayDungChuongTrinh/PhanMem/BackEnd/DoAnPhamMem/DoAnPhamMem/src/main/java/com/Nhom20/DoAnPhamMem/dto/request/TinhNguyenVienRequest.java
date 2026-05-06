@@ -17,10 +17,10 @@ import java.time.LocalDate;
 public class TinhNguyenVienRequest {
     @NotBlank(message = "Họ tên không được để trống")
     @Size(max = 100)
-    private String hoTen;
+    private String hoVaTen;
     @NotBlank(message = "CCCD không được để trống")
     @Size(min = 12, max = 12, message = "CCCD phải 12 số")
-    private String cccd;
+    private String soCCCD;
     @NotNull(message = "Ngày sinh không được để trống")
     private LocalDate ngaySinh;
     private GioiTinh gioiTinh;

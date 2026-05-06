@@ -26,6 +26,7 @@ public class DonDangKyServiceImpl implements DonDangKyService {
     private final DonDangKyMapper mapper;
     private final TinhNguyenVienRepository tinhNguyenVienRepository;
     private final ChienDichHienMauRepository chienDichRepository;
+    private final com.Nhom20.DoAnPhamMem.repository.NhanVienRepository nhanVienRepository;
 
     @Override
     public ApiResponse<DonDangKyResponse> createDonDangKy(DonDangKyRequest request) {
@@ -46,6 +47,9 @@ public class DonDangKyServiceImpl implements DonDangKyService {
         entity.setTinhNguyenVien(tnv);
         ChienDichHienMauEntity chienDich = chienDichRepository.findById(request.getMaChienDich()).orElseThrow(() -> new RuntimeException("Không tìm thấy chiến dịch: " + request.getMaChienDich()));
         entity.setChienDich(chienDich);
+        if (request.getMaNV() != null && !request.getMaNV().isBlank()) {
+            entity.setNhanVienPhuTrach(nhanVienRepository.findById(request.getMaNV()).orElse(null));
+        }
         DonDangKyEntity saved = repository.save(entity);
         return ApiResponse.<DonDangKyResponse>builder().message("Đăng ký thành công!").status(true).data(mapper.toResponse(saved)).build();
     }
@@ -55,5 +59,37 @@ public class DonDangKyServiceImpl implements DonDangKyService {
         return repository.findByTinhNguyenVien_MaTNVAndChienDich_MaChienDich(maTNV, maChienDich)
                 .map(entity -> ApiResponse.<DonDangKyResponse>builder().status(true).message("Đã đăng ký").data(mapper.toResponse(entity)).build())
                 .orElse(ApiResponse.<DonDangKyResponse>builder().status(false).message("Chưa đăng ký").data(null).build());
+    }
+
+    @Override
+    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getAll(org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Page<DonDangKyEntity> page = repository.findAll(pageable);
+        org.springframework.data.domain.Page<DonDangKyResponse> responsePage = page.map(mapper::toResponse);
+        return ApiResponse.<org.springframework.data.domain.Page<DonDangKyResponse>>builder()
+                .status(true)
+                .message("Lấy danh sách đơn đăng ký thành công")
+                .data(responsePage)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<DonDangKyResponse> updateDonDangKy(String maDon, DonDangKyRequest request) {
+        DonDangKyEntity entity = repository.findById(maDon).orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon));
+        if (request.getTheTich() != null) {
+            entity.setTheTich(TheTich.fromDbValue(request.getTheTich()));
+        }
+        if (request.getMaChienDich() != null) {
+            ChienDichHienMauEntity chienDich = chienDichRepository.findById(request.getMaChienDich()).orElseThrow(() -> new RuntimeException("Không tìm thấy chiến dịch: " + request.getMaChienDich()));
+            entity.setChienDich(chienDich);
+        }
+        DonDangKyEntity saved = repository.save(entity);
+        return ApiResponse.<DonDangKyResponse>builder().status(true).message("Cập nhật thành công").data(mapper.toResponse(saved)).build();
+    }
+
+    @Override
+    public ApiResponse<Void> deleteDonDangKy(String maDon) {
+        if (!repository.existsById(maDon)) throw new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon);
+        repository.deleteById(maDon);
+        return ApiResponse.<Void>builder().status(true).message("Xóa thành công").build();
     }
 }

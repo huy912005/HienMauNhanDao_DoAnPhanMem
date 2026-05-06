@@ -74,4 +74,22 @@ public class TinhNguyenVienImpl implements TinhNguyenVienService {
                 .map(entity -> ApiResponse.<TinhNguyenVienReSponse>builder().status(true).message("Lấy thông tin tình nguyện viên thành công!").data(tinhNguyenVienMapper.toResponse(entity)).build())
                 .orElse(ApiResponse.<TinhNguyenVienReSponse>builder().status(false).message("Chưa có thông tin tình nguyện viên với tài khoản này.").data(null).build());
     }
+
+    @Override
+    public ApiResponse<TinhNguyenVienReSponse> getByCccd(String cccd) {
+        return tinhNguyenVienRepository.findByCccd(cccd)
+                .map(entity -> ApiResponse.<TinhNguyenVienReSponse>builder().status(true).message("Lấy thông tin thành công!").data(tinhNguyenVienMapper.toResponse(entity)).build())
+                .orElse(ApiResponse.<TinhNguyenVienReSponse>builder().status(false).message("Không tìm thấy TNV với CCCD này.").data(null).build());
+    }
+
+    @Override
+    public ApiResponse<org.springframework.data.domain.Page<TinhNguyenVienReSponse>> getAll(org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Page<TinhNguyenVienEntity> page = tinhNguyenVienRepository.findAll(pageable);
+        org.springframework.data.domain.Page<TinhNguyenVienReSponse> responsePage = page.map(tinhNguyenVienMapper::toResponse);
+        return ApiResponse.<org.springframework.data.domain.Page<TinhNguyenVienReSponse>>builder()
+                .status(true)
+                .message("Lấy danh sách tình nguyện viên thành công!")
+                .data(responsePage)
+                .build();
+    }
 }
