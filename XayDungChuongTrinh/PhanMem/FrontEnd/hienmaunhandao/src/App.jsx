@@ -11,6 +11,7 @@ import ChienDichPage from './pages/ChienDichPage';
 import ThongTinCaNhan from './pages/ThongTinCaNhan';
 import KhaiBaoYTe from './pages/KhaiBaoYTe';
 import XacNhanDangKy from './pages/XacNhanDangKy';
+import ThongKeTonKho from './pages/ThongKeTonKho';
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="khai-bao-thong-tin-ca-nhan" element={<ThongTinCaNhan />} />
             <Route path="khai-bao-y-te" element={<KhaiBaoYTe />} />
             <Route path="xac-nhan-dang-ky" element={<XacNhanDangKy />} />
+            <Route path="thong-ke" element={<ThongKeTonKho />} />
           </Route>
         </Routes>
       </Router>

@@ -24,8 +24,8 @@ public class PhieuNhapXuatServiceImpl implements PhieuNhapXuatService {
         com.Nhom20.DoAnPhamMem.entity.PhieuNhapXuatEntity phieu = new com.Nhom20.DoAnPhamMem.entity.PhieuNhapXuatEntity();
         String maPhieu = "PN" + System.currentTimeMillis() % 100000;
         phieu.setMaPhieu(maPhieu);
-        phieu.setNhanVien(nhanVien);
-        phieu.setLoaiPhieu("Nhập kho");
+        phieu.setNhanVienThucHien(nhanVien);
+        phieu.setLoaiPhieu(com.Nhom20.DoAnPhamMem.enums.LoaiPhieuNhapXuat.NHAP_KHO);
         phieu.setNgayNhapXuat(java.time.LocalDate.now());
         phieuNhapXuatRepository.save(phieu);
 
