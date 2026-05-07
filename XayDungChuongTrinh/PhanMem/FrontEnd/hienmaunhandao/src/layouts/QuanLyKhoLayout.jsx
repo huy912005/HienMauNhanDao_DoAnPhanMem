@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 
-export default function AdminLayout() {
+export default function QuanLyKhoLayout() {
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -13,8 +13,8 @@ export default function AdminLayout() {
   const initials = "QL";
 
   const menu = [
-    { page: '/admin/thong-ke', icon: 'pie_chart', label: 'Thống kê tồn kho' },
-    { page: '/admin/nhap-kho', icon: 'add_box', label: 'Quản lý nhập kho' },
+    { page: '/quan-ly-kho/thong-ke', icon: 'pie_chart', label: 'Thống kê tồn kho' },
+    { page: '/quan-ly-kho/nhap-kho', icon: 'add_box', label: 'Quản lý nhập kho' },
   ];
 
   return (

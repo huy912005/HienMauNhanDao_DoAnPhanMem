@@ -16,10 +16,20 @@ const ThongKeTonKho = () => {
   // Thêm state cho biểu đồ và bảng
   const [barData, setBarData] = useState([]);
   const [pieData, setPieData] = useState([]);
-  const [bloodUnits, setBloodUnits] = useState({ content: [], totalElements: 0 });
+  const [bloodUnits, setBloodUnits] = useState({ content: [], totalPages: 0 });
   const [page, setPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [bloodTypeFilter, setBloodTypeFilter] = useState('');
 
   const COLORS = ['#af101a', '#d32f2f', '#ffb3ac', '#8f6f6c']; // Tương ứng O, A, B, AB
+
+  // Hàm debounce cho tìm kiếm
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPage(0); // Reset về trang đầu khi tìm kiếm/lọc
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm, bloodTypeFilter]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,7 +40,7 @@ const ThongKeTonKho = () => {
           http.get('/api/tuimau/stats'),
           http.get('/api/tuimau/charts/bar?year=2026'),
           http.get('/api/khomau/charts/pie'),
-          http.get(`/api/tuimau/blood-units?page=${page}&size=5`)
+          http.get(`/api/tuimau/blood-units?page=${page}&size=5&search=${searchTerm}&bloodType=${bloodTypeFilter}`)
         ]);
         
         setStats(statsData);
@@ -58,7 +68,7 @@ const ThongKeTonKho = () => {
     };
 
     fetchData();
-  }, [page]);
+  }, [page, searchTerm, bloodTypeFilter]);
 
   // Hàm xử lý hủy túi máu
   const handleDelete = async (maTuiMau) => {
@@ -66,7 +76,7 @@ const ThongKeTonKho = () => {
       return;
     }
     try {
-      await http.delete(`/api/tuimau/${maTuiMau}`);
+      await http.delete(`/api/tuimau/blood-units/${maTuiMau}`);
       alert('Đã hủy túi máu thành công!');
       // Tải lại dữ liệu trang hiện tại
       setPage(0);
@@ -95,7 +105,7 @@ const ThongKeTonKho = () => {
             <button className="h-10 px-4 bg-white border border-slate-300 rounded-xl text-sm font-medium text-slate-700 flex items-center gap-2 hover:bg-slate-50">
               <span className="material-symbols-outlined text-sm">file_download</span> Xuất báo cáo
             </button>
-            <Link to="/admin/nhap-kho" className="h-10 px-4 bg-[#af101a] text-white rounded-xl text-sm font-medium flex items-center gap-2 hover:bg-red-800">
+            <Link to="/quan-ly-kho/nhap-kho" className="h-10 px-4 bg-[#af101a] text-white rounded-xl text-sm font-medium flex items-center gap-2 hover:bg-red-800">
               <span className="material-symbols-outlined text-sm">add</span> Cập nhật kho
             </Link>
           </div>
@@ -211,8 +221,35 @@ const ThongKeTonKho = () => {
 
         {/* PHẦN MỚI: Bảng chi tiết */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-          <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center">
+          <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
             <h4 className="text-sm font-bold text-slate-700">Chi tiết tồn kho theo đơn vị máu</h4>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                <input 
+                  type="text" 
+                  placeholder="Tìm kiếm mã túi máu..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 pr-4 h-9 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 outline-none w-56" 
+                />
+              </div>
+              <select 
+                value={bloodTypeFilter}
+                onChange={(e) => setBloodTypeFilter(e.target.value)}
+                className="h-9 px-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 outline-none focus:border-red-400"
+              >
+                <option value="">Tất cả nhóm máu</option>
+                <option value="A+">Nhóm A+</option>
+                <option value="A-">Nhóm A-</option>
+                <option value="B+">Nhóm B+</option>
+                <option value="B-">Nhóm B-</option>
+                <option value="O+">Nhóm O+</option>
+                <option value="O-">Nhóm O-</option>
+                <option value="AB+">Nhóm AB+</option>
+                <option value="AB-">Nhóm AB-</option>
+              </select>
+            </div>
           </div>
           <table className="w-full text-left">
             <thead>
