@@ -1,0 +1,106 @@
+import React from 'react';
+import { Outlet, Link, useLocation } from 'react-router-dom';
+
+export default function AdminLayout() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Giả lập thông tin đăng nhập
+  const session = {
+    name: "Quản Lý Kho",
+    role: "QLK"
+  };
+  const initials = "QL";
+
+  const menu = [
+    { page: '/admin/thong-ke', icon: 'pie_chart', label: 'Thống kê tồn kho' },
+    { page: '/admin/nhap-kho', icon: 'add_box', label: 'Quản lý nhập kho' },
+  ];
+
+  return (
+    <div className="w-full min-h-screen flex bg-gray-50 text-slate-800 antialiased overflow-x-hidden">
+      {/* Sidebar */}
+      <aside className="w-64 min-h-screen bg-white border-r border-slate-200 flex flex-col sticky top-0 shrink-0 z-40">
+        <div className="px-5 py-4 flex items-center gap-3 border-b border-slate-100">
+          <div className="w-10 h-10 bg-red-700 rounded-xl flex items-center justify-center shadow-md">
+            <span className="material-symbols-outlined text-white text-2xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 700" }}>bloodtype</span>
+          </div>
+          <div>
+            <h1 className="font-black text-red-700 text-sm leading-tight">Hệ thống Hiến máu</h1>
+            <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">TP. Đà Nẵng</p>
+          </div>
+        </div>
+        
+        <div className="px-4 py-4 border-b border-slate-100">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0"
+                 style={{ background: 'linear-gradient(135deg,#af101a,#d32f2f)' }}>{initials}</div>
+            <div className="overflow-hidden">
+              <p className="text-sm font-bold text-slate-800 truncate">{session.name}</p>
+              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">Quản Lý Kho</span>
+            </div>
+          </div>
+        </div>
+
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          {menu.map((item, index) => {
+            const active = currentPath === item.page;
+            return (
+              <Link key={index} to={item.page}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer
+                ${active ? 'bg-red-50 text-red-700 font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-red-700'}`}>
+                <span className="material-symbols-outlined text-xl"
+                      style={{ fontVariationSettings: `'FILL' ${active ? 1 : 0}, 'wght' 400, 'GRAD' 0, 'opsz' 24` }}>{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="px-3 py-3 border-t border-slate-100">
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-700 transition-all">
+            <span className="material-symbols-outlined text-xl text-slate-400">logout</span>Đăng xuất
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+        {/* Header */}
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-30 shrink-0">
+          <div className="flex items-center gap-4 flex-1 max-w-md">
+            <div className="relative w-full">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+              <input type="text" placeholder="Tìm kiếm nhanh..."
+                     className="w-full h-10 pl-10 pr-4 bg-slate-50 border border-slate-200 rounded-full text-sm
+                            focus:ring-2 focus:ring-red-200 focus:border-red-400 outline-none transition-all"/>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="relative w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+              <span className="material-symbols-outlined text-slate-500 text-xl">notifications</span>
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full border-2 border-white animate-pulse"></span>
+            </button>
+            <div className="h-8 w-px bg-slate-200"></div>
+            <div className="flex items-center gap-2">
+              <div className="text-right">
+                <p className="text-xs font-bold text-slate-800 leading-tight">{session.name}</p>
+                <p className="text-[10px] text-slate-500 uppercase tracking-tight">Quản Lý Kho</p>
+              </div>
+              <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-black shrink-0"
+                   style={{ background: 'linear-gradient(135deg,#af101a,#d32f2f)' }}>{initials}</div>
+            </div>
+            <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-red-50 hover:text-red-600 text-slate-400 transition-colors" title="Đăng xuất">
+              <span className="material-symbols-outlined text-xl">logout</span>
+            </button>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 w-full bg-gray-50">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}

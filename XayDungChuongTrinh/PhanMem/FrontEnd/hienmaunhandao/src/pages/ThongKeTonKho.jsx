@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import http from '../utils/http';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
@@ -59,6 +60,23 @@ const ThongKeTonKho = () => {
     fetchData();
   }, [page]);
 
+  // Hàm xử lý hủy túi máu
+  const handleDelete = async (maTuiMau) => {
+    if (!window.confirm(`Bạn có chắc chắn muốn hủy túi máu ${maTuiMau} không? Hành động này không thể hoàn tác.`)) {
+      return;
+    }
+    try {
+      await http.delete(`/api/tuimau/${maTuiMau}`);
+      alert('Đã hủy túi máu thành công!');
+      // Tải lại dữ liệu trang hiện tại
+      setPage(0);
+      window.location.reload();
+    } catch (error) {
+      console.error('Lỗi khi hủy túi máu:', error);
+      alert('Không thể hủy túi máu này. Vui lòng thử lại sau.');
+    }
+  };
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center font-bold">Đang tải dữ liệu từ máy chủ...</div>;
   }
@@ -77,9 +95,9 @@ const ThongKeTonKho = () => {
             <button className="h-10 px-4 bg-white border border-slate-300 rounded-xl text-sm font-medium text-slate-700 flex items-center gap-2 hover:bg-slate-50">
               <span className="material-symbols-outlined text-sm">file_download</span> Xuất báo cáo
             </button>
-            <button className="h-10 px-4 bg-[#af101a] text-white rounded-xl text-sm font-medium flex items-center gap-2 hover:bg-red-800">
+            <Link to="/admin/nhap-kho" className="h-10 px-4 bg-[#af101a] text-white rounded-xl text-sm font-medium flex items-center gap-2 hover:bg-red-800">
               <span className="material-symbols-outlined text-sm">add</span> Cập nhật kho
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -203,6 +221,7 @@ const ThongKeTonKho = () => {
                 <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Nhóm máu</th>
                 <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ngày thu nhận</th>
                 <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Trạng thái</th>
+                <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right">Hành động</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -219,19 +238,55 @@ const ThongKeTonKho = () => {
                       {unit.ngayThuNhan ? new Date(unit.ngayThuNhan).toLocaleDateString('vi-VN') : ''}
                     </td>
                     <td className="px-6">
-                      <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase bg-green-100 text-green-700">
+                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase ${unit.trangThai === 'HUY' ? 'bg-slate-100 text-slate-500' : 'bg-green-100 text-green-700'}`}>
                         {unit.trangThai}
                       </span>
+                    </td>
+                    <td className="px-6 text-right">
+                      {unit.trangThai !== 'HUY' && (
+                        <button 
+                          onClick={() => handleDelete(unit.maTuiMau)}
+                          className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                          title="Hủy túi máu"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">delete</span>
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="text-center py-8 text-slate-500">Chưa có dữ liệu túi máu nào trong kho.</td>
+                  <td colSpan="5" className="text-center py-8 text-slate-500">Chưa có dữ liệu túi máu nào trong kho.</td>
                 </tr>
               )}
             </tbody>
           </table>
+          
+          {/* Phân trang */}
+          {bloodUnits.totalPages > 1 && (
+            <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+              <span className="text-sm text-slate-500">
+                Hiển thị trang <span className="font-bold text-slate-700">{page + 1}</span> / {bloodUnits.totalPages}
+              </span>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setPage(Math.max(0, page - 1))}
+                  disabled={page === 0}
+                  className="px-3 py-1.5 text-sm font-medium border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Trước
+                </button>
+                <button 
+                  onClick={() => setPage(Math.min(bloodUnits.totalPages - 1, page + 1))}
+                  disabled={page >= bloodUnits.totalPages - 1}
+                  className="px-3 py-1.5 text-sm font-medium border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Sau
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
       </main>
