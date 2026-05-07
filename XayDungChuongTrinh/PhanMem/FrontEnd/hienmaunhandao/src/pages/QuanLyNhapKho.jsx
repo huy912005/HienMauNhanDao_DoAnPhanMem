@@ -22,7 +22,7 @@ const QuanLyNhapKho = () => {
     try {
       setLoading(true);
       // Gọi API lấy thông tin túi máu
-      const response = await http.get(`/api/tuimau/scan/${barcode.trim()}`);
+      const response = await http.get(`/tuimau/scan/${barcode.trim()}`);
       
       // Thêm vào danh sách tạm
       setScannedUnits([...scannedUnits, response]);
@@ -57,7 +57,7 @@ const QuanLyNhapKho = () => {
         maTuiMauList: scannedUnits.map(u => u.maTuiMau)
       };
 
-      await http.post('/api/phieunhapxuat/import', payload);
+      await http.post('/phieunhapxuat/import', payload);
       alert('Nhập kho thành công!');
       setScannedUnits([]); // Reset danh sách
     } catch (error) {

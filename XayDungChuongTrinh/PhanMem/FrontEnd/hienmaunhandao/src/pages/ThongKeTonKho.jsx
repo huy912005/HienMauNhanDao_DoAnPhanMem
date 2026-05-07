@@ -37,10 +37,10 @@ const ThongKeTonKho = () => {
         setLoading(true);
         // Chạy song song 4 API để lấy dữ liệu nhanh hơn
         const [statsData, barDataRes, pieDataRes, tableDataRes] = await Promise.all([
-          http.get('/api/tuimau/stats'),
-          http.get('/api/tuimau/charts/bar?year=2026'),
-          http.get('/api/khomau/charts/pie'),
-          http.get(`/api/tuimau/blood-units?page=${page}&size=5&search=${searchTerm}&bloodType=${bloodTypeFilter}`)
+          http.get('/tuimau/stats'),
+          http.get('/tuimau/charts/bar?year=2026'),
+          http.get('/khomau/charts/pie'),
+          http.get(`/tuimau/blood-units?page=${page}&size=5&search=${searchTerm}&bloodType=${bloodTypeFilter}`)
         ]);
         
         setStats(statsData);
@@ -76,7 +76,7 @@ const ThongKeTonKho = () => {
       return;
     }
     try {
-      await http.delete(`/api/tuimau/blood-units/${maTuiMau}`);
+      await http.delete(`/tuimau/blood-units/${maTuiMau}`);
       alert('Đã hủy túi máu thành công!');
       // Tải lại dữ liệu trang hiện tại
       setPage(0);
