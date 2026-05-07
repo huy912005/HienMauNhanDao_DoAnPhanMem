@@ -16,7 +16,8 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('email');
-    navigate('/login');
+    localStorage.removeItem('role');
+    window.location.href = '/login';
   };
 
   // Helper để xác định class cho link đang active

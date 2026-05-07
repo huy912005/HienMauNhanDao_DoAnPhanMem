@@ -15,4 +15,5 @@ public interface TinhNguyenVienRepository extends JpaRepository<TinhNguyenVienEn
 
     // Tìm TNV theo maTaiKhoan (email được dùng làm maTaiKhoan từ frontend)
     Optional<TinhNguyenVienEntity> findByTaiKhoan_MaTaiKhoan(String maTaiKhoan);
+    Optional<TinhNguyenVienEntity> findByCccd(String cccd);
 }

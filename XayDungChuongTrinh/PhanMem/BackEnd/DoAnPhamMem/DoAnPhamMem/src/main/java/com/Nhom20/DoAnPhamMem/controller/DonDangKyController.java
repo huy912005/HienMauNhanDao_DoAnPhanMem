@@ -34,4 +34,24 @@ public class DonDangKyController {
             @RequestParam String maChienDich) {
         return ResponseEntity.ok(donDangKyService.checkDaDangKy(maTNV, maChienDich));
     }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<?>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return ResponseEntity.ok(donDangKyService.getAll(pageable));
+    }
+
+    @PutMapping("/{maDon}")
+    public ResponseEntity<ApiResponse<DonDangKyResponse>> update(
+            @PathVariable String maDon,
+            @RequestBody DonDangKyRequest request) {
+        return ResponseEntity.ok(donDangKyService.updateDonDangKy(maDon, request));
+    }
+
+    @DeleteMapping("/{maDon}")
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable String maDon) {
+        return ResponseEntity.ok(donDangKyService.deleteDonDangKy(maDon));
+    }
 }

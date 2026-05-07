@@ -14,8 +14,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class TinhNguyenVienReSponse {
     private String maTNV;
-    private String hoTen;
-    private String cccd;
+    private String hoVaTen;
+    private String soCCCD;
     private LocalDate ngaySinh;
     private GioiTinh gioiTinh;
     private String soDienThoai;

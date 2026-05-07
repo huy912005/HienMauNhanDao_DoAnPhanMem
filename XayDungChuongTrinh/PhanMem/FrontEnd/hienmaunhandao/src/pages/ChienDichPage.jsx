@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { chienDichService } from "../services/chienDichService";
 import { donDangKyService } from "../services/donDangKy";
 import { tinhNguyenVienService } from "../services/tinhNguyenVienService";
+import Swal from 'sweetalert2';
 
 export default function ChienDichPage() {
     const navigate = useNavigate();
@@ -97,6 +98,9 @@ export default function ChienDichPage() {
             filtered = filtered.filter(campaign => {
                 const campaignDate = new Date(campaign.thoiGianBD);
                 const from = new Date(fromDate);
+                //Do chỉ lấy ngày nên set giờ
+                campaignDate.setHours(0, 0, 0, 0);
+                from.setHours(0, 0, 0, 0);
                 return campaignDate >= from;
             });
         }
@@ -104,6 +108,8 @@ export default function ChienDichPage() {
             filtered = filtered.filter(campaign => {
                 const campaignDate = new Date(campaign.thoiGianKT);
                 const to = new Date(toDate);
+                campaignDate.setHours(0, 0, 0, 0);
+                to.setHours(0, 0, 0, 0);
                 return campaignDate <= to;
             });
         }
@@ -145,8 +151,11 @@ export default function ChienDichPage() {
     };
     
     const getProgressPercentage = (campaign) => {
-        if (campaign.soLuongDuKien === 0) return 0;
-        return Math.round((campaign.luongMauDaThu / campaign.soLuongDuKien) * 100);
+        if (campaign.soLuongDuKien === 0) 
+            return 0;
+        if(campaign.luongMauDaThu * campaign.soLuongDuKien / 100 < campaign.luongMauDaThu / campaign.soLuongDuKien * 100)
+            return (campaign.luongMauDaThu / campaign.soLuongDuKien * 100).toFixed(1);
+        return (campaign.luongMauDaThu / campaign.soLuongDuKien * 100);
     };
     
     // Pagination
@@ -307,7 +316,7 @@ export default function ChienDichPage() {
                                     {/* Date */}
                                     <div className="flex items-center gap-3 text-sm text-slate-600">
                                         <span className="material-symbols-outlined text-red-700 text-lg">calendar_month</span>
-                                        <span>{campaign.thoiGianBD} - {campaign.thoiGianKT}</span>
+                                        <span>{campaign.thoiGianBD} --- {campaign.thoiGianKT}</span>
                                     </div>
                                     
                                     {/* Target */}
@@ -353,6 +362,20 @@ export default function ChienDichPage() {
                                         <button
                                             disabled={status.status === "Đã kết thúc"}
                                             onClick={() => {
+                                                const userEmail = localStorage.getItem('email');
+                                                if (!userEmail) {
+                                                    Swal.fire({
+                                                        icon: 'warning',
+                                                        title: 'Chưa đăng nhập',
+                                                        text: 'Vui lòng đăng nhập để tham gia chiến dịch!',
+                                                        confirmButtonText: 'Đăng nhập ngay',
+                                                        confirmButtonColor: '#dc2626'
+                                                    }).then(() => {
+                                                        navigate('/login');
+                                                    });
+
+                                                    return;
+                                                }
                                                 localStorage.setItem('selectedCampaign', JSON.stringify(campaign));
                                                 navigate('/khai-bao-thong-tin-ca-nhan');
                                             }}
