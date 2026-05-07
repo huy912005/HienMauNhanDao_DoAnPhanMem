@@ -31,6 +31,13 @@ function NvytGuard({ children }) {
   return children;
 }
 
+// Guard: chỉ cho phép role QLK (Quản lý kho) truy cập
+function QlkGuard({ children }) {
+  const role = localStorage.getItem('role');
+  if (role !== 'QLK') return <Navigate to="/login" replace />;
+  return children;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -49,7 +56,7 @@ function App() {
             <Route path="xac-nhan-dang-ky" element={<XacNhanDangKy />} />
           </Route>
           {/* Quản Lý Kho Routes */}
-          <Route path="/quan-ly-kho" element={<QuanLyKhoLayout />}>
+          <Route path="/quan-ly-kho" element={<QlkGuard><QuanLyKhoLayout /></QlkGuard>}>
             <Route path="thong-ke" element={<ThongKeTonKho />} />
             <Route path="nhap-kho" element={<QuanLyNhapKho />} />
           </Route>

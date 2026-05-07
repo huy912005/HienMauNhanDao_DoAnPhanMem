@@ -12,12 +12,16 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await authService.login({ email, matKhau });
-      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('token', res.data.access_token);
       localStorage.setItem('email', res.data.email);
       localStorage.setItem('role', res.data.maVaiTro);
       // Redirect theo vai trò
       if (res.data.maVaiTro === 'NVYT') {
         navigate('/nvyt/don-dang-ky', { replace: true });
+      } else if (res.data.maVaiTro === 'QLK') {
+        navigate('/quan-ly-kho/thong-ke', { replace: true });
+      } else if (res.data.maVaiTro === 'AD') {
+        navigate('/admin', { replace: true });
       } else {
         navigate('/', { replace: true });
       }

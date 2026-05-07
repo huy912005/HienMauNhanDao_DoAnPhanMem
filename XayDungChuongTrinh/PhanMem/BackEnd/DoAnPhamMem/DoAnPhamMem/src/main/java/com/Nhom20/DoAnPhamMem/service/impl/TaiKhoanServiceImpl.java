@@ -103,7 +103,10 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
             throw new RuntimeException("Email already exists");
         }
 
-        VaiTroEntity vaiTro = vaiTroRepository.findByTenVaiTro("TNV") // Mặc định là Tình nguyện viên
+        // Đoạn code cũ của Leader (Đã comment lại vì lỗi Duplicate Key khi tên vai trò là "Tình nguyện viên")
+        // VaiTroEntity vaiTro = vaiTroRepository.findByTenVaiTro("TNV") // Mặc định là Tình nguyện viên
+        // Đoạn code mới sửa: dùng findById để tìm theo Mã Vai Trò thay vì Tên
+        VaiTroEntity vaiTro = vaiTroRepository.findById("TNV")
                 .orElseGet(() -> {
                     VaiTroEntity newRole = new VaiTroEntity();
                     newRole.setMaVaiTro("TNV");

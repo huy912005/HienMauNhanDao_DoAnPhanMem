@@ -1,16 +1,27 @@
 import React from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 
 export default function QuanLyKhoLayout() {
   const location = useLocation();
   const currentPath = location.pathname;
+  const navigate = useNavigate();
 
-  // Giả lập thông tin đăng nhập
-  const session = {
-    name: "Quản Lý Kho",
-    role: "QLK"
+  const handleLogout = () => {
+    localStorage.clear(); // Xóa toàn bộ token và role
+    navigate('/login');
   };
-  const initials = "QL";
+
+  // Lấy thông tin đăng nhập từ localStorage
+  const email = localStorage.getItem('email') || "User";
+  const nameDisplay = email.split('@')[0]; // Lấy phần trước @ làm tên hiển thị
+  const roleCode = localStorage.getItem('role') || "QLK";
+  const roleDisplay = roleCode === 'QLK' ? 'Quản Lý Kho' : 'Nhân Viên';
+
+  const session = {
+    name: nameDisplay,
+    role: roleDisplay
+  };
+  const initials = session.name.substring(0, 2).toUpperCase();
 
   const menu = [
     { page: '/quan-ly-kho/thong-ke', icon: 'pie_chart', label: 'Thống kê tồn kho' },
@@ -37,7 +48,7 @@ export default function QuanLyKhoLayout() {
                  style={{ background: 'linear-gradient(135deg,#af101a,#d32f2f)' }}>{initials}</div>
             <div className="overflow-hidden">
               <p className="text-sm font-bold text-slate-800 truncate">{session.name}</p>
-              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">Quản Lý Kho</span>
+              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-orange-700">{session.role}</span>
             </div>
           </div>
         </div>
@@ -58,7 +69,7 @@ export default function QuanLyKhoLayout() {
         </nav>
 
         <div className="px-3 py-3 border-t border-slate-100">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-700 transition-all">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-700 transition-all">
             <span className="material-symbols-outlined text-xl text-slate-400">logout</span>Đăng xuất
           </button>
         </div>
@@ -85,12 +96,12 @@ export default function QuanLyKhoLayout() {
             <div className="flex items-center gap-2">
               <div className="text-right">
                 <p className="text-xs font-bold text-slate-800 leading-tight">{session.name}</p>
-                <p className="text-[10px] text-slate-500 uppercase tracking-tight">Quản Lý Kho</p>
+                <p className="text-[10px] text-slate-500 uppercase tracking-tight">{session.role}</p>
               </div>
               <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-black shrink-0"
                    style={{ background: 'linear-gradient(135deg,#af101a,#d32f2f)' }}>{initials}</div>
             </div>
-            <button className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-red-50 hover:text-red-600 text-slate-400 transition-colors" title="Đăng xuất">
+            <button onClick={handleLogout} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-red-50 hover:text-red-600 text-slate-400 transition-colors" title="Đăng xuất">
               <span className="material-symbols-outlined text-xl">logout</span>
             </button>
           </div>
