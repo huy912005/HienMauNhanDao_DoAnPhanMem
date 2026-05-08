@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum TrangThaiDonDangKy {
     DA_DANG_KY("Đã đăng ký"),
+    CHO_KHAM("Chờ khám"),
+    DA_KHAM("Đã khám"),
     DA_HIEN("Đã hiến"),
+    DA_HIEN_MAU("Đã hiến máu"),
+    TU_CHOI("Từ chối"),
     DA_NHAN_CHUNG_NHAN("Đã nhận chứng nhận"),
     CHUA_HIEN("Chưa hiến");
 
@@ -20,7 +24,8 @@ public enum TrangThaiDonDangKy {
     }
 
     public static TrangThaiDonDangKy fromDbValue(String value) {
-        if (value == null) return null;
+        if (value == null)
+            return null;
         String trimmed = value.trim();
         for (TrangThaiDonDangKy t : values()) {
             if (t.dbValue.equalsIgnoreCase(trimmed)) {

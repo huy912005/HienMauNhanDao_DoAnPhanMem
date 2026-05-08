@@ -29,7 +29,9 @@ public class DonDangKyEntity {
     @Column(name = "thoiGianDangKy")
     private LocalDateTime thoiGianDangKy;
     @Column(name = "trangThai", length = 50)
+    @Convert(converter = com.Nhom20.DoAnPhamMem.enums.TrangThaiDonDangKyConverter.class)
     private TrangThaiDonDangKy trangThai;
     @Column(name = "theTich")
+    @Convert(converter = com.Nhom20.DoAnPhamMem.enums.TheTichConverter.class)
     private TheTich theTich;
 }

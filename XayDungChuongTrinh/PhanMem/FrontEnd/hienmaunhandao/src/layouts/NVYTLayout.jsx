@@ -25,6 +25,11 @@ const NAV_ITEMS = [
     path: '/nvyt/kham-lam-sang',
   },
   {
+    label: 'Thu nhận máu',
+    icon: 'vaccines',
+    path: '/nvyt/thu-nhan-mau',
+  },
+  {
     label: 'Cập nhật XN',
     icon: 'biotech',
     path: '/nvyt/cap-nhat-xet-nghiem',
