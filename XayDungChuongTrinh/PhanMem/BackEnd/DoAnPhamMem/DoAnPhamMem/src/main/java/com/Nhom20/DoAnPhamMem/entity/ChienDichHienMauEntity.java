@@ -1,7 +1,7 @@
 package com.Nhom20.DoAnPhamMem.entity;
 
 import com.Nhom20.DoAnPhamMem.enums.TrangThaiChienDich;
-import com.Nhom20.DoAnPhamMem.converter.TrangThaiChienDichConverter;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +30,6 @@ public class ChienDichHienMauEntity {
     private LocalDateTime thoiGianKT;
     @Column(name = "soLuongDuKien")
     private Integer soLuongDuKien;
-    @Convert(converter = TrangThaiChienDichConverter.class)
     @Column(name = "trangThai", nullable = false, length = 50)
     private TrangThaiChienDich trangThai;
     @Column(name = "maQR")

@@ -22,12 +22,10 @@ public class TuiMauEntity {
     @JoinColumn(name = "maKho")
     private KhoMauEntity khoMau;
     @Column(name = "theTich")
-    @Convert(converter = com.Nhom20.DoAnPhamMem.enums.TheTichTuiMauConverter.class)
     private TheTichTuiMau theTich;
     @Column(name = "thoiGianLayMau")
     private LocalDateTime thoiGianLayMau;
     @Column(name = "trangThai", length = 50)
-    @Convert(converter = com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMauConverter.class)
     private TrangThaiTuiMau trangThai;
 
     @ManyToOne(fetch = FetchType.LAZY)

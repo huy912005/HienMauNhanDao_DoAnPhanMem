@@ -8,6 +8,7 @@ import jakarta.persistence.Converter;
 public class TrangThaiDonDangKyConverter implements AttributeConverter<TrangThaiDonDangKy, String> {
     @Override
     public String convertToDatabaseColumn(TrangThaiDonDangKy attribute) {
+        System.out.println("Converting TrangThaiDonDangKy to DB: " + attribute);
         if (attribute == null) return null;
         return attribute.getDbValue();
     }
