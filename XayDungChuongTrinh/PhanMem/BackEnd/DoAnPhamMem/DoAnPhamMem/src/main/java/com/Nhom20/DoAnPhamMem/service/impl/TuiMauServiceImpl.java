@@ -41,11 +41,28 @@ public class TuiMauServiceImpl implements TuiMauService {
         return tuiMauRepository.searchAndFilterBloodUnits(search, enumNhomMau, pageable).map(tuiMau -> {
             com.Nhom20.DoAnPhamMem.dto.response.BloodUnitDTO dto = new com.Nhom20.DoAnPhamMem.dto.response.BloodUnitDTO();
             dto.setMaTuiMau(tuiMau.getMaTuiMau());
-            dto.setNhomMau(tuiMau.getKhoMau() != null && tuiMau.getKhoMau().getNhomMau() != null ? tuiMau.getKhoMau().getNhomMau().getDbValue() : "Chưa rõ");
-            dto.setNgayThuNhan(tuiMau.getThoiGianLayMau() != null ? java.sql.Timestamp.valueOf(tuiMau.getThoiGianLayMau()) : null);
-            dto.setTrangThai(tuiMau.getTrangThai() != null ? tuiMau.getTrangThai().name() : "");
+            dto.setNhomMau(tuiMau.getKhoMau() != null && tuiMau.getKhoMau().getNhomMau() != null
+                    ? tuiMau.getKhoMau().getNhomMau().getDbValue() : "Chưa rõ");
+            // Ngày thu nhận
+            dto.setNgayThuNhan(tuiMau.getThoiGianLayMau() != null
+                    ? java.sql.Timestamp.valueOf(tuiMau.getThoiGianLayMau()) : null);
+            // Thể tích (ml)
+            dto.setTheTich(tuiMau.getTheTich() != null ? tuiMau.getTheTich().getMl() : null);
+            // Trạng thái hiển thị tiếng Việt
+            dto.setTrangThai("Nhập kho");
+            // Máu cất đông có hạn sử dụng lâu (VD: 365 ngày thay vì 42 ngày)
+            if (tuiMau.getThoiGianLayMau() != null) {
+                java.time.LocalDateTime hetHan = tuiMau.getThoiGianLayMau().plusDays(365);
+                dto.setNgayHetHan(java.sql.Timestamp.valueOf(hetHan));
+                // Tình trạng HSD
+                long daysLeft = java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDateTime.now(), hetHan);
+                if (daysLeft < 0) dto.setTinhTrangHSD("Hết hạn");
+                else if (daysLeft <= 30) dto.setTinhTrangHSD("Sắp hết hạn");
+                else dto.setTinhTrangHSD("Còn hạn");
+            }
             return dto;
         });
+
     }
 
     @Override
@@ -68,9 +85,20 @@ public class TuiMauServiceImpl implements TuiMauService {
         }
         com.Nhom20.DoAnPhamMem.dto.response.BloodUnitDTO dto = new com.Nhom20.DoAnPhamMem.dto.response.BloodUnitDTO();
         dto.setMaTuiMau(tuiMau.getMaTuiMau());
-        dto.setNhomMau(tuiMau.getKhoMau() != null && tuiMau.getKhoMau().getNhomMau() != null ? tuiMau.getKhoMau().getNhomMau().getDbValue() : "Chưa rõ");
-        dto.setNgayThuNhan(tuiMau.getThoiGianLayMau() != null ? java.sql.Timestamp.valueOf(tuiMau.getThoiGianLayMau()) : null);
-        dto.setTrangThai(tuiMau.getTrangThai().name());
+        dto.setNhomMau(tuiMau.getKhoMau() != null && tuiMau.getKhoMau().getNhomMau() != null
+                ? tuiMau.getKhoMau().getNhomMau().getDbValue() : "Chưa rõ");
+        dto.setNgayThuNhan(tuiMau.getThoiGianLayMau() != null
+                ? java.sql.Timestamp.valueOf(tuiMau.getThoiGianLayMau()) : null);
+        dto.setTheTich(tuiMau.getTheTich() != null ? tuiMau.getTheTich().getMl() : null);
+        dto.setTrangThai(tuiMau.getTrangThai() != null ? tuiMau.getTrangThai().name() : "");
+        if (tuiMau.getThoiGianLayMau() != null) {
+            java.time.LocalDateTime hetHan = tuiMau.getThoiGianLayMau().plusDays(365);
+            dto.setNgayHetHan(java.sql.Timestamp.valueOf(hetHan));
+            long daysLeft = java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDateTime.now(), hetHan);
+            if (daysLeft < 0) dto.setTinhTrangHSD("Hết hạn");
+            else if (daysLeft <= 30) dto.setTinhTrangHSD("Sắp hết hạn");
+            else dto.setTinhTrangHSD("Còn hạn");
+        }
         return dto;
     }
 }

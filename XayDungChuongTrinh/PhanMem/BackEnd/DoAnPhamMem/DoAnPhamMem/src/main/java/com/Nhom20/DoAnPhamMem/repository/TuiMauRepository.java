@@ -12,7 +12,8 @@ public interface TuiMauRepository extends JpaRepository<TuiMauEntity,String> {
     java.util.List<com.Nhom20.DoAnPhamMem.dto.response.MonthlyCollectionStatDTO> countBloodUnitsByMonth(@org.springframework.data.repository.query.Param("year") int year);
 
     @org.springframework.data.jpa.repository.Query("SELECT t FROM TuiMauEntity t JOIN t.khoMau k " +
-            "WHERE (:search IS NULL OR t.maTuiMau LIKE %:search%) " +
+            "WHERE t.trangThai = com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau.NHAP_KHO " +
+            "AND (:search IS NULL OR t.maTuiMau LIKE %:search%) " +
             "AND (:bloodType IS NULL OR k.nhomMau = :bloodType)")
     org.springframework.data.domain.Page<TuiMauEntity> searchAndFilterBloodUnits(
             @org.springframework.data.repository.query.Param("search") String search,
