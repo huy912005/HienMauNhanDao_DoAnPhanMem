@@ -15,50 +15,57 @@ const ThongKeTonKho = () => {
 
   // Thêm state cho biểu đồ và bảng
   const [barData, setBarData] = useState([]);
+  const [bloodUnits, setBloodUnits] = useState({ content: [] });
   const [pieData, setPieData] = useState([]);
-  const [bloodUnits, setBloodUnits] = useState({ content: [], totalPages: 0 });
-  const [page, setPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [bloodTypeFilter, setBloodTypeFilter] = useState('');
-
   const COLORS = ['#af101a', '#d32f2f', '#ffb3ac', '#8f6f6c']; // Tương ứng O, A, B, AB
-
-  // Hàm debounce cho tìm kiếm
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setPage(0); // Reset về trang đầu khi tìm kiếm/lọc
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchTerm, bloodTypeFilter]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Chạy song song 4 API để lấy dữ liệu nhanh hơn
-        const [statsData, barDataRes, pieDataRes, tableDataRes] = await Promise.all([
+        // Chạy song song API để lấy dữ liệu
+        const [statsData, barDataRes, pieDataRes] = await Promise.all([
           http.get('/tuimau/stats'),
           http.get('/tuimau/charts/bar?year=2026'),
-          http.get('/khomau/charts/pie'),
-          http.get(`/tuimau/blood-units?page=${page}&size=5&search=${searchTerm}&bloodType=${bloodTypeFilter}`)
+          http.get('/khomau/charts/pie')
         ]);
         
         setStats(statsData);
         
-        // Map data cho Bar Chart (nếu API rỗng, ta tạo data giả để bạn xem khung trước)
+        // Map data cho Bar Chart
         const mappedBarData = barDataRes.length > 0 ? barDataRes : 
           Array.from({length: 12}, (_, i) => ({ month: `T.${i+1}`, quantity: 0 }));
         setBarData(mappedBarData);
 
-        // Map data cho Pie Chart
-        const mappedPieData = pieDataRes.length > 0 ? pieDataRes.map(item => ({
-          name: `Nhóm ${item.bloodType}`,
-          value: item.quantity
-        })) : [{name: 'Trống', value: 1}];
+        // Map data cho Pie Chart (Gộp thành 4 nhóm O, A, B, AB)
+        const aggregatedPie = { 'Nhóm O': 0, 'Nhóm A': 0, 'Nhóm B': 0, 'Nhóm AB': 0 };
+        pieDataRes.forEach(item => {
+          if (item.bloodType.startsWith('AB')) aggregatedPie['Nhóm AB'] += item.quantity;
+          else if (item.bloodType.startsWith('A')) aggregatedPie['Nhóm A'] += item.quantity;
+          else if (item.bloodType.startsWith('B')) aggregatedPie['Nhóm B'] += item.quantity;
+          else if (item.bloodType.startsWith('O')) aggregatedPie['Nhóm O'] += item.quantity;
+        });
+
+        const mappedPieData = Object.keys(aggregatedPie)
+          .map(key => ({ name: key, value: aggregatedPie[key] }))
+          .filter(item => item.value > 0);
+        
+        if (mappedPieData.length === 0) mappedPieData.push({name: 'Trống', value: 1});
         setPieData(mappedPieData);
 
-        // Map data cho Bảng
-        setBloodUnits(tableDataRes);
+        // Map data cho Bảng Tổng hợp 8 nhóm máu
+        const today = new Date().toLocaleDateString('vi-VN');
+        const NGUONG_AN_TOAN = 10;
+        
+        const summaryTable = pieDataRes.map(item => ({
+          nhomMau: item.bloodType,
+          soLuong: item.quantity,
+          nguongAnToan: NGUONG_AN_TOAN,
+          trangThai: item.quantity >= NGUONG_AN_TOAN ? 'An toàn' : 'Sắp hết',
+          ngayCapNhat: today
+        }));
+        
+        setBloodUnits({ content: summaryTable });
 
       } catch (error) {
         console.error('Lỗi khi lấy dữ liệu từ Backend:', error);
@@ -68,7 +75,7 @@ const ThongKeTonKho = () => {
     };
 
     fetchData();
-  }, [page, searchTerm, bloodTypeFilter]);
+  }, []);
 
   // Hàm xử lý hủy túi máu
   const handleDelete = async (maTuiMau) => {
@@ -222,108 +229,57 @@ const ThongKeTonKho = () => {
         {/* PHẦN MỚI: Bảng chi tiết */}
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
           <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-            <h4 className="text-sm font-bold text-slate-700">Chi tiết tồn kho theo đơn vị máu</h4>
+            <h4 className="text-sm font-bold text-slate-700">Trạng thái tồn kho theo 8 nhóm máu</h4>
             <div className="flex items-center gap-3">
-              <div className="relative">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-                <input 
-                  type="text" 
-                  placeholder="Tìm kiếm mã túi máu..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 h-9 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-red-100 outline-none w-56" 
-                />
-              </div>
-              <select 
-                value={bloodTypeFilter}
-                onChange={(e) => setBloodTypeFilter(e.target.value)}
-                className="h-9 px-3 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-600 outline-none focus:border-red-400"
-              >
-                <option value="">Tất cả nhóm máu</option>
-                <option value="A+">Nhóm A+</option>
-                <option value="A-">Nhóm A-</option>
-                <option value="B+">Nhóm B+</option>
-                <option value="B-">Nhóm B-</option>
-                <option value="O+">Nhóm O+</option>
-                <option value="O-">Nhóm O-</option>
-                <option value="AB+">Nhóm AB+</option>
-                <option value="AB-">Nhóm AB-</option>
-              </select>
+              <span className="text-xs text-slate-500 flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-red-500"></span> Dưới ngưỡng an toàn
+              </span>
+              <span className="text-xs text-slate-500 flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Trên ngưỡng an toàn
+              </span>
             </div>
           </div>
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Mã túi máu</th>
                 <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Nhóm máu</th>
-                <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ngày thu nhận</th>
+                <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center">Ngưỡng an toàn</th>
+                <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ngày cập nhật</th>
                 <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest">Trạng thái</th>
-                <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right">Hành động</th>
+                <th className="h-12 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-right">Tổng số lượng</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {bloodUnits.content && bloodUnits.content.length > 0 ? (
+              {bloodUnits && bloodUnits.content && bloodUnits.content.length > 0 ? (
                 bloodUnits.content.map((unit, idx) => (
                   <tr key={idx} className="h-16 hover:bg-slate-50 transition-colors">
-                    <td className="px-6 text-sm font-bold text-slate-700">{unit.maTuiMau}</td>
                     <td className="px-6">
-                      <span className="w-10 h-6 inline-flex items-center justify-center rounded-full text-[10px] font-black bg-red-100 text-red-800">
+                      <span className="w-10 h-6 inline-flex items-center justify-center rounded-full text-[12px] font-black bg-red-100 text-red-800">
                         {unit.nhomMau}
                       </span>
                     </td>
+                    <td className="px-6 text-sm font-bold text-slate-600 text-center">{unit.nguongAnToan}</td>
                     <td className="px-6 text-sm text-slate-600">
-                      {unit.ngayThuNhan ? new Date(unit.ngayThuNhan).toLocaleDateString('vi-VN') : ''}
+                      {unit.ngayCapNhat}
                     </td>
                     <td className="px-6">
-                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase ${unit.trangThai === 'HUY' ? 'bg-slate-100 text-slate-500' : 'bg-green-100 text-green-700'}`}>
+                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase flex w-fit items-center gap-1 ${unit.trangThai === 'Sắp hết' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-700 border border-emerald-100'}`}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{backgroundColor: unit.trangThai === 'Sắp hết' ? '#ef4444' : '#10b981'}}></span>
                         {unit.trangThai}
                       </span>
                     </td>
-                    <td className="px-6 text-right">
-                      {unit.trangThai !== 'HUY' && (
-                        <button 
-                          onClick={() => handleDelete(unit.maTuiMau)}
-                          className="w-8 h-8 inline-flex items-center justify-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                          title="Hủy túi máu"
-                        >
-                          <span className="material-symbols-outlined text-[18px]">delete</span>
-                        </button>
-                      )}
+                    <td className="px-6 text-right font-black text-lg text-slate-800">
+                      {unit.soLuong}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="text-center py-8 text-slate-500">Chưa có dữ liệu túi máu nào trong kho.</td>
+                  <td colSpan="5" className="text-center py-8 text-slate-500">Chưa có dữ liệu tồn kho.</td>
                 </tr>
               )}
             </tbody>
           </table>
-          
-          {/* Phân trang */}
-          {bloodUnits.totalPages > 1 && (
-            <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-sm text-slate-500">
-                Hiển thị trang <span className="font-bold text-slate-700">{page + 1}</span> / {bloodUnits.totalPages}
-              </span>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => setPage(Math.max(0, page - 1))}
-                  disabled={page === 0}
-                  className="px-3 py-1.5 text-sm font-medium border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Trước
-                </button>
-                <button 
-                  onClick={() => setPage(Math.min(bloodUnits.totalPages - 1, page + 1))}
-                  disabled={page >= bloodUnits.totalPages - 1}
-                  className="px-3 py-1.5 text-sm font-medium border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Sau
-                </button>
-              </div>
-            </div>
-          )}
         </div>
 
       </main>
