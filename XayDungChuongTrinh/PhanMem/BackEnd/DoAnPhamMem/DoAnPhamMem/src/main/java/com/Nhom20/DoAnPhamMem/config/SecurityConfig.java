@@ -23,16 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@OpenAPIDefinition(
-        info = @Info(title = "Hien Mau Nhan Dao API", version = "1.0"),
-        security = @SecurityRequirement(name = "bearerAuth")
-)
-@SecurityScheme(
-        name = "bearerAuth",
-        type = SecuritySchemeType.HTTP,
-        scheme = "bearer",
-        bearerFormat = "JWT"
-)
+@OpenAPIDefinition(info = @Info(title = "Hien Mau Nhan Dao API", version = "1.0"), security = @SecurityRequirement(name = "bearerAuth"))
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 public class SecurityConfig {
 
     private final JwtTokenProvider tokenProvider;
@@ -49,22 +41,29 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenProvider, userDetailsService);
-        
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenProvider,
+                userDetailsService);
+
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/api/chiendich", "/api/chiendich/**", "/api/phuongxa", "/api/phuongxa/**",
-                            // Cho phép mọi sub-path của tinhnguyenvien (bao gồm /dang-ky, /tai-khoan/**)
-                            "/api/tinhnguyenvien", "/api/tinhnguyenvien/**", "/api/hososuckhoe", "/api/hososuckhoe/**", "/api/dondangky", "/api/dondangky/**", "/api/nhanvien", "/api/nhanvien/**", "/", "/index.html", "/static/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated()
-                );
+                        .requestMatchers("/auth/**", "/api/chiendich", "/api/chiendich/**", "/api/phuongxa",
+                                "/api/phuongxa/**",
+                                // Cho phép mọi sub-path của tinhnguyenvien (bao gồm /dang-ky, /tai-khoan/**)
+                                "/api/tinhnguyenvien", "/api/tinhnguyenvien/**", "/api/hososuckhoe",
+                                "/api/hososuckhoe/**", "/api/dondangky", "/api/dondangky/**", "/api/nhanvien",
+                                "/api/nhanvien/**", "/api/ketqualamsang", "/api/ketqualamsang/**", 
+                                "/api/tuimau", "/api/tuimau/**", "/", "/index.html", "/static/**", "/v3/api-docs/**",
+                                "/swagger-ui/**", "/swagger-ui.html")
+                        .permitAll().anyRequest().authenticated());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

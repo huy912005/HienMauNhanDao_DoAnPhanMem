@@ -1,4 +1,5 @@
 package com.Nhom20.DoAnPhamMem.repository;
+
 import com.Nhom20.DoAnPhamMem.entity.DonDangKyEntity;
 import com.Nhom20.DoAnPhamMem.enums.TrangThaiDonDangKy;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @Repository
 public interface DonDangKyRepository extends JpaRepository<DonDangKyEntity, String> {
@@ -20,5 +20,3 @@ public interface DonDangKyRepository extends JpaRepository<DonDangKyEntity, Stri
     // Kiểm tra TNV đã đăng ký chiến dịch chưa
     Optional<DonDangKyEntity> findByTinhNguyenVien_MaTNVAndChienDich_MaChienDich(String maTNV, String maChienDich);
 }
-
-
