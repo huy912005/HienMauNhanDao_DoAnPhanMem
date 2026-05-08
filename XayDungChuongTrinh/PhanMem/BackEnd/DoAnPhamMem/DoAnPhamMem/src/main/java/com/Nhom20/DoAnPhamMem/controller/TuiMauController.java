@@ -1,49 +1,76 @@
 package com.Nhom20.DoAnPhamMem.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.Nhom20.DoAnPhamMem.dto.response.*;
+import com.Nhom20.DoAnPhamMem.service.TuiMauService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tuimau")
-@lombok.RequiredArgsConstructor
-@org.springframework.web.bind.annotation.CrossOrigin(origins = "*")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class TuiMauController {
 
-    private final com.Nhom20.DoAnPhamMem.service.TuiMauService tuiMauService;
+    private final TuiMauService tuiMauService;
 
-    // 1. API lấy 4 số thống kê trên cùng
-    @org.springframework.web.bind.annotation.GetMapping("/stats")
-    public org.springframework.http.ResponseEntity<com.Nhom20.DoAnPhamMem.dto.response.DashboardStatsDTO> getDashboardStats() {
-        return org.springframework.http.ResponseEntity.ok(tuiMauService.getDashboardStats());
+    // --- My Features ---
+    
+    @GetMapping("/dashboard/stats") // Đổi path một chút để tránh trùng /stats
+    public ResponseEntity<DashboardStatsDTO> getDashboardStats() {
+        return ResponseEntity.ok(tuiMauService.getDashboardStats());
     }
 
-    // 2. API lấy data biểu đồ cột (mặc định lấy năm 2026)
-    @org.springframework.web.bind.annotation.GetMapping("/charts/bar")
-    public org.springframework.http.ResponseEntity<java.util.List<com.Nhom20.DoAnPhamMem.dto.response.MonthlyCollectionStatDTO>> getBloodCollectionByMonth(
-            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "2026") int year) {
-        return org.springframework.http.ResponseEntity.ok(tuiMauService.getBloodCollectionByMonth(year));
+    @GetMapping("/charts/bar")
+    public ResponseEntity<List<MonthlyCollectionStatDTO>> getBloodCollectionByMonth(
+            @RequestParam(defaultValue = "2026") int year) {
+        return ResponseEntity.ok(tuiMauService.getBloodCollectionByMonth(year));
     }
 
-    // 3. API lấy danh sách chi tiết tồn kho (có phân trang và bộ lọc)
-    @org.springframework.web.bind.annotation.GetMapping("/blood-units")
-    public org.springframework.http.ResponseEntity<org.springframework.data.domain.Page<com.Nhom20.DoAnPhamMem.dto.response.BloodUnitDTO>> getBloodUnits(
-            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "0") int page,
-            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "10") int size,
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String search,
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String bloodType) {
-        return org.springframework.http.ResponseEntity.ok(tuiMauService.getBloodUnits(page, size, search, bloodType));
+    @GetMapping("/blood-units")
+    public ResponseEntity<Page<BloodUnitDTO>> getBloodUnits(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String bloodType) {
+        return ResponseEntity.ok(tuiMauService.getBloodUnits(page, size, search, bloodType));
     }
 
-    // 4. API hủy một túi máu
-    @org.springframework.web.bind.annotation.DeleteMapping("/blood-units/{maTuiMau}")
-    public org.springframework.http.ResponseEntity<String> deleteBloodUnit(@org.springframework.web.bind.annotation.PathVariable String maTuiMau) {
+    @DeleteMapping("/blood-units/{maTuiMau}")
+    public ResponseEntity<String> deleteBloodUnit(@PathVariable String maTuiMau) {
         tuiMauService.deleteBloodUnit(maTuiMau);
-        return org.springframework.http.ResponseEntity.ok("Xóa/Hủy túi máu thành công.");
+        return ResponseEntity.ok("Xóa/Hủy túi máu thành công.");
     }
 
-    // 5. API quét lấy thông tin túi máu trước khi nhập
-    @org.springframework.web.bind.annotation.GetMapping("/scan/{maTuiMau}")
-    public org.springframework.http.ResponseEntity<com.Nhom20.DoAnPhamMem.dto.response.BloodUnitDTO> scanBloodUnit(@org.springframework.web.bind.annotation.PathVariable String maTuiMau) {
-        return org.springframework.http.ResponseEntity.ok(tuiMauService.scanBloodUnit(maTuiMau));
+    @GetMapping("/scan/{maTuiMau}")
+    public ResponseEntity<BloodUnitDTO> scanBloodUnit(@PathVariable String maTuiMau) {
+        return ResponseEntity.ok(tuiMauService.scanBloodUnit(maTuiMau));
+    }
+
+    // --- Develop Features ---
+
+    @GetMapping
+    public ResponseEntity<List<TuiMauResponse>> getAll() {
+        return ResponseEntity.ok(tuiMauService.getAll());
+    }
+
+    @GetMapping("/stats") // Giữ nguyên path này cho develop
+    public ResponseEntity<CollectionStatsResponse> getStats() {
+        return ResponseEntity.ok(tuiMauService.getStats());
+    }
+
+    @DeleteMapping("/{maTuiMau}")
+    public ResponseEntity<Void> delete(@PathVariable String maTuiMau) {
+        tuiMauService.delete(maTuiMau);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{maTuiMau}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable String maTuiMau, @RequestParam String status) {
+        tuiMauService.updateStatus(maTuiMau, status);
+        return ResponseEntity.ok().build();
     }
 }

@@ -20,6 +20,7 @@ import DonDangKy from './pages/nvyt/DonDangKy';
 import TinhNguyenVien from './pages/nvyt/TinhNguyenVien';
 import KhaiBaoYTeNVYT from './pages/nvyt/KhaiBaoYTeNVYT';
 import KhamLamSang from './pages/nvyt/KhamLamSang';
+import ThuNhanMau from './pages/nvyt/ThuNhanMau';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
 
 const queryClient = new QueryClient();
@@ -68,6 +69,7 @@ function App() {
             <Route path="tinh-nguyen-vien" element={<TinhNguyenVien />} />
             <Route path="khai-bao-y-te" element={<KhaiBaoYTeNVYT />} />
             <Route path="kham-lam-sang" element={<KhamLamSang />} />
+            <Route path="thu-nhan-mau" element={<ThuNhanMau />} />
             <Route path="cap-nhat-xet-nghiem" element={<CapNhatXetNghiem />} />
           </Route>
         </Routes>

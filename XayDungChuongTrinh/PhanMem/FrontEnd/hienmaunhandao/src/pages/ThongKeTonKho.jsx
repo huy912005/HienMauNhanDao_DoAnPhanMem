@@ -51,7 +51,7 @@ const ThongKeTonKho = () => {
         setLoading(true);
         // Chạy song song API để lấy dữ liệu
         const [statsData, barDataRes, pieDataRes] = await Promise.all([
-          http.get("/tuimau/stats"),
+          http.get("/tuimau/dashboard/stats"),
           http.get("/tuimau/charts/bar?year=2026"),
           http.get("/khomau/charts/pie"),
         ]);
