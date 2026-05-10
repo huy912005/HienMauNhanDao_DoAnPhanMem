@@ -46,8 +46,8 @@ export default function ThongTinCaNhan() {
         if (tnvData) {
           setFormData(prev => ({
             ...prev,
-            hoVaTen: tnvData.hoTen || '',
-            soCCCD: tnvData.cccd || '',
+            hoVaTen: tnvData.hoVaTen || '',
+            soCCCD: tnvData.soCCCD || '',
             ngaySinh: tnvData.ngaySinh || '',
             gioiTinh: tnvData.gioiTinh || 'Nam',
             soDienThoai: tnvData.soDienThoai || '',
@@ -91,8 +91,8 @@ export default function ThongTinCaNhan() {
 
       // BƯỚC 1: Lưu/Cập nhật thông tin TNV
       const tinhNguyenVienData = {
-        hoTen: formData.hoVaTen,
-        cccd: formData.soCCCD,
+        hoVaTen: formData.hoVaTen,
+        soCCCD: formData.soCCCD,
         ngaySinh: formData.ngaySinh,
         gioiTinh: formData.gioiTinh,
         soDienThoai: formData.soDienThoai,
