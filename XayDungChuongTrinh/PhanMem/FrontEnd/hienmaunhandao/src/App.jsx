@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import UserLayout from './layouts/UserLayout';
 import QuanLyKhoLayout from './layouts/QuanLyKhoLayout';
 import NVYTLayout from './layouts/NVYTLayout';
+import BacSiLayout from './layouts/BacSiLayout';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import RegisterVolunteer from './pages/RegisterVolunteer';
@@ -23,6 +24,10 @@ import KhamLamSang from './pages/nvyt/KhamLamSang';
 import ThuNhanMau from './pages/nvyt/ThuNhanMau';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
 
+// Bác sĩ pages
+import KhamSangLoc from './pages/bacsi/KhamSangLoc';
+import HoSoBenhAn from './pages/bacsi/HoSoBenhAn';
+
 const queryClient = new QueryClient();
 
 // Guard: chỉ cho phép role NVYT truy cập
@@ -36,6 +41,13 @@ function NvytGuard({ children }) {
 function QlkGuard({ children }) {
   const role = localStorage.getItem('role');
   if (role !== 'QLK') return <Navigate to="/login" replace />;
+  return children;
+}
+
+// Guard: chỉ cho phép role BAC_SI truy cập
+function BacSiGuard({ children }) {
+  const role = localStorage.getItem('role');
+  if (role !== 'BAC_SI' && role !== 'BACSI' && role !== 'BS') return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -71,6 +83,13 @@ function App() {
             <Route path="kham-lam-sang" element={<KhamLamSang />} />
             <Route path="thu-nhan-mau" element={<ThuNhanMau />} />
             <Route path="cap-nhat-xet-nghiem" element={<CapNhatXetNghiem />} />
+          </Route>
+
+          {/* ── Trang Bác sĩ ── */}
+          <Route path="/bac-si" element={<BacSiGuard><BacSiLayout /></BacSiGuard>}>
+            <Route index element={<Navigate to="kham-sang-loc" replace />} />
+            <Route path="kham-sang-loc" element={<KhamSangLoc />} />
+            <Route path="ho-so-benh-an" element={<HoSoBenhAn />} />
           </Route>
         </Routes>
       </Router>
