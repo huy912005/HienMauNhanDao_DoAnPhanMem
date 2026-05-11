@@ -27,4 +27,8 @@ public class TuiMauEntity {
     private LocalDateTime thoiGianLayMau;
     @Column(name = "trangThai", length = 50)
     private TrangThaiTuiMau trangThai;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maNhanVien")
+    private NhanVienEntity nhanVien;
 }

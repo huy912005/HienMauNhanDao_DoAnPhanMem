@@ -87,6 +87,36 @@ public class DonDangKyServiceImpl implements DonDangKyService {
     }
 
     @Override
+    public ApiResponse<DonDangKyResponse> cancelDonDangKy(String maDon) {
+        DonDangKyEntity entity = repository.findById(maDon).orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon));
+        entity.setTrangThai(TrangThaiDonDangKy.DA_HUY);
+        DonDangKyEntity saved = repository.save(entity);
+        return ApiResponse.<DonDangKyResponse>builder().status(true).message("Hủy đăng ký thành công").data(mapper.toResponse(saved)).build();
+    }
+
+    @Override
+    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getByMaTNV(String maTNV, org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Page<DonDangKyEntity> page = repository.findByTinhNguyenVien_MaTNV(maTNV, pageable);
+        org.springframework.data.domain.Page<DonDangKyResponse> responsePage = page.map(mapper::toResponse);
+        return ApiResponse.<org.springframework.data.domain.Page<DonDangKyResponse>>builder()
+                .status(true)
+                .message("Lấy danh sách đơn đăng ký thành công")
+                .data(responsePage)
+                .build();
+    }
+
+    @Override
+    public ApiResponse<DonDangKyResponse> getById(String maDon) {
+        DonDangKyEntity entity = repository.findById(maDon)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon));
+        return ApiResponse.<DonDangKyResponse>builder()
+                .status(true)
+                .message("Lấy thông tin đơn đăng ký thành công")
+                .data(mapper.toResponse(entity))
+                .build();
+    }
+
+    @Override
     public ApiResponse<Void> deleteDonDangKy(String maDon) {
         if (!repository.existsById(maDon)) throw new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon);
         repository.deleteById(maDon);

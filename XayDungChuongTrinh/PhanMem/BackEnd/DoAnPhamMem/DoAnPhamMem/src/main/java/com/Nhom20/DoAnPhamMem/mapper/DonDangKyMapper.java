@@ -3,6 +3,8 @@ package com.Nhom20.DoAnPhamMem.mapper;
 import com.Nhom20.DoAnPhamMem.dto.response.DonDangKyResponse;
 import com.Nhom20.DoAnPhamMem.dto.request.DonDangKyRequest;
 import com.Nhom20.DoAnPhamMem.entity.DonDangKyEntity;
+import com.Nhom20.DoAnPhamMem.entity.ChienDichHienMauEntity;
+import com.Nhom20.DoAnPhamMem.dto.response.ChienDichDonDangKyResponse;
 import com.Nhom20.DoAnPhamMem.enums.TrangThaiDonDangKy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,7 +28,15 @@ public interface DonDangKyMapper {
     @Mapping(target = "maChienDich", source = "chienDich.maChienDich")
     @Mapping(target = "maNV", source = "nhanVienPhuTrach.maNhanVien")
     @Mapping(target = "trangThai", source = "trangThai.dbValue")
+    @Mapping(target = "chienDich", source = "chienDich")
     DonDangKyResponse toResponse(DonDangKyEntity entity);
+
+    @Mapping(target = "tenChienDich", source = "tenChienDich")
+    @Mapping(target = "thoiGianBD", source = "thoiGianBD")
+    @Mapping(target = "thoiGianKT", source = "thoiGianKT")
+    @Mapping(target = "maChienDich", source = "maChienDich")
+    @Mapping(target = "diaDiem", source = "diaDiem")
+    ChienDichDonDangKyResponse toChienDichResponse(ChienDichHienMauEntity entity);
 
     @Named("stringToEnum")
     default TrangThaiDonDangKy stringToEnum(String value) {

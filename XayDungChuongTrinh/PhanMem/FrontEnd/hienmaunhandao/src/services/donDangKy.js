@@ -69,6 +69,15 @@ export const donDangKyService = {
      * @param {Object} data - Dữ liệu cập nhật
      * @returns {Promise<Object>} Đơn đăng ký đã cập nhật
      */
+    cancel: async (maDon) => {
+        try {
+            const response = await http.put(`/dondangky/${maDon}/huy`);
+            return response?.data || response;
+        } catch (error) {
+            console.error(`Error canceling đơn đăng ký ${maDon}:`, error);
+            throw error;
+        }
+    },
     /**
      * Kiểm tra TNV đã đăng ký chiến dịch chưa
      * @param {string} maTNV - Mã tình nguyện viên
@@ -85,6 +94,24 @@ export const donDangKyService = {
             console.error('Error checking đơn đăng ký:', error);
             return null;
         }
+    },
+
+    /**
+     * Lấy danh sách đơn đăng ký của người dùng
+     * @param {string} maTNV - Mã tình nguyện viên
+     * @param {number} page - Số trang (từ 0)
+     * @param {number} size - Số lượng trên mỗi trang
+     * @returns {Promise<Object>} Danh sách đơn đăng ký
+     */
+    getByMaTNV: async (maTNV, page = 0, size = 10) => {
+        try {
+            const response = await http.get(`/dondangky/user/${maTNV}?page=${page}&size=${size}`);
+            return response?.data || [];
+        } catch (error) {
+            console.error(`Error fetching đơn đăng ký cho TNV ${maTNV}:`, error);
+            throw error;
+        }
     }
 };
+
 

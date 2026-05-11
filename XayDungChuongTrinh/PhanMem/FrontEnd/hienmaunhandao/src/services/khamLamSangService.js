@@ -1,0 +1,16 @@
+import http from '../utils/http';
+
+export const khamLamSangService = {
+  getAll: () => http.get('/ketqualamsang'),
+  getWaiting: () => http.get('/ketqualamsang/waiting'),
+  getStats: () => http.get('/ketqualamsang/stats'),
+  save: (data) => http.post('/ketqualamsang', data),
+  delete: (id) => http.delete(`/ketqualamsang/${id}`),
+};
+
+export const thuNhanMauService = {
+  getAll: () => http.get('/tuimau'),
+  getStats: () => http.get('/tuimau/stats'),
+  updateStatus: (id, status) => http.patch(`/tuimau/${id}/status?status=${encodeURIComponent(status)}`),
+  delete: (id) => http.delete(`/tuimau/${id}`),
+};
