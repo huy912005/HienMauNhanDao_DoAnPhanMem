@@ -66,7 +66,7 @@ export default function NVYTLayout() {
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = '/login';
+    navigate('/login');
   };
 
   const initials = nhanVien
@@ -153,7 +153,7 @@ export default function NVYTLayout() {
       {/* ── Main area ─────────────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
         {/* Topbar */}
-        <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0 shadow-sm z-10">
+        <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0 shadow-sm z-50">
           {/* Search */}
           <div className="relative w-80">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">
@@ -213,11 +213,6 @@ export default function NVYTLayout() {
                     <p className="text-sm font-bold text-slate-800 truncate">
                       {localStorage.getItem('email') || ''}
                     </p>
-                    {nhanVien?.maNV && (
-                      <p className="text-xs text-primary font-mono font-bold mt-1">
-                        Mã NV: {nhanVien.maNV}
-                      </p>
-                    )}
                   </div>
                   <button
                     onClick={handleLogout}
