@@ -15,6 +15,8 @@ import KhaiBaoYTe from './pages/KhaiBaoYTe';
 import XacNhanDangKy from './pages/XacNhanDangKy';
 import ThongKeTonKho from './pages/ThongKeTonKho';
 import QuanLyNhapKho from './pages/QuanLyNhapKho';
+import DanhSachDonDangKy from './pages/DanhSachDonDangKy';
+
 // NVYT pages
 import DonDangKy from './pages/nvyt/DonDangKy';
 import TinhNguyenVien from './pages/nvyt/TinhNguyenVien';
@@ -52,9 +54,12 @@ function App() {
             <Route path="otp" element={<OtpVerification />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="chiendich" element={<ChienDichPage />} />
+            <Route path="don-dang-ky" element={<DanhSachDonDangKy />} />
+            <Route path="don-dang-ky-detail/:maDon" element={<XacNhanDangKy />} />
             <Route path="khai-bao-thong-tin-ca-nhan" element={<ThongTinCaNhan />} />
             <Route path="khai-bao-y-te" element={<KhaiBaoYTe />} />
             <Route path="xac-nhan-dang-ky" element={<XacNhanDangKy />} />
+            <Route path="xac-nhan-dang-ky/:maDon" element={<XacNhanDangKy />} />
           </Route>
           {/* Quản Lý Kho Routes */}
           <Route path="/quan-ly-kho" element={<QlkGuard><QuanLyKhoLayout /></QlkGuard>}>

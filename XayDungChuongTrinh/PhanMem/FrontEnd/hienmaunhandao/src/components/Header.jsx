@@ -60,16 +60,8 @@ export default function Header() {
           <nav className="flex items-center gap-1">
             <Link className={navLinkClass('/')} to="/">Trang chủ</Link>
             <Link className={navLinkClass('/about')} to="/about">Giới thiệu</Link>
-            {hasCampaign ? (
-              <Link className={navLinkClass('/khai-bao-thong-tin-ca-nhan')} to="/khai-bao-thong-tin-ca-nhan">
-                Đăng ký hiến máu
-              </Link>
-            ) : (
-              <span className="px-4 py-2 text-slate-400 font-bold border-b-2 border-transparent uppercase text-sm cursor-not-allowed opacity-50">
-                Đăng ký hiến máu
-              </span>
-            )}
             <Link className={navLinkClass('/chiendich')} to="/chiendich">Chiến dịch</Link>
+            {/* {token && <Link className={navLinkClass('/don-dang-ky')} to="/don-dang-ky">Đơn đăng ký</Link>} */}
           </nav>
 
           <div className="flex items-center gap-4">
@@ -89,6 +81,9 @@ export default function Header() {
                   
                   <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="py-2">
+                      <Link to="/don-dang-ky" className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
+                        <span className="material-symbols-outlined text-[18px]">assignment</span>Đơn đăng ký
+                      </Link>
                       <Link to="#" className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
                         <span className="material-symbols-outlined text-[18px]">person</span>Hồ sơ & Lịch sử
                       </Link>

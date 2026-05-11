@@ -67,7 +67,7 @@ export default function KhaiBaoYTe() {
       localStorage.setItem('healthAnswers', JSON.stringify(answers));
       localStorage.setItem('moTaKhac', moTaKhac);
 
-      navigate('/xac-nhan-dang-ky');
+      navigate('/xac-nhan-dang-ky/' + maDon);
     } catch (err) {
       console.error('Error saving health info:', err);
       setError(err.message || 'Lỗi khi lưu thông tin y tế. Vui lòng thử lại.');

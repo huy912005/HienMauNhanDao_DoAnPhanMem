@@ -2,6 +2,8 @@ package com.Nhom20.DoAnPhamMem.repository;
 
 import com.Nhom20.DoAnPhamMem.entity.DonDangKyEntity;
 import com.Nhom20.DoAnPhamMem.enums.TrangThaiDonDangKy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,4 +21,7 @@ public interface DonDangKyRepository extends JpaRepository<DonDangKyEntity, Stri
 
     // Kiểm tra TNV đã đăng ký chiến dịch chưa
     Optional<DonDangKyEntity> findByTinhNguyenVien_MaTNVAndChienDich_MaChienDich(String maTNV, String maChienDich);
+
+    // Lấy danh sách đơn đăng ký của một tình nguyện viên
+    Page<DonDangKyEntity> findByTinhNguyenVien_MaTNV(String maTNV, Pageable pageable);
 }

@@ -43,6 +43,28 @@ public class DonDangKyController {
         return ResponseEntity.ok(donDangKyService.getAll(pageable));
     }
 
+    /**
+     * Lấy đơn đăng ký của người dùng theo maTNV
+     * GET /api/dondangky/user/{maTNV}?page=0&size=10
+     */
+    @GetMapping("/user/{maTNV}")
+    public ResponseEntity<ApiResponse<?>> getByMaTNV(
+            @PathVariable String maTNV,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return ResponseEntity.ok(donDangKyService.getByMaTNV(maTNV, pageable));
+    }
+
+    /**
+     * Lấy chi tiết đơn đăng ký
+     * GET /api/dondangky/{maDon}
+     */
+    @GetMapping("/{maDon}")
+    public ResponseEntity<ApiResponse<DonDangKyResponse>> getById(@PathVariable String maDon) {
+        return ResponseEntity.ok(donDangKyService.getById(maDon));
+    }
+
     @PutMapping("/{maDon}")
     public ResponseEntity<ApiResponse<DonDangKyResponse>> update(
             @PathVariable String maDon,
@@ -53,5 +75,10 @@ public class DonDangKyController {
     @DeleteMapping("/{maDon}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable String maDon) {
         return ResponseEntity.ok(donDangKyService.deleteDonDangKy(maDon));
+    }
+
+    @PutMapping("/{maDon}/huy")
+    public ResponseEntity<ApiResponse<DonDangKyResponse>> cancel(@PathVariable String maDon) {
+        return ResponseEntity.ok(donDangKyService.cancelDonDangKy(maDon));
     }
 }

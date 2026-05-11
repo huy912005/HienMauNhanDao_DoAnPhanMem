@@ -10,7 +10,8 @@ public enum TrangThaiDonDangKy {
     DA_HIEN_MAU("Đã hiến máu"),
     TU_CHOI("Từ chối"),
     DA_NHAN_CHUNG_NHAN("Đã nhận chứng nhận"),
-    CHUA_HIEN("Chưa hiến");
+    CHUA_HIEN("Chưa hiến"),
+    DA_HUY("Đã hủy");
 
     private final String dbValue;
 

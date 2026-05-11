@@ -12,16 +12,13 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DonDangKyResponse {
+public class ChienDichDonDangKyResponse {
 
-    private String maDon;
-    private TinhNguyenVienReSponse tinhNguyenVien;
-    private ChienDichDonDangKyResponse chienDich;
-    private String maTNV;
     private String maChienDich;
-    private String maNV;
-    private String maQR;
+    private String tenChienDich;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime thoiGianDangKy;
-    private String trangThai;
+    private LocalDateTime thoiGianBD;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime thoiGianKT;
+    private DiaDiemResponse diaDiem;
 }
