@@ -5,6 +5,8 @@ export const khamLamSangService = {
   getWaiting: () => http.get('/ketqualamsang/waiting'),
   getStats: () => http.get('/ketqualamsang/stats'),
   save: (data) => http.post('/ketqualamsang', data),
+  update: (maKQ, data) =>
+    http.post(`/ketqualamsang/${encodeURIComponent(String(maKQ).trim())}/cap-nhat`, data),
   delete: (id) => http.delete(`/ketqualamsang/${id}`),
 };
 
