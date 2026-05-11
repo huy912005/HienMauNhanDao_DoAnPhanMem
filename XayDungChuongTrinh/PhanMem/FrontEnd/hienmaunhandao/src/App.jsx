@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import UserLayout from './layouts/UserLayout';
 import QuanLyKhoLayout from './layouts/QuanLyKhoLayout';
 import NVYTLayout from './layouts/NVYTLayout';
+import BacSiLayout from './layouts/BacSiLayout';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import RegisterVolunteer from './pages/RegisterVolunteer';
@@ -21,7 +22,7 @@ import DanhSachDonDangKy from './pages/DanhSachDonDangKy';
 import DonDangKy from './pages/nvyt/DonDangKy';
 import TinhNguyenVien from './pages/nvyt/TinhNguyenVien';
 import KhaiBaoYTeNVYT from './pages/nvyt/KhaiBaoYTeNVYT';
-import KhamLamSang from './pages/nvyt/KhamLamSang';
+import KhamLamSang from './pages/bacsi/KhamLamSang';
 import ThuNhanMau from './pages/nvyt/ThuNhanMau';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
 
@@ -31,6 +32,12 @@ const queryClient = new QueryClient();
 function NvytGuard({ children }) {
   const role = localStorage.getItem('role');
   if (role !== 'NVYT') return <Navigate to="/login" replace />;
+  return children;
+}
+
+function BacSiGuard({ children }) {
+  const role = localStorage.getItem('role');
+  if (role !== 'BS') return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -67,13 +74,18 @@ function App() {
             <Route path="nhap-kho" element={<QuanLyNhapKho />} />
           </Route>
 
+          {/* ── Trang bác sĩ (maVaiTro = BS trong TAIKHOAN) ── */}
+          <Route path="/bac-si" element={<BacSiGuard><BacSiLayout /></BacSiGuard>}>
+            <Route index element={<Navigate to="kham-lam-sang" replace />} />
+            <Route path="kham-lam-sang" element={<KhamLamSang />} />
+          </Route>
+
           {/* ── Trang nhân viên y tế ── */}
           <Route path="/nvyt" element={<NvytGuard><NVYTLayout /></NvytGuard>}>
             <Route index element={<Navigate to="don-dang-ky" replace />} />
             <Route path="don-dang-ky" element={<DonDangKy />} />
             <Route path="tinh-nguyen-vien" element={<TinhNguyenVien />} />
             <Route path="khai-bao-y-te" element={<KhaiBaoYTeNVYT />} />
-            <Route path="kham-lam-sang" element={<KhamLamSang />} />
             <Route path="thu-nhan-mau" element={<ThuNhanMau />} />
             <Route path="cap-nhat-xet-nghiem" element={<CapNhatXetNghiem />} />
           </Route>

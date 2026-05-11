@@ -1,50 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { nhanVienService } from '../services/nvytService';
 
-// ─── Sidebar nav items ────────────────────────────────────────────────────────
 const NAV_ITEMS = [
   {
-    label: 'Đơn đăng ký',
-    icon: 'description',
-    path: '/nvyt/don-dang-ky',
-  },
-  {
-    label: 'Tình nguyện viên',
-    icon: 'group',
-    path: '/nvyt/tinh-nguyen-vien',
-  },
-  {
-    label: 'Khai báo y tế',
-    icon: 'fact_check',
-    path: '/nvyt/khai-bao-y-te',
-  },
-  {
-    label: 'Thu nhận máu',
-    icon: 'vaccines',
-    path: '/nvyt/thu-nhan-mau',
-  },
-  {
-    label: 'Cập nhật XN',
-    icon: 'biotech',
-    path: '/nvyt/cap-nhat-xet-nghiem',
+    label: 'Khám lâm sàng',
+    icon: 'clinical_notes',
+    path: '/bac-si/kham-lam-sang',
   },
 ];
 
-// ─── Component ────────────────────────────────────────────────────────────────
-export default function NVYTLayout() {
+export default function BacSiLayout() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [nhanVien, setNhanVien] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [notifOpen, setNotifOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  // Lấy thông tin nhân viên từ localStorage → API
   useEffect(() => {
     const role = localStorage.getItem('role');
     const email = localStorage.getItem('email');
-    if (role !== 'NVYT') {
+    if (role !== 'BS') {
       navigate('/login', { replace: true });
       return;
     }
@@ -53,7 +29,7 @@ export default function NVYTLayout() {
         if (data) {
           setNhanVien(data);
         } else {
-          setNhanVien({ hoVaTen: 'Tài khoản NVYT', maNV: '---' });
+          setNhanVien({ hoVaTen: 'Bác sĩ', maNV: '---' });
         }
       });
     }
@@ -70,9 +46,7 @@ export default function NVYTLayout() {
 
   return (
     <div className="w-full min-h-screen flex bg-[#F3F4F6] font-sans antialiased">
-      {/* ── Sidebar ───────────────────────────────────────────────────── */}
       <aside className="w-64 min-h-screen bg-white border-r border-slate-200 flex flex-col shadow-sm shrink-0">
-        {/* Brand */}
         <div className="flex items-center gap-3 px-5 py-5 border-b border-slate-100">
           <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-white text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -83,11 +57,10 @@ export default function NVYTLayout() {
             <p className="text-[11px] font-black uppercase text-primary tracking-wider leading-tight">
               Hệ thống Hiến máu
             </p>
-            <p className="text-[10px] text-slate-400 font-medium">TP. Đà Nẵng</p>
+            <p className="text-[10px] text-slate-400 font-medium">TP. Đà Nẵng · Bác sĩ</p>
           </div>
         </div>
 
-        {/* User card */}
         <div className="px-4 py-4 border-b border-slate-100">
           <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-sm font-black shrink-0 shadow">
@@ -95,16 +68,15 @@ export default function NVYTLayout() {
             </div>
             <div className="min-w-0">
               <p className="text-sm font-bold text-slate-800 truncate">
-                {nhanVien ? (nhanVien.hoVaTen || 'Nhân viên') : 'Đang tải...'}
+                {nhanVien ? (nhanVien.hoVaTen || 'Bác sĩ') : 'Đang tải...'}
               </p>
               <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
-                Nhân viên y tế
+                Bác sĩ
               </p>
             </div>
           </div>
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1">
           {NAV_ITEMS.map((item) => (
             <NavLink
@@ -133,7 +105,6 @@ export default function NVYTLayout() {
           ))}
         </nav>
 
-        {/* Footer */}
         <div className="px-3 py-4 border-t border-slate-100">
           <button
             onClick={handleLogout}
@@ -145,11 +116,8 @@ export default function NVYTLayout() {
         </div>
       </aside>
 
-      {/* ── Main area ─────────────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
-        {/* Topbar */}
         <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0 shadow-sm z-50">
-          {/* Search */}
           <div className="relative w-80">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">
               search
@@ -163,9 +131,7 @@ export default function NVYTLayout() {
             />
           </div>
 
-          {/* Right side */}
           <div className="flex items-center gap-3">
-            {/* Notification bell */}
             <div className="relative">
               <button
                 onClick={() => { setNotifOpen(!notifOpen); setUserMenuOpen(false); }}
@@ -182,7 +148,6 @@ export default function NVYTLayout() {
               )}
             </div>
 
-            {/* User menu */}
             <div className="relative">
               <button
                 onClick={() => { setUserMenuOpen(!userMenuOpen); setNotifOpen(false); }}
@@ -196,7 +161,7 @@ export default function NVYTLayout() {
                     {nhanVien ? (nhanVien.hoVaTen || 'BS.') : 'Đang tải...'}
                   </p>
                   <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
-                    Nhân viên y tế
+                    Bác sĩ
                   </p>
                 </div>
                 <span className="material-symbols-outlined text-slate-400 text-base">expand_more</span>
@@ -222,13 +187,11 @@ export default function NVYTLayout() {
           </div>
         </header>
 
-        {/* Page content */}
         <main className="flex-1 p-8 flex flex-col gap-6 overflow-y-auto">
           <Outlet context={{ nhanVien, searchQuery }} />
         </main>
       </div>
 
-      {/* Click outside to close menus */}
       {(notifOpen || userMenuOpen) && (
         <div
           className="fixed inset-0 z-40"

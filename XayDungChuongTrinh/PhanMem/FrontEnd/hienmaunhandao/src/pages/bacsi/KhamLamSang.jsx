@@ -14,7 +14,6 @@ export default function KhamLamSang() {
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
 
-  // Thêm state cho danh sách dữ liệu
   const [screeningList, setScreeningList] = useState([]);
   const [stats, setStats] = useState({ tongSo: 0, datYeuCau: 0, khongDat: 0 });
   const [loading, setLoading] = useState(false);
@@ -25,7 +24,6 @@ export default function KhamLamSang() {
     setTimeout(() => setToast(null), 3500);
   };
 
-  // Fetch danh sách khám lâm sàng từ API
   const fetchScreeningList = async () => {
     try {
       setLoading(true);
@@ -53,16 +51,15 @@ export default function KhamLamSang() {
     if (!qrInput.trim()) { showToast('Vui lòng nhập mã QR / mã đơn', 'error'); return; }
     setPulsing(true);
     try {
-      // Giả sử tìm đơn đăng ký qua ID
       const res = await khamLamSangService.getWaiting();
       const list = Array.isArray(res) ? res : (res.data || []);
       const found = list.find(d => d.maDon === qrInput.trim());
-      
+
       if (found) {
         setIsCheckedIn(true);
         setDonorInfo({
           hoVaTen: found.tenTinhNguyenVien,
-          ngaySinh: found.ngaySinh || '---', 
+          ngaySinh: found.ngaySinh || '---',
           gioiTinh: found.gioiTinh || '---',
           nhomMau: found.nhomMau || '---',
           soLanHienMau: 0,
@@ -115,7 +112,7 @@ export default function KhamLamSang() {
   const handleSave = async () => {
     if (!isCheckedIn) { showToast('Vui lòng quét mã QR để check-in trước.', 'error'); return; }
     if (!form.ketQua) { showToast('Vui lòng chọn kết quả sàng lọc.', 'error'); return; }
-    
+
     setSaving(true);
     try {
       const payload = {
@@ -132,14 +129,12 @@ export default function KhamLamSang() {
 
       await khamLamSangService.save(payload);
       showToast('Hoàn tất! Đã lưu dữ liệu và ghi nhận túi máu vào hệ thống.', 'success');
-      
-      // Reset form
+
       setIsCheckedIn(false);
       setDonorInfo(null);
       setForm({ huyetAp: '120/80', nhipTim: '75', canNang: '65', nhietDo: '37.0', ketQua: '' });
       setQrInput('');
-      
-      // Nếu đang ở tab danh sách thì load lại
+
       if (showList) fetchScreeningList();
     } catch (err) {
       console.error(err);
@@ -170,7 +165,6 @@ export default function KhamLamSang() {
         </div>
       )}
 
-      {/* Page header */}
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Khám sàng lọc & Thu nhận máu</h1>
@@ -181,7 +175,6 @@ export default function KhamLamSang() {
         </div>
       </div>
 
-      {/* Tabs: Nhập dữ liệu / Danh sách */}
       <div className="flex gap-2 border-b border-slate-200">
         <button
           onClick={() => setShowList(false)}
@@ -209,11 +202,8 @@ export default function KhamLamSang() {
         </button>
       </div>
 
-      {/* Conditional: Form hoặc Danh sách */}
       {showList ? (
-        // ──── DANH SÁCH KẾT QUẢ KHÁM ────
         <div className="space-y-6">
-          {/* Stats Cards */}
           <div className="grid grid-cols-3 gap-6">
             <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
               <div className="flex items-center justify-between">
@@ -244,7 +234,6 @@ export default function KhamLamSang() {
             </div>
           </div>
 
-          {/* Table */}
           {loading ? (
             <div className="flex justify-center items-center h-40">
               <p className="text-slate-500">Đang tải dữ liệu...</p>
@@ -285,7 +274,7 @@ export default function KhamLamSang() {
                           </td>
                           <td className="px-6 py-4 text-slate-600 text-sm">{item.lyDoTuChoi || '---'}</td>
                           <td className="px-6 py-4 text-center">
-                            <button 
+                            <button
                               onClick={async () => {
                                 if (confirm('Xác nhận xóa kết quả khám này?')) {
                                   try {
@@ -306,7 +295,7 @@ export default function KhamLamSang() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan="9" className="px-6 py-8 text-center text-slate-500">
+                        <td colSpan={10} className="px-6 py-8 text-center text-slate-500">
                           Không có dữ liệu khám lâm sàng
                         </td>
                       </tr>
@@ -318,9 +307,7 @@ export default function KhamLamSang() {
           )}
         </div>
       ) : (
-        // ──── FORM NHẬP DỮ LIỆU ────
         <div className="grid grid-cols-12 gap-6">
-          {/* QR Scan */}
           <div className="col-span-4 bg-white border border-slate-200 rounded-2xl p-6 h-[320px] flex flex-col items-center justify-center text-center relative overflow-hidden group shadow-sm">
             <div className="absolute inset-0 bg-slate-50/50 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             <div className="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mb-4 text-primary relative">
@@ -348,7 +335,6 @@ export default function KhamLamSang() {
             </div>
           </div>
 
-          {/* Donor Info */}
           <div className="col-span-8 bg-white border border-slate-200 rounded-2xl p-6 h-[320px] flex flex-col shadow-sm">
             <div className="w-full border-b border-slate-100 pb-4 mb-6 flex justify-between items-center shrink-0">
               <span className="text-xs font-black uppercase text-slate-400 tracking-widest">Thông tin đối tượng</span>
@@ -382,7 +368,6 @@ export default function KhamLamSang() {
             </div>
           </div>
 
-          {/* Form sàng lọc */}
           <div className="col-span-7 bg-white border border-slate-200 rounded-2xl p-8 min-h-[440px] shadow-sm">
             <div className="flex items-center gap-2 mb-8">
               <span className="material-symbols-outlined text-primary">clinical_notes</span>
@@ -430,7 +415,6 @@ export default function KhamLamSang() {
             </div>
           </div>
 
-          {/* Thu nhận máu */}
           <div className="col-span-5 bg-white border border-slate-200 rounded-2xl p-8 flex flex-col shadow-sm">
             <div className="flex items-center gap-2 mb-8">
               <span className="material-symbols-outlined text-primary">vaccines</span>
@@ -471,7 +455,6 @@ export default function KhamLamSang() {
             </div>
           </div>
 
-          {/* Inventory visual */}
           <div className="col-span-12 bg-white border border-slate-200 rounded-2xl p-6 h-[180px] flex flex-col shadow-sm">
             <div className="w-full flex justify-between items-center mb-6">
               <h4 className="text-xs font-black uppercase text-slate-500 tracking-wider">Tình trạng lưu trữ tại điểm hiến máu</h4>
@@ -493,10 +476,3 @@ export default function KhamLamSang() {
     </div>
   );
 }
-
-const BLOOD_TYPES = [
-  { label: 'A+', fill: '75%' }, { label: 'A-', fill: '25%' },
-  { label: 'B+', fill: '50%' }, { label: 'B-', fill: '66%' },
-  { label: 'O+', fill: '100%' }, { label: 'O-', fill: '20%' },
-  { label: 'AB+', fill: '33%' }, { label: 'AB-', fill: '5%' },
-];

@@ -16,7 +16,9 @@ export default function Login() {
       localStorage.setItem('email', res.data.email);
       localStorage.setItem('role', res.data.maVaiTro);
       // Redirect theo vai trò
-      if (res.data.maVaiTro === 'NVYT') {
+      if (res.data.maVaiTro === 'BS') {
+        navigate('/bac-si/kham-lam-sang', { replace: true });
+      } else if (res.data.maVaiTro === 'NVYT') {
         navigate('/nvyt/don-dang-ky', { replace: true });
       } else if (res.data.maVaiTro === 'QLK') {
         navigate('/quan-ly-kho/thong-ke', { replace: true });
