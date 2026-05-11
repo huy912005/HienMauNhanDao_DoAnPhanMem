@@ -23,6 +23,7 @@ import DonDangKy from './pages/nvyt/DonDangKy';
 import TinhNguyenVien from './pages/nvyt/TinhNguyenVien';
 import KhaiBaoYTeNVYT from './pages/nvyt/KhaiBaoYTeNVYT';
 import KhamLamSang from './pages/bacsi/KhamLamSang';
+import DanhSachChoKham from './pages/bacsi/DanhSachChoKham';
 import ThuNhanMau from './pages/nvyt/ThuNhanMau';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
 
@@ -76,7 +77,8 @@ function App() {
 
           {/* ── Trang bác sĩ (maVaiTro = BS trong TAIKHOAN) ── */}
           <Route path="/bac-si" element={<BacSiGuard><BacSiLayout /></BacSiGuard>}>
-            <Route index element={<Navigate to="kham-lam-sang" replace />} />
+            <Route index element={<Navigate to="danh-sach-cho-kham" replace />} />
+            <Route path="danh-sach-cho-kham" element={<DanhSachChoKham />} />
             <Route path="kham-lam-sang" element={<KhamLamSang />} />
           </Route>
 

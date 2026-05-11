@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useLocation } from 'react-router-dom';
 import { khamLamSangService } from '../../services/khamLamSangService';
 
 export default function KhamLamSang() {
   const { nhanVien } = useOutletContext();
+  const location = useLocation();
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [donorInfo, setDonorInfo] = useState(null);
   const [qrInput, setQrInput] = useState('');
@@ -46,6 +47,13 @@ export default function KhamLamSang() {
       fetchScreeningList();
     }
   }, [showList]);
+
+  useEffect(() => {
+    const ma = location.state?.maDon;
+    if (ma && typeof ma === 'string') {
+      setQrInput(ma.trim());
+    }
+  }, [location.state?.maDon]);
 
   const handleScanQR = async () => {
     if (!qrInput.trim()) { showToast('Vui lòng nhập mã QR / mã đơn', 'error'); return; }

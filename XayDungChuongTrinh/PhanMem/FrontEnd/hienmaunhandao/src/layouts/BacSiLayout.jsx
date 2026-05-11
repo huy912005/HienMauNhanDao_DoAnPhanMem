@@ -4,6 +4,11 @@ import { nhanVienService } from '../services/nvytService';
 
 const NAV_ITEMS = [
   {
+    label: 'Danh sách chờ khám',
+    icon: 'groups',
+    path: '/bac-si/danh-sach-cho-kham',
+  },
+  {
     label: 'Khám lâm sàng',
     icon: 'clinical_notes',
     path: '/bac-si/kham-lam-sang',
