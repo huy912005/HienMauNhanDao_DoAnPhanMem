@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import UserLayout from './layouts/UserLayout';
 import QuanLyKhoLayout from './layouts/QuanLyKhoLayout';
 import NVYTLayout from './layouts/NVYTLayout';
+import BSLayout from './layouts/BSLayout';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import RegisterVolunteer from './pages/RegisterVolunteer';
@@ -25,6 +26,10 @@ import KhamLamSang from './pages/nvyt/KhamLamSang';
 import ThuNhanMau from './pages/nvyt/ThuNhanMau';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
 
+// Bác sĩ pages
+import DanhSachChoKham from './pages/bacsi/DanhSachChoKham';
+import KhamLamSangBS from './pages/bacsi/KhamLamSangBS';
+
 const queryClient = new QueryClient();
 
 // Guard: chỉ cho phép role NVYT truy cập
@@ -38,6 +43,13 @@ function NvytGuard({ children }) {
 function QlkGuard({ children }) {
   const role = localStorage.getItem('role');
   if (role !== 'QLK') return <Navigate to="/login" replace />;
+  return children;
+}
+
+// Guard: chỉ cho phép role BS (Bác sĩ) truy cập
+function BsGuard({ children }) {
+  const role = localStorage.getItem('role');
+  if (role !== 'BS') return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -76,6 +88,14 @@ function App() {
             <Route path="kham-lam-sang" element={<KhamLamSang />} />
             <Route path="thu-nhan-mau" element={<ThuNhanMau />} />
             <Route path="cap-nhat-xet-nghiem" element={<CapNhatXetNghiem />} />
+          </Route>
+
+          {/* ── Trang bác sĩ ── */}
+          <Route path="/bac-si" element={<BsGuard><BSLayout /></BsGuard>}>
+            <Route index element={<Navigate to="danh-sach-cho-kham" replace />} />
+            <Route path="danh-sach-cho-kham" element={<DanhSachChoKham />} />
+            <Route path="kham-lam-sang" element={<KhamLamSangBS />} />
+            <Route path="tinh-nguyen-vien" element={<TinhNguyenVien />} />
           </Route>
         </Routes>
       </Router>

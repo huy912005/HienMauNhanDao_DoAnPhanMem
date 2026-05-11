@@ -20,6 +20,8 @@ export default function Login() {
         navigate('/nvyt/don-dang-ky', { replace: true });
       } else if (res.data.maVaiTro === 'QLK') {
         navigate('/quan-ly-kho/thong-ke', { replace: true });
+      } else if (res.data.maVaiTro === 'BS') {
+        navigate('/bac-si/danh-sach-cho-kham', { replace: true });
       } else if (res.data.maVaiTro === 'AD') {
         navigate('/admin', { replace: true });
       } else {
