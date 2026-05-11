@@ -1,8 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { donDangKyNvytService } from '../../services/nvytService';
 
 const PAGE_SIZE = 10;
+/** Lấy một lần rồi lọc + phân trang client (API chưa hỗ trợ lọc theo trạng thái) */
+const FETCH_CHUNK = 1000;
+
+/** Ẩn đơn đã hiến xong — chỉ hiện đơn chờ / chưa hiến */
+function laTrangThaiDaHien(t) {
+  const s = String(t ?? '').trim();
+  return s === 'Đã hiến' || s === 'Đã hiến máu' || s === 'DA_HIEN' || s === 'DA_HIEN_MAU';
+}
 
 function trangThaiBadgeClass(don) {
   const t = don.trangThai;
@@ -14,10 +22,9 @@ function trangThaiBadgeClass(don) {
 
 export default function DanhSachChoKham() {
   const navigate = useNavigate();
-  const [dons, setDons] = useState([]);
+  const [filteredAll, setFilteredAll] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
   const [keyword, setKeyword] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [toast, setToast] = useState(null);
@@ -30,20 +37,30 @@ export default function DanhSachChoKham() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await donDangKyNvytService.getAll(page, PAGE_SIZE, keyword);
-      const content = Array.isArray(res) ? res : (res.content || []);
-      setDons(content);
-      setTotalPages(res.totalPages || 1);
+      const res = await donDangKyNvytService.getAll(0, FETCH_CHUNK, keyword);
+      const raw = Array.isArray(res) ? res : (res.content || []);
+      setFilteredAll(raw.filter((don) => !laTrangThaiDaHien(don.trangThai)));
     } catch {
       showToast('Lỗi khi tải danh sách đơn đăng ký', 'error');
     } finally {
       setLoading(false);
     }
-  }, [page, keyword]);
+  }, [keyword]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredAll.length / PAGE_SIZE));
+
+  useEffect(() => {
+    setPage((p) => Math.min(p, Math.max(0, totalPages - 1)));
+  }, [totalPages]);
+
+  const dons = useMemo(
+    () => filteredAll.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
+    [filteredAll, page]
+  );
 
   const handleSearch = () => {
     setKeyword(searchInput);
@@ -72,7 +89,10 @@ export default function DanhSachChoKham() {
 
       <div>
         <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Danh sách chờ khám</h1>
-        <p className="text-slate-500 mt-1 text-sm">Quản lý các đơn đăng ký hiến máu trong hệ thống</p>
+        <p className="text-slate-500 mt-1 text-sm">
+          Cùng nguồn đơn như NVYT; chỉ hiển thị đơn có trạng thái khác <span className="font-semibold text-slate-600">Đã hiến</span> /{' '}
+          <span className="font-semibold text-slate-600">Đã hiến máu</span>
+        </p>
       </div>
 
       <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex gap-3">
@@ -141,17 +161,14 @@ export default function DanhSachChoKham() {
                 <tr>
                   <td colSpan={7} className="text-center py-16 text-slate-400">
                     <span className="material-symbols-outlined text-5xl block mb-2">inbox</span>
-                    Không có đơn đăng ký nào
+                    Không có đơn nào (hoặc toàn bộ đều đã ở trạng thái Đã hiến / Đã hiến máu)
                   </td>
                 </tr>
               ) : (
                 dons.map((don) => {
                   const editable = isEditable(don);
                   return (
-                    <tr
-                      key={don.maDon}
-                      className={`border-b border-slate-100 hover:bg-slate-50/80 transition-colors ${!editable ? 'opacity-60' : ''}`}
-                    >
+                    <tr key={don.maDon} className="border-b border-slate-100 hover:bg-slate-50/80 transition-colors">
                       <td className="px-5 py-4">
                         <span className="font-mono text-xs font-bold text-primary bg-red-50 px-2 py-1 rounded-lg">
                           {don.maDon}
