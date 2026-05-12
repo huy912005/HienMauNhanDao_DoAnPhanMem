@@ -211,7 +211,7 @@ public class TuiMauServiceImpl implements TuiMauService {
         tuiMau.setKhoMau(kho);
         tuiMau.setTheTich(TheTichTuiMau.fromMl(request.getTheTich()));
         tuiMau.setThoiGianLayMau(request.getThoiGianLayMau());
-        tuiMau.setTrangThai(TrangThaiTuiMau.NHAP_KHO);
+        tuiMau.setTrangThai(TrangThaiTuiMau.CHO_XET_NGHIEM);
         tuiMau.setNhietDoVanChuyen(request.getNhietDoVanChuyen());
 
         tuiMauRepository.save(tuiMau);
@@ -220,9 +220,5 @@ public class TuiMauServiceImpl implements TuiMauService {
         don.setTrangThai(TrangThaiDonDangKy.DA_HIEN);
         don.setTheTich(TheTich.fromDbValue(request.getTheTich()));
         donDangKyRepository.save(don);
-
-        // 7. Cập nhật số lượng tồn trong kho máu
-        kho.setSoLuongTon((kho.getSoLuongTon() != null ? kho.getSoLuongTon() : 0) + 1);
-        khoMauRepository.save(kho);
     }
 }

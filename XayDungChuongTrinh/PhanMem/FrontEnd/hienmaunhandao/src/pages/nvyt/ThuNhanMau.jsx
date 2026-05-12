@@ -160,6 +160,16 @@ export default function ThuNhanMau() {
     }
   }, []);
 
+  const handleUpdateStatus = async (maTuiMau, newStatus) => {
+    try {
+      await thuNhanMauService.updateStatus(maTuiMau, newStatus);
+      showToast('Cập nhật trạng thái thành công!');
+      fetchCollectionList();
+    } catch (error) {
+      showToast('Lỗi khi cập nhật trạng thái', 'error');
+    }
+  };
+
   useEffect(() => {
     if (activeTab === 'pending') fetchPendingList();
     else fetchCollectionList();
@@ -169,6 +179,17 @@ export default function ThuNhanMau() {
     showToast('Thu nhận túi máu thành công!');
     setModalDon(null);
     fetchPendingList();
+  };
+
+  const handleCancelDon = async (maDon) => {
+    if (!window.confirm(`Bạn có chắc chắn muốn hủy đơn đăng ký ${maDon}?`)) return;
+    try {
+      await donDangKyNvytService.cancel(maDon);
+      showToast('Hủy đơn đăng ký thành công!');
+      fetchPendingList();
+    } catch (error) {
+      showToast(error.message || 'Lỗi khi hủy đơn đăng ký', 'error');
+    }
   };
 
   const getStatusColor = (status) => {
@@ -265,13 +286,22 @@ export default function ThuNhanMau() {
                       ) : '---'}
                     </td>
                     <td className="px-5 py-4">
-                      <button
-                        onClick={() => setModalDon(don)}
-                        className="flex items-center gap-2 h-9 px-4 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 rounded-xl font-bold text-xs transition-colors shadow-sm"
-                      >
-                        <span className="material-symbols-outlined text-base">vaccines</span>
-                        Tạo túi máu
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => setModalDon(don)}
+                          className="flex items-center gap-2 h-9 px-4 bg-red-600 text-white hover:bg-red-700 rounded-xl font-bold text-[11px] transition-all shadow-md shadow-red-100 hover:shadow-red-200 active:scale-95 group"
+                        >
+                          <span className="material-symbols-outlined text-base group-hover:rotate-12 transition-transform">vaccines</span>
+                          Tạo túi máu
+                        </button>
+                        <button
+                          onClick={() => handleCancelDon(don.maDon)}
+                          className="flex items-center justify-center w-9 h-9 bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all border border-slate-200 hover:border-red-100 group active:scale-90"
+                          title="Hủy đơn đăng ký"
+                        >
+                          <span className="material-symbols-outlined text-base group-hover:scale-110 transition-transform">event_busy</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -321,34 +351,99 @@ export default function ThuNhanMau() {
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 border-b border-slate-200">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Mã túi</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Tên TNV</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Nhóm máu</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Thể tích</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Thời gian lấy</th>
-                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Trạng thái</th>
+                      <th className="px-5 py-3 text-left text-xs font-bold text-slate-600 uppercase">Mã túi</th>
+                      <th className="px-5 py-3 text-left text-xs font-bold text-slate-600 uppercase">Tình nguyện viên</th>
+                      <th className="px-5 py-3 text-left text-xs font-bold text-slate-600 uppercase">Nhóm máu</th>
+                      <th className="px-5 py-3 text-left text-xs font-bold text-slate-600 uppercase">Chiến dịch</th>
+                      <th className="px-5 py-3 text-left text-xs font-bold text-slate-600 uppercase">Thể tích</th>
+                      <th className="px-5 py-3 text-left text-xs font-bold text-slate-600 uppercase">Bác sĩ khám</th>
+                      <th className="px-5 py-3 text-left text-xs font-bold text-slate-600 uppercase">Trạng thái</th>
+                      <th className="px-5 py-3 text-center text-xs font-bold text-slate-600 uppercase">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody>
                     {collectionList.length > 0 ? (
                       collectionList.map((item, idx) => (
-                        <tr key={item.maTuiMau} className={`border-b border-slate-100 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
-                          <td className="px-6 py-4 font-semibold text-slate-700">{item.maTuiMau}</td>
-                          <td className="px-6 py-4 text-slate-700">{item.tenTinhNguyenVien}</td>
-                          <td className="px-6 py-4 text-slate-600"><span className="font-bold text-red-700">{item.nhomMau}</span></td>
-                          <td className="px-6 py-4 text-slate-600">{item.theTich} ml</td>
-                          <td className="px-6 py-4 text-slate-600">
-                            {item.thoiGianLayMau ? new Date(item.thoiGianLayMau).toLocaleString('vi-VN') : '---'}
+                        <tr key={item.maTuiMau} className={`border-b border-slate-100 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'} hover:bg-slate-100/50 transition-colors`}>
+                          <td className="px-5 py-4 font-mono text-xs font-bold text-slate-700">{item.maTuiMau}</td>
+                          <td className="px-5 py-4">
+                            <p className="font-semibold text-slate-800">{item.tenTinhNguyenVien}</p>
+                            <p className="text-[10px] text-slate-400 font-mono">{item.maDon}</p>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-5 py-4"><span className="font-bold text-red-700">{item.nhomMau}</span></td>
+                          <td className="px-5 py-4 text-xs text-slate-600">{item.tenChienDich || '---'}</td>
+                          <td className="px-5 py-4 text-slate-600 font-bold">{item.theTich} ml</td>
+                          <td className="px-5 py-4 text-xs font-semibold text-slate-600">
+                            {item.tenBacSi ? (
+                              <div>
+                                <p>{item.tenBacSi}</p>
+                                <p className="text-[10px] text-slate-400 font-mono">{item.maBacSi}</p>
+                              </div>
+                            ) : '---'}
+                          </td>
+                          <td className="px-5 py-4">
                             <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase ${getStatusColor(item.trangThai)}`}>
                               {item.trangThai}
                             </span>
                           </td>
+                          <td className="px-5 py-4">
+                            <div className="flex justify-center gap-2">
+                              {item.trangThai === 'Chờ xét nghiệm' && (
+                                <>
+                                  <button
+                                    onClick={() => handleUpdateStatus(item.maTuiMau, 'Nhập kho')}
+                                    className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition-all"
+                                    title="Nhập kho"
+                                  >
+                                    <span className="material-symbols-outlined text-sm">inventory_2</span>
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      if (window.confirm(`Bạn có chắc chắn muốn hủy túi máu ${item.maTuiMau}?`)) {
+                                        handleUpdateStatus(item.maTuiMau, 'Hủy');
+                                      }
+                                    }}
+                                    className="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-all"
+                                    title="Hủy túi máu"
+                                  >
+                                    <span className="material-symbols-outlined text-sm">delete</span>
+                                  </button>
+                                </>
+                              )}
+                              {item.trangThai === 'Nhập kho' && (
+                                <>
+                                  <button
+                                    onClick={() => handleUpdateStatus(item.maTuiMau, 'Đã xuất')}
+                                    className="p-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg transition-all"
+                                    title="Xuất kho"
+                                  >
+                                    <span className="material-symbols-outlined text-sm">output</span>
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      if (window.confirm(`Bạn có chắc chắn muốn hủy túi máu ${item.maTuiMau}?`)) {
+                                        handleUpdateStatus(item.maTuiMau, 'Hủy');
+                                      }
+                                    }}
+                                    className="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-all"
+                                    title="Hủy túi máu"
+                                  >
+                                    <span className="material-symbols-outlined text-sm">block</span>
+                                  </button>
+                                </>
+                              )}
+                              {item.trangThai === 'Đã xuất' && (
+                                <span className="text-[10px] text-green-600 font-bold italic">Đã sử dụng</span>
+                              )}
+                              {item.trangThai === 'Hủy' && (
+                                <span className="text-[10px] text-red-400 font-bold italic">Đã hủy</span>
+                              )}
+                            </div>
+                          </td>
                         </tr>
                       ))
                     ) : (
-                      <tr><td colSpan="6" className="px-6 py-8 text-center text-slate-500">Không có dữ liệu túi máu</td></tr>
+                      <tr><td colSpan="8" className="px-5 py-12 text-center text-slate-400">Không có dữ liệu túi máu</td></tr>
                     )}
                   </tbody>
                 </table>

@@ -188,6 +188,21 @@ export const donDangKyNvytService = {
   },
 
   /**
+   * Hủy đơn đăng ký.
+   */
+  cancel: async (maDon) => {
+    try {
+      const res = await http.put(`/dondangky/${maDon}/cancel`);
+      return res?.data || res;
+    } catch (err) {
+      throw {
+        message: err.response?.data?.message || 'Lỗi khi hủy đơn đăng ký',
+        status: err.response?.status,
+      };
+    }
+  },
+
+  /**
    * Lấy chi tiết đơn đăng ký.
    */
   getById: async (maDon) => {
