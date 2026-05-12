@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
-import { donDangKyNvytService, tnvNvytService, nhanVienService } from '../../services/nvytService';
+import { donDangKyNvytService, tnvNvytService} from '../../services/nvytService';
+import { phuongXaService } from '../../services/phuongXaService';
 
 const PAGE_SIZE = 10;
 
@@ -11,7 +12,7 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
   const [tnv, setTnv] = useState(mode === 'edit' ? don?.tinhNguyenVien : null);
   const [searching, setSearching] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const [newTnv, setNewTnv] = useState({ hoVaTen: '', ngaySinh: '', gioiTinh: 'Nam', soDienThoai: '', diaChi: '', soCCCD: '' });
+  const [newTnv, setNewTnv] = useState({ hoVaTen: '', ngaySinh: '', gioiTinh: 'Nam', soDienThoai: '', diaChi: '', soCCCD: '', maPhuongXa: '' });
   const [form, setForm] = useState({
     maChienDich: don?.maChienDich || '',
     theTich: don?.theTich || 250,
@@ -19,6 +20,22 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [phuongXaList, setPhuongXaList] = useState([]);
+
+  const isValidPhone = (phone) => /^(0[3|5|7|8|9])[0-9]{8}$/.test(String(phone || '').trim());
+
+  useEffect(() => {
+    const fetchPhuongXa = async () => {
+      try {
+        const list = await phuongXaService.getAll();
+        const sortedList = [...list].sort((a, b) => (a.tenPhuongXa || '').localeCompare(b.tenPhuongXa || '', 'vi', { sensitivity: 'base' }));
+        setPhuongXaList(sortedList);
+        console.log('Phường/xã list:', sortedList);
+      } catch (e) { console.error('Error fetching phường/xã list:', e); }
+    };
+    fetchPhuongXa();
+  }, []);
+
 
   const handleSearchCCCD = async () => {
     if (!cccd.trim()) return;
@@ -32,6 +49,12 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
   };
 
   const handleCreateTnv = async () => {
+    if (!newTnv.hoVaTen.trim()) { setError('Vui lòng nhập họ và tên'); return; }
+    if (!newTnv.ngaySinh) { setError('Vui lòng chọn ngày sinh'); return; }
+    if (!newTnv.soCCCD.trim() || newTnv.soCCCD.trim().length !== 12) { setError('CCCD phải đúng 12 số'); return; }
+    if (!newTnv.soDienThoai.trim()) { setError('Vui lòng nhập số điện thoại'); return; }
+    if (!isValidPhone(newTnv.soDienThoai)) { setError('SĐT không hợp lệ. Định dạng: 03/05/07/08/09 + 8 số (vd: 0987654321)'); return; }
+    if (!newTnv.maPhuongXa) { setError('Vui lòng chọn phường/xã'); return; }
     setLoading(true); setError('');
     try {
       const created = await tnvNvytService.create(newTnv);
@@ -51,6 +74,8 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
         maChienDich: form.maChienDich,
         theTich: Number(form.theTich),
         ghiChu: form.ghiChu,
+        maPhuongXa: tnv?.maPhuongXa || newTnv.maPhuongXa || '',
+        cccd: tnv?.soCCCD || newTnv.soCCCD
       };
       if (mode === 'create') {
         const saved = await donDangKyNvytService.create(payload);
@@ -109,15 +134,31 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
                     { label: 'Họ và tên *', key: 'hoVaTen', type: 'text' },
                     { label: 'Ngày sinh *', key: 'ngaySinh', type: 'date' },
                     { label: 'Số điện thoại', key: 'soDienThoai', type: 'tel' },
+                    { label: 'Phường xã', key: 'maPhuongXa', type: 'select', options: phuongXaList },
                     { label: 'Địa chỉ', key: 'diaChi', type: 'text' },
                   ].map(f => (
                     <div key={f.key}>
                       <label className="text-xs font-semibold text-slate-600 block mb-1">{f.label}</label>
-                      <input
-                        type={f.type} value={newTnv[f.key]}
-                        onChange={e => setNewTnv(p => ({ ...p, [f.key]: e.target.value }))}
-                        className="w-full h-10 border border-slate-200 rounded-lg px-3 text-sm outline-none focus:border-primary"
-                      />
+                      {f.type === 'select' ? (
+                        <select
+                          value={newTnv[f.key]}
+                          onChange={e => setNewTnv(p => ({ ...p, [f.key]: e.target.value }))}
+                          className="w-full h-10 border border-slate-200 rounded-lg px-3 text-sm outline-none focus:border-primary"
+                        >
+                          <option value="">Chọn phường/xã</option>
+                          {f.options.map((option) => (
+                            <option key={option.maPhuongXa} value={option.maPhuongXa}>
+                              {option.tenPhuongXa}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type={f.type} value={newTnv[f.key]}
+                          onChange={e => setNewTnv(p => ({ ...p, [f.key]: e.target.value }))}
+                          className="w-full h-10 border border-slate-200 rounded-lg px-3 text-sm outline-none focus:border-primary"
+                        />
+                      )}
                     </div>
                   ))}
                   <div>
@@ -146,6 +187,8 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
                   <p className="text-xs font-bold text-green-700 uppercase mb-1">Tình nguyện viên</p>
                   <p className="font-bold text-green-900">{tnv.hoVaTen}</p>
                   <p className="text-xs text-green-700 mt-0.5">CCCD: {tnv.soCCCD} &nbsp;|&nbsp; {tnv.gioiTinh}</p>
+                  <p className="text-xs text-green-700 mt-1">Mã Phường/xã: {tnv?.maPhuongXa || newTnv?.maPhuongXa || '---'}</p>
+                  <p className="text-xs text-green-700">Địa chỉ: {tnv.diaChi || '---'}</p>
                 </div>
               )}
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl">
