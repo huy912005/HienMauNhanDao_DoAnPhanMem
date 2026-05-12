@@ -256,7 +256,14 @@ export default function ThuNhanMau() {
                     <td className="px-5 py-4 font-bold text-red-600">{don.tinhNguyenVien?.nhomMau || '---'}</td>
                     <td className="px-5 py-4 font-mono text-xs text-slate-600">{don.maChienDich || '---'}</td>
                     <td className="px-5 py-4"><span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg">{don.theTich || 0} ml</span></td>
-                    <td className="px-5 py-4 text-xs font-semibold text-slate-600">{don.tenBacSi || '---'}</td>
+                    <td className="px-5 py-4 text-xs font-semibold text-slate-600">
+                      {don.tenBacSi ? (
+                        <div>
+                          <p>{don.tenBacSi}</p>
+                          <p className="text-[10px] text-slate-400 font-mono">{don.maBacSi}</p>
+                        </div>
+                      ) : '---'}
+                    </td>
                     <td className="px-5 py-4">
                       <button
                         onClick={() => setModalDon(don)}
