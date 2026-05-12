@@ -13,5 +13,6 @@ public interface DonDangKyService {
     ApiResponse<DonDangKyResponse> updateDonDangKy(String maDon, DonDangKyRequest request);
     ApiResponse<DonDangKyResponse> cancelDonDangKy(String maDon);
     ApiResponse<Void> deleteDonDangKy(String maDon);
+    ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getReadyForCollection(org.springframework.data.domain.Pageable pageable);
 }
 

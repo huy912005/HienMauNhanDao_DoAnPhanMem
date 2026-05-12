@@ -21,6 +21,9 @@ public class DonDangKyRequest {
     // Có thể null nên không dùng @NotBlank
     private String maNV;
 
+    // Email nhân viên đang đăng nhập, dùng để tự động lấy mã nhân viên
+    private String emailNhanVien;
+
     // Thể tích máu hiến (250, 350, 450), gửi từ frontend
     private Integer theTich;
 }

@@ -16,9 +16,15 @@ import java.util.List;
 public class TuiMauController {
 
     private final TuiMauService tuiMauService;
+    
+    @PostMapping
+    public ResponseEntity<Void> createTuiMau(@RequestBody com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request) {
+        tuiMauService.createTuiMau(request);
+        return ResponseEntity.ok().build();
+    }
 
     // --- My Features ---
-    
+
     @GetMapping("/dashboard/stats") // Đổi path một chút để tránh trùng /stats
     public ResponseEntity<DashboardStatsDTO> getDashboardStats() {
         return ResponseEntity.ok(tuiMauService.getDashboardStats());
