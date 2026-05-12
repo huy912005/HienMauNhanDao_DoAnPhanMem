@@ -38,20 +38,26 @@ public class DonDangKyServiceImpl implements DonDangKyService {
         DonDangKyEntity entity = mapper.toEntity(request);
         Integer max = repository.findMaxMaDon();
         entity.setMaDon(String.format("DK%05d", (max == null) ? 1 : max + 1));
-        // Set maQR tự sinh
         entity.setMaQR("QR_" + entity.getMaDon());
         entity.setThoiGianDangKy(LocalDateTime.now());
         entity.setTrangThai(TrangThaiDonDangKy.DA_DANG_KY);
         if (request.getTheTich() != null && request.getTheTich() > 0) {
             entity.setTheTich(TheTich.fromDbValue(request.getTheTich()));
         }
-        TinhNguyenVienEntity tnv = tinhNguyenVienRepository.findById(request.getMaTNV()).orElseThrow(() -> new RuntimeException("Không tìm thấy tình nguyện viên: " + request.getMaTNV()));
+        TinhNguyenVienEntity tnv = tinhNguyenVienRepository.findById(request.getMaTNV())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy tình nguyện viên: " + request.getMaTNV()));
         entity.setTinhNguyenVien(tnv);
-        ChienDichHienMauEntity chienDich = chienDichRepository.findById(request.getMaChienDich()).orElseThrow(() -> new RuntimeException("Không tìm thấy chiến dịch: " + request.getMaChienDich()));
+        ChienDichHienMauEntity chienDich = chienDichRepository.findById(request.getMaChienDich())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy chiến dịch: " + request.getMaChienDich()));
         entity.setChienDich(chienDich);
-        if (request.getMaNV() != null && !request.getMaNV().isBlank()) {
-            entity.setNhanVienPhuTrach(nhanVienRepository.findById(request.getMaNV()).orElse(null));
+
+        // Lấy nhân viên từ email gửi lên từ frontend (localStorage.getItem('email'))
+        String email = request.getEmailNhanVien();
+        if (email != null && !email.isBlank()) {
+            nhanVienRepository.findByTaiKhoan_Email(email)
+                    .ifPresent(entity::setNhanVienPhuTrach);
         }
+
         DonDangKyEntity saved = repository.save(entity);
         return ApiResponse.<DonDangKyResponse>builder().message("Đăng ký thành công!").status(true).data(mapper.toResponse(saved)).build();
     }

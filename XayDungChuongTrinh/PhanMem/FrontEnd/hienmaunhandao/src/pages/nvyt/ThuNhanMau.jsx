@@ -106,7 +106,7 @@ function TuiMauModal({ don, nhanVien, onClose, onSaved }) {
 export default function ThuNhanMau() {
   const { nhanVien } = useOutletContext();
   const [activeTab, setActiveTab] = useState('pending'); // 'pending' | 'collected'
-  
+
   // Pending
   const [pendingList, setPendingList] = useState([]);
   const [pendingLoading, setPendingLoading] = useState(false);
@@ -208,18 +208,16 @@ export default function ThuNhanMau() {
       <div className="flex gap-4 border-b border-slate-200">
         <button
           onClick={() => setActiveTab('pending')}
-          className={`pb-3 px-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
-            activeTab === 'pending' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'
-          }`}
+          className={`pb-3 px-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'pending' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
         >
           <span className="material-symbols-outlined text-xl">hourglass_top</span>
           Danh sách chờ thu nhận
         </button>
         <button
           onClick={() => setActiveTab('collected')}
-          className={`pb-3 px-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
-            activeTab === 'collected' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'
-          }`}
+          className={`pb-3 px-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'collected' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'
+            }`}
         >
           <span className="material-symbols-outlined text-xl">bloodtype</span>
           Túi máu đã thu

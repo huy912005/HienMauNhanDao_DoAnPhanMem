@@ -47,6 +47,7 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
       const payload = {
         maTNV: tnv?.maTNV,
         maNV: nhanVien?.maNV,
+        emailNhanVien: localStorage.getItem('email') || '',
         maChienDich: form.maChienDich,
         theTich: Number(form.theTich),
         ghiChu: form.ghiChu,

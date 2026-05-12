@@ -87,6 +87,9 @@ export default function BacSiLayout() {
               <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
                 Bác sĩ
               </p>
+              <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                Mã NV: {nhanVien?.maNV || '---'}
+              </p>
             </div>
           </div>
         </div>
@@ -176,6 +179,9 @@ export default function BacSiLayout() {
                   </p>
                   <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
                     Bác sĩ
+                  </p>
+                  <p className="text-[9px] text-slate-400 font-medium">
+                    ID: {nhanVien?.maNV || '---'}
                   </p>
                 </div>
                 <span className="material-symbols-outlined text-slate-400 text-base">expand_more</span>

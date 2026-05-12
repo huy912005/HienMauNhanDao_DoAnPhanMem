@@ -12,11 +12,13 @@ export default function Login() {
     e.preventDefault();
     try {
       const res = await authService.login({ email, matKhau });
-      localStorage.setItem('token', res.data.access_token);
-      localStorage.setItem('email', res.data.email);
-      localStorage.setItem('userId', res.data.user_id);
-      localStorage.setItem('maNV', res.data.maNV);
-      localStorage.setItem('role', res.data.maVaiTro);
+      // http interceptor đã unwrap response.data, nên res chính là LoginResponse
+      const loginData = res.data ?? res;
+      localStorage.setItem('token', loginData.access_token);
+      localStorage.setItem('email', loginData.email);
+      localStorage.setItem('userId', loginData.user_id);
+      localStorage.setItem('maNV', loginData.maNV);
+      localStorage.setItem('role', loginData.maVaiTro);
       // Redirect theo vai trò
       if (res.data.maVaiTro === 'BS') {
         navigate('/bac-si/danh-sach-cho-kham', { replace: true });
