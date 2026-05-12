@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@org.springframework.transaction.annotation.Transactional
 public class TuiMauServiceImpl implements TuiMauService {
 
     private final TuiMauRepository tuiMauRepository;
@@ -176,9 +177,20 @@ public class TuiMauServiceImpl implements TuiMauService {
 
     @Override
     public void updateStatus(String maTuiMau, String status) {
-        tuiMauRepository.findById(maTuiMau).ifPresent(tuiMau -> {
-            tuiMau.setTrangThai(TrangThaiTuiMau.fromDbValue(status));
-            tuiMauRepository.save(tuiMau);
+        System.out.println("DEBUG: Dang cap nhat trang thai tui mau [" + maTuiMau + "] sang [" + status + "]");
+        tuiMauRepository.findById(maTuiMau).ifPresentOrElse(tuiMau -> {
+            try {
+                TrangThaiTuiMau newTrangThai = TrangThaiTuiMau.fromDbValue(status);
+                tuiMau.setTrangThai(newTrangThai);
+                tuiMauRepository.save(tuiMau);
+                System.out.println("DEBUG: Cap nhat thanh cong tui mau [" + maTuiMau + "]");
+            } catch (Exception e) {
+                System.err.println("DEBUG: Loi khi tim trang thai enum cho [" + status + "]: " + e.getMessage());
+                throw e;
+            }
+        }, () -> {
+            System.err.println("DEBUG: Khong tim thay tui mau [" + maTuiMau + "]");
+            throw new RuntimeException("Không tìm thấy túi máu: " + maTuiMau);
         });
     }
 

@@ -192,7 +192,7 @@ export const donDangKyNvytService = {
    */
   cancel: async (maDon) => {
     try {
-      const res = await http.put(`/dondangky/${maDon}/cancel`);
+      const res = await http.put(`/dondangky/${maDon}/huy`);
       return res?.data || res;
     } catch (err) {
       throw {

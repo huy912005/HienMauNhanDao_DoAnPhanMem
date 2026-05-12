@@ -4,7 +4,7 @@ export const thuNhanMauService = {
   getAll: () => http.get('/tuimau'),
   getStats: () => http.get('/tuimau/stats'),
   create: (data) => http.post('/tuimau', data),
-  updateStatus: (id, status) => http.patch(`/tuimau/${id}/status?status=${encodeURIComponent(status)}`),
+  updateStatus: (id, status) => http.put(`/tuimau/${id}/status?status=${encodeURIComponent(status)}`),
   delete: (id) => http.delete(`/tuimau/${id}`),
 };
 

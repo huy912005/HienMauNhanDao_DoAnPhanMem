@@ -161,11 +161,13 @@ export default function ThuNhanMau() {
   }, []);
 
   const handleUpdateStatus = async (maTuiMau, newStatus) => {
+    console.log(`Updating blood bag ${maTuiMau} to status: ${newStatus}`);
     try {
       await thuNhanMauService.updateStatus(maTuiMau, newStatus);
       showToast('Cập nhật trạng thái thành công!');
       fetchCollectionList();
     } catch (error) {
+      console.error('Update status error:', error);
       showToast('Lỗi khi cập nhật trạng thái', 'error');
     }
   };
@@ -182,12 +184,14 @@ export default function ThuNhanMau() {
   };
 
   const handleCancelDon = async (maDon) => {
+    console.log('Attempting to cancel registration:', maDon);
     if (!window.confirm(`Bạn có chắc chắn muốn hủy đơn đăng ký ${maDon}?`)) return;
     try {
       await donDangKyNvytService.cancel(maDon);
       showToast('Hủy đơn đăng ký thành công!');
       fetchPendingList();
     } catch (error) {
+      console.error('Cancel registration error:', error);
       showToast(error.message || 'Lỗi khi hủy đơn đăng ký', 'error');
     }
   };
@@ -286,20 +290,20 @@ export default function ThuNhanMau() {
                       ) : '---'}
                     </td>
                     <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={() => setModalDon(don)}
-                          className="flex items-center gap-2 h-9 px-4 bg-red-600 text-white hover:bg-red-700 rounded-xl font-bold text-[11px] transition-all shadow-md shadow-red-100 hover:shadow-red-200 active:scale-95 group"
+                          className="flex items-center justify-center w-9 h-9 bg-red-600 text-white hover:bg-red-700 rounded-xl transition-all shadow-md shadow-red-100 group active:scale-90"
+                          title="Tạo túi máu"
                         >
-                          <span className="material-symbols-outlined text-base group-hover:rotate-12 transition-transform">vaccines</span>
-                          Tạo túi máu
+                          <span className="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">add_circle</span>
                         </button>
                         <button
                           onClick={() => handleCancelDon(don.maDon)}
-                          className="flex items-center justify-center w-9 h-9 bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all border border-slate-200 hover:border-red-100 group active:scale-90"
+                          className="flex items-center justify-center w-9 h-9 bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all border border-slate-200 group active:scale-90"
                           title="Hủy đơn đăng ký"
                         >
-                          <span className="material-symbols-outlined text-base group-hover:scale-110 transition-transform">event_busy</span>
+                          <span className="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">block</span>
                         </button>
                       </div>
                     </td>
