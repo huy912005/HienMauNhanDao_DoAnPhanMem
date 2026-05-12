@@ -54,4 +54,17 @@ export const tinhNguyenVienService = {
       };
     }
   },
+  getAll: async () => {
+    try {
+      const response = await http.get('/tinhnguyenvien');
+      return response?.data || response;
+    } catch (error) {
+      console.error('Error fetching tình nguyện viên list:', error);
+      throw {
+        message: error.response?.data?.message || 'Lỗi khi lấy danh sách tình nguyện viên',
+        status: error.response?.status,
+        data: error.response?.data
+      };
+    }
+  }
 };

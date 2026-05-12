@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { chienDichService } from '../services/chienDichService';
+import { DiaDiemService } from '../services/DiaDiemService';
+import { tinhNguyenVienService } from '../services/tinhNguyenVienService';
+import { useQuery } from '@tanstack/react-query';
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -36,6 +39,26 @@ export default function HomePage() {
         };
         fetchCampaigns();
     }, []);
+    const { data: countDD, isLoading: loadingDD } = useQuery({
+    queryKey: ['countDiaDiem'],
+    queryFn: async () => {
+        const response = await DiaDiemService.getDiaDiems();
+        console.log("Dữ liệu địa điểm:", response);
+        const data = response?.data || response;
+        if (Array.isArray(data)) {
+            return data.length;
+        }
+        return data?.totalElements || 0;
+    },
+    staleTime: 10 * 60 * 1000, // 10 phút
+});
+    const { data: countNH, isLoading, isError } = useQuery({
+        queryKey: ['countNguoiHien'],
+        queryFn: async () => {
+            const response = await tinhNguyenVienService.getAll();
+            return response?.totalElements || response?.data?.totalElements || 0;
+        }
+    });
 
     const getCampaignStatus = (campaign) => {
         const now = new Date();
@@ -91,7 +114,7 @@ export default function HomePage() {
                         <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
                             <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>
                         </div>
-                        <h3 className="text-4xl font-black text-slate-900 mb-2">15,000+</h3>
+                        <h3 className="text-4xl font-black text-slate-900 mb-2">{countNH}</h3>
                         <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Người hiến máu</p>
                     </div>
                     <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 flex flex-col items-center text-center group hover:-translate-y-2 transition-all duration-300">
@@ -105,8 +128,8 @@ export default function HomePage() {
                         <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
                             <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>local_hospital</span>
                         </div>
-                        <h3 className="text-4xl font-black text-slate-900 mb-2">12</h3>
-                        <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Bệnh viện liên kết</p>
+                        <h3 className="text-4xl font-black text-slate-900 mb-2">{countDD}</h3>
+                        <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Địa điểm liên kết</p>
                     </div>
                 </div>
             </section>
