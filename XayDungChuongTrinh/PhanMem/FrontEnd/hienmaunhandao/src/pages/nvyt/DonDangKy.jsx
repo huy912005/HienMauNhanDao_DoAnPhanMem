@@ -53,6 +53,7 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
       const payload = {
         maTNV: tnv?.maTNV,
         maNV: nhanVien?.maNV,
+        emailNhanVien: localStorage.getItem('email') || '',
         maChienDich: form.maChienDich,
         theTich: Number(form.theTich),
       };
@@ -357,7 +358,7 @@ export default function DonDangKy() {
                       <span className={`px-2.5 py-1 text-xs font-bold rounded-full
                         ${don.trangThai === 'DA_KHAM' ? 'bg-green-100 text-green-700' :
                           don.trangThai === 'CHO_KHAM' ? 'bg-amber-100 text-amber-700' :
-                          'bg-slate-100 text-slate-600'}`}>
+                            'bg-slate-100 text-slate-600'}`}>
                         {don.trangThai || 'Chờ xử lý'}
                       </span>
                     </td>

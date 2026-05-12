@@ -16,6 +16,6 @@ public class NhanVienController {
 
     @GetMapping("/tai-khoan/{maTaiKhoan}")
     public ResponseEntity<ApiResponse<?>> getByMaTaiKhoan(@PathVariable String maTaiKhoan) {
-        return ResponseEntity.ok(nhanVienService.getByMaTaiKhoan(maTaiKhoan));
+        return ResponseEntity.ok(nhanVienService.getByMaTaiKhoan(maTaiKhoan != null ? maTaiKhoan.trim() : ""));
     }
 }

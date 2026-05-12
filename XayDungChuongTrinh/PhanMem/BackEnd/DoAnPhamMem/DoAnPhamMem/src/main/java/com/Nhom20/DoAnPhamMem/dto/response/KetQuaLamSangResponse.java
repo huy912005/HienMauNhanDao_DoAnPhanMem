@@ -16,6 +16,7 @@ public class KetQuaLamSangResponse {
     private String nhomMau;
     private String tenChienDich;
     private String tenBacSi;
+    private String maBacSi;
     private String huyetAp;
     private Integer nhipTim;
     private Double canNang;

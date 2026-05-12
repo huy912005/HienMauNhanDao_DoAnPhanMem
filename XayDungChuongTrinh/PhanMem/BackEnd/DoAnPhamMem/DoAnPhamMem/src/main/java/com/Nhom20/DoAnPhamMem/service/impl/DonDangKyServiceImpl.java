@@ -1,5 +1,11 @@
 package com.Nhom20.DoAnPhamMem.service.impl;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.Nhom20.DoAnPhamMem.common.ApiResponse;
 import com.Nhom20.DoAnPhamMem.dto.request.DonDangKyRequest;
 import com.Nhom20.DoAnPhamMem.dto.response.DonDangKyResponse;
@@ -49,14 +55,6 @@ public class DonDangKyServiceImpl implements DonDangKyService {
         entity.setChienDich(chienDich);
         if (request.getMaNV() != null && !request.getMaNV().isBlank()) {
             entity.setNhanVienPhuTrach(nhanVienRepository.findById(request.getMaNV()).orElse(null));
-        }
-        // Set mã tài khoản của nhân viên y tế
-        if (request.getMaTaiKhoan() != null && !request.getMaTaiKhoan().isBlank()) {
-            entity.setMaTaiKhoan(request.getMaTaiKhoan());
-        }
-        // Set ghi chú
-        if (request.getGhiChu() != null) {
-            entity.setGhiChu(request.getGhiChu());
         }
         DonDangKyEntity saved = repository.save(entity);
         return ApiResponse.<DonDangKyResponse>builder().message("Đăng ký thành công!").status(true).data(mapper.toResponse(saved)).build();
@@ -130,4 +128,5 @@ public class DonDangKyServiceImpl implements DonDangKyService {
         repository.deleteById(maDon);
         return ApiResponse.<Void>builder().status(true).message("Xóa thành công").build();
     }
+
 }

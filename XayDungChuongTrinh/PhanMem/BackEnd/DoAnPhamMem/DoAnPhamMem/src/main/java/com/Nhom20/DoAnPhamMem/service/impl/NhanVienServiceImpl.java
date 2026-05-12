@@ -20,20 +20,37 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public ApiResponse<NhanVienResponse> getByMaTaiKhoan(String maTaiKhoan) {
-        Optional<NhanVienEntity> nhanVien = nhanVienRepository.findByTaiKhoan_MaTaiKhoan(maTaiKhoan);
-        if (nhanVien.isEmpty()) {
-            nhanVien = nhanVienRepository.findByTaiKhoan_Email(maTaiKhoan);
-        }
-        if (nhanVien.isEmpty()) {
+        String key = maTaiKhoan != null ? maTaiKhoan.trim() : "";
+        System.out.println("DEBUG: Dang tim nhan vien cho tai khoan/email: [" + key + "]");
+
+        if (key.isEmpty()) {
             return ApiResponse.<NhanVienResponse>builder()
-                    .status(false)
-                    .message("Không tìm thấy nhân viên")
-                    .build();
+                    .status(false).message("Không tìm thấy nhân viên liên kết với tài khoản này").build();
         }
+
+        // Thử tìm theo maTaiKhoan trực tiếp trước
+        Optional<NhanVienEntity> nhanVien = nhanVienRepository.findByTaiKhoan_MaTaiKhoan(key);
+
+        // Nếu không có, thử tìm theo email
+        if (nhanVien.isEmpty()) {
+            nhanVien = nhanVienRepository.findByTaiKhoan_Email(key);
+        }
+
+        // Nếu vẫn không có, thử findByAccount (LIKE query)
+        if (nhanVien.isEmpty()) {
+            nhanVien = nhanVienRepository.findByAccount(key);
+        }
+
+        if (nhanVien.isEmpty()) {
+            System.out.println("DEBUG: KHONG tim thay nhan vien trong DB!");
+            return ApiResponse.<NhanVienResponse>builder()
+                    .status(false).message("Không tìm thấy nhân viên liên kết với tài khoản này").build();
+        }
+
+        NhanVienResponse response = nhanVienMapper.toResponse(nhanVien.get());
+        System.out.println("DEBUG: Da tim thay nhan vien: " + response.getMaNV() + " - " + response.getHoVaTen());
+
         return ApiResponse.<NhanVienResponse>builder()
-                .status(true)
-                .message("Lấy thông tin thành công")
-                .data(nhanVienMapper.toResponse(nhanVien.get()))
-                .build();
+                .status(true).message("Lấy thông tin nhân viên thành công").data(response).build();
     }
 }

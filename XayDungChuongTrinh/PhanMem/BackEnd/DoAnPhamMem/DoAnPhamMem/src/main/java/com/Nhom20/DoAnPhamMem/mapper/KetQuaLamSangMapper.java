@@ -12,5 +12,6 @@ public interface KetQuaLamSangMapper {
     @Mapping(target = "tenTinhNguyenVien", source = "donDangKy.tinhNguyenVien.hoTen")
     @Mapping(target = "tenChienDich", source = "donDangKy.chienDich.tenChienDich")
     @Mapping(target = "tenBacSi", source = "bacSiKham.hoTen")
+    @Mapping(target = "maBacSi", source = "bacSiKham.maNhanVien")
     KetQuaLamSangResponse toResponse(KetQuaLamSangEntity entity);
 }

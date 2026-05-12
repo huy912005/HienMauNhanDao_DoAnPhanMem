@@ -1,14 +1,25 @@
 package com.Nhom20.DoAnPhamMem.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.Nhom20.DoAnPhamMem.common.ApiResponse;
 import com.Nhom20.DoAnPhamMem.dto.request.DonDangKyRequest;
 import com.Nhom20.DoAnPhamMem.dto.response.DonDangKyResponse;
 import com.Nhom20.DoAnPhamMem.service.DonDangKyService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/dondangky")
@@ -80,5 +91,17 @@ public class DonDangKyController {
     @PutMapping("/{maDon}/huy")
     public ResponseEntity<ApiResponse<DonDangKyResponse>> cancel(@PathVariable String maDon) {
         return ResponseEntity.ok(donDangKyService.cancelDonDangKy(maDon));
+    }
+
+    /**
+     * Lấy danh sách chờ thu nhận máu
+     * GET /api/dondangky/cho-thu-nhan
+     */
+    @GetMapping("/cho-thu-nhan")
+    public ResponseEntity<ApiResponse<?>> getReadyForCollection(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return ResponseEntity.ok(donDangKyService.getReadyForCollection(pageable));
     }
 }

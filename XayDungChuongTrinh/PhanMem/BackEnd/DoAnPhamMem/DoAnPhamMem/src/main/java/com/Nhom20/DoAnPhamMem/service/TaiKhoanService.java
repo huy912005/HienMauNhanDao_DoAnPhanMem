@@ -9,5 +9,5 @@ public interface TaiKhoanService {
     LoginResponse login(LoginRequest loginRequest);
     void logout(HttpServletRequest request);
     void register(RegisterRequest registerRequest);
-    String getMaTaiKhoanByEmail(String email);
+//    String getMaTaiKhoanByEmail(String email);
 }
