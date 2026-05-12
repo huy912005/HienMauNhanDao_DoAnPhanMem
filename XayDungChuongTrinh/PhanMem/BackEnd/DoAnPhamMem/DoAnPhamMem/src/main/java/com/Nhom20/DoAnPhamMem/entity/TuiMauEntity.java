@@ -31,4 +31,7 @@ public class TuiMauEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maNhanVien")
     private NhanVienEntity nhanVien;
+
+    @Column(name = "nhietDoVanChuyen")
+    private Double nhietDoVanChuyen;
 }

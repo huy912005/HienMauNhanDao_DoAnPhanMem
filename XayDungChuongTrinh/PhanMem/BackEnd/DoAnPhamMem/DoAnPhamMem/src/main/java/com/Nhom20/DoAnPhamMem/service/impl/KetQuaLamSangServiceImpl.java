@@ -96,29 +96,45 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
 
         ketQuaLamSangRepository.save(entity);
 
-        // Nếu đạt yêu cầu, tự động tạo túi máu
+        // Không cập nhật DonDangKy ở đây để tránh vi phạm Ràng buộc (Constraint) của DB
+        // Chỉ cần lưu KetQuaLamSang là đủ để danh sách Thu nhận máu hiển thị được
+        /*
         if (Boolean.TRUE.equals(request.getKetQua())) {
-            don.setTrangThai(TrangThaiDonDangKy.DA_HIEN);
+            don.setTrangThai(TrangThaiDonDangKy.DA_KHAM);
             don.setTheTich(TheTich.fromDbValue(request.getTheTichHien()));
-            
-            TuiMauEntity tuiMau = new TuiMauEntity();
-            tuiMau.setMaTuiMau("TM" + String.format("%05d", System.currentTimeMillis() % 100000));
-            tuiMau.setDonDangKy(don);
-            tuiMau.setTheTich(TheTichTuiMau.fromMl(request.getTheTichHien()));
-            tuiMau.setThoiGianLayMau(LocalDateTime.now());
-            tuiMau.setTrangThai(TrangThaiTuiMau.CHO_XET_NGHIEM);
-            tuiMau.setNhanVien(nhanVienRepository.findById(request.getMaNhanVien()).orElse(null));
-            tuiMauRepository.save(tuiMau);
         } else {
             don.setTrangThai(TrangThaiDonDangKy.CHUA_HIEN);
             don.setTheTich(TheTich.fromDbValue(0));
         }
-        
         donDangKyRepository.save(don);
+        */
     }
 
     @Override
     public void delete(String maKQ) {
         ketQuaLamSangRepository.deleteById(maKQ);
+    }
+
+    @Override
+    @Transactional
+    public void update(String maKQ, KetQuaLamSangRequest request) {
+        String id = maKQ != null ? maKQ.trim() : "";
+        KetQuaLamSangEntity entity = ketQuaLamSangRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy kết quả khám: " + id));
+        if (request.getMaNhanVien() != null && !request.getMaNhanVien().isBlank()) {
+            nhanVienRepository.findById(request.getMaNhanVien().trim()).ifPresent(entity::setBacSiKham);
+        }
+        if (request.getCanNang() != null && request.getCanNang() < 40) {
+            throw new IllegalArgumentException("Cân nặng phải từ 40 kg trở lên (ràng buộc CSDL).");
+        }
+        entity.setHuyetAp(request.getHuyetAp());
+        entity.setNhipTim(request.getNhipTim());
+        entity.setCanNang(request.getCanNang());
+        entity.setNhietDo(request.getNhietDo());
+        if (request.getKetQua() != null) {
+            entity.setKetQua(Boolean.TRUE.equals(request.getKetQua()));
+        }
+        entity.setLyDoTuChoi(Boolean.TRUE.equals(entity.getKetQua()) ? null : request.getLyDoTuChoi());
+        ketQuaLamSangRepository.save(entity);
     }
 }
