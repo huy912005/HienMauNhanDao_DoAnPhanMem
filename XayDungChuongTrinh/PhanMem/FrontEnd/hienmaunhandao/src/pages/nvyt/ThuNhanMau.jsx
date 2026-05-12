@@ -1,18 +1,126 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { thuNhanMauService } from '../../services/khamLamSangService';
+import { donDangKyNvytService } from '../../services/nvytService';
+
+// ─── Modal Thu Nhận Máu ─────────────────────────────────────────────────────
+function TuiMauModal({ don, nhanVien, onClose, onSaved }) {
+  const [form, setForm] = useState({
+    maDon: don?.maDon || '',
+    maNV: nhanVien?.maNV || '',
+    theTich: don?.theTich || 250,
+    thoiGianLayMau: new Date().toLocaleString('sv-SE').replace(' ', 'T').slice(0, 16),
+    nhietDoVanChuyen: 4.2
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async () => {
+    setLoading(true); setError('');
+    try {
+      await thuNhanMauService.create({
+        ...form,
+        thoiGianLayMau: form.thoiGianLayMau + ':00'
+      });
+      onSaved();
+    } catch (e) {
+      setError(e.response?.data?.message || e.message || 'Lỗi khi tạo túi máu');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200 overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-red-50">
+          <div className="flex items-center gap-2 text-red-700">
+            <span className="material-symbols-outlined font-bold">vaccines</span>
+            <h3 className="font-bold">Thu nhận túi máu</h3>
+          </div>
+          <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-red-100 flex items-center justify-center transition-colors">
+            <span className="material-symbols-outlined text-red-500 text-xl font-bold">close</span>
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4">
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm font-medium">{error}</div>
+          )}
+
+          <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+            <div className="flex justify-between">
+              <span className="text-xs font-bold text-slate-500 uppercase">Đơn đăng ký:</span>
+              <span className="text-xs font-mono font-bold text-primary">{don.maDon}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-xs font-bold text-slate-500 uppercase">Người hiến:</span>
+              <span className="text-xs font-bold text-slate-800">{don.tinhNguyenVien?.hoVaTen}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-xs font-bold text-slate-500 uppercase">Nhóm máu:</span>
+              <span className="text-xs font-bold text-red-600">{don.tinhNguyenVien?.nhomMau}</span>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold text-slate-700 block mb-1">Thể tích túi máu *</label>
+            <select value={form.theTich} onChange={e => setForm(p => ({ ...p, theTich: Number(e.target.value) }))}
+              className="w-full h-11 border border-slate-200 rounded-xl px-4 text-sm outline-none focus:border-red-500 bg-white">
+              <option value={250}>250 ml</option>
+              <option value={350}>350 ml</option>
+              <option value={450}>450 ml</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold text-slate-700 block mb-1">Thời gian lấy máu *</label>
+            <input
+              type="datetime-local"
+              value={form.thoiGianLayMau} onChange={e => setForm(p => ({ ...p, thoiGianLayMau: e.target.value }))}
+              className="w-full h-11 border border-slate-200 rounded-xl px-4 text-sm outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold text-slate-700 block mb-1">Nhiệt độ vận chuyển (°C)</label>
+            <input
+              type="number" step="0.1"
+              value={form.nhietDoVanChuyen} onChange={e => setForm(p => ({ ...p, nhietDoVanChuyen: Number(e.target.value) }))}
+              className="w-full h-11 border border-slate-200 rounded-xl px-4 text-sm outline-none focus:border-red-500"
+            />
+          </div>
+
+          <div className="pt-2">
+            <button onClick={handleSubmit} disabled={loading}
+              className="w-full h-12 bg-red-600 text-white rounded-xl font-bold text-sm hover:bg-red-700 transition-colors shadow-lg shadow-red-100 disabled:opacity-60">
+              {loading ? 'Đang xử lý...' : 'Xác nhận thu nhận máu'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ThuNhanMau() {
   const { nhanVien } = useOutletContext();
+  const [activeTab, setActiveTab] = useState('pending'); // 'pending' | 'collected'
+  
+  // Pending
+  const [pendingList, setPendingList] = useState([]);
+  const [pendingLoading, setPendingLoading] = useState(false);
+  const [pendingPage, setPendingPage] = useState(0);
+  const [pendingTotalPages, setPendingTotalPages] = useState(1);
+  const [modalDon, setModalDon] = useState(null);
+
+  // Collected
   const [collectionList, setCollectionList] = useState([]);
   const [stats, setStats] = useState({
-    tongSoTui: 0,
-    tongTheTich: 0,
-    theoNhomMau: {},
-    theoTheTich: {},
+    tongSoTui: 0, tongTheTich: 0, theoNhomMau: {}, theoTheTich: {}
   });
-  const [loading, setLoading] = useState(false);
-  const [showList, setShowList] = useState(true); // Mặc định hiển thị danh sách
+  const [collectedLoading, setCollectedLoading] = useState(false);
+
   const [toast, setToast] = useState(null);
 
   const showToast = (msg, type = 'success') => {
@@ -20,45 +128,56 @@ export default function ThuNhanMau() {
     setTimeout(() => setToast(null), 3500);
   };
 
-  // Fetch danh sách túi máu từ API
-  const fetchCollectionList = async () => {
+  const fetchPendingList = useCallback(async () => {
     try {
-      setLoading(true);
+      setPendingLoading(true);
+      const res = await donDangKyNvytService.getReadyForCollection(pendingPage, 10);
+      const content = Array.isArray(res) ? res : (res.content || []);
+      setPendingList(content);
+      setPendingTotalPages(res.totalPages || 1);
+    } catch (error) {
+      showToast('Lỗi khi tải danh sách chờ thu nhận', 'error');
+    } finally {
+      setPendingLoading(false);
+    }
+  }, [pendingPage]);
+
+  const fetchCollectionList = useCallback(async () => {
+    try {
+      setCollectedLoading(true);
       const [dataRes, statsRes] = await Promise.all([
         thuNhanMauService.getAll(),
         thuNhanMauService.getStats(),
       ]);
       setCollectionList(Array.isArray(dataRes) ? dataRes : (dataRes.data || []));
       setStats(statsRes.data || statsRes || {
-        tongSoTui: 0,
-        tongTheTich: 0,
-        theoNhomMau: {},
-        theoTheTich: {},
+        tongSoTui: 0, tongTheTich: 0, theoNhomMau: {}, theoTheTich: {},
       });
     } catch (error) {
-      console.error('Lỗi khi lấy dữ liệu:', error);
-      showToast('Lỗi khi tải dữ liệu', 'error');
+      showToast('Lỗi khi tải danh sách đã thu nhận', 'error');
     } finally {
-      setLoading(false);
+      setCollectedLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchCollectionList();
-  }, []);
+    if (activeTab === 'pending') fetchPendingList();
+    else fetchCollectionList();
+  }, [activeTab, fetchPendingList, fetchCollectionList]);
+
+  const handleSaved = () => {
+    showToast('Thu nhận túi máu thành công!');
+    setModalDon(null);
+    fetchPendingList();
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Chờ xét nghiệm':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'Nhập kho':
-        return 'bg-blue-100 text-blue-700';
-      case 'Đã xuất':
-        return 'bg-green-100 text-green-700';
-      case 'Hủy':
-        return 'bg-red-100 text-red-700';
-      default:
-        return 'bg-slate-100 text-slate-700';
+      case 'Chờ xét nghiệm': return 'bg-yellow-100 text-yellow-700';
+      case 'Nhập kho': return 'bg-blue-100 text-blue-700';
+      case 'Đã xuất': return 'bg-green-100 text-green-700';
+      case 'Hủy': return 'bg-red-100 text-red-700';
+      default: return 'bg-slate-100 text-slate-700';
     }
   };
 
@@ -69,215 +188,178 @@ export default function ThuNhanMau() {
     <div className="space-y-6">
       {toast && (
         <div className={`fixed top-6 right-6 z-[100] px-5 py-3 rounded-xl shadow-lg text-white text-sm font-bold flex items-center gap-2 transition-all
-          ${toast.type === 'error' ? 'bg-red-600' : toast.type === 'warning' ? 'bg-amber-500' : toast.type === 'info' ? 'bg-blue-600' : 'bg-green-600'}`}>
+          ${toast.type === 'error' ? 'bg-red-600' : 'bg-green-600'}`}>
           <span className="material-symbols-outlined text-lg">
-            {toast.type === 'error' ? 'error' : toast.type === 'warning' ? 'warning' : toast.type === 'info' ? 'info' : 'check_circle'}
+            {toast.type === 'error' ? 'error' : 'check_circle'}
           </span>
           {toast.msg}
         </div>
       )}
 
       {/* Page header */}
-      <div className="flex items-end justify-between">
+      <div className="flex items-end justify-between border-b border-slate-200 pb-4">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-800 tracking-tight">Thu nhận máu</h1>
-          <p className="text-slate-500 mt-1 text-sm">Quản lý túi máu được thu nhận từ tình nguyện viên</p>
+          <p className="text-slate-500 mt-1 text-sm">Danh sách đơn chờ lấy máu và các túi máu đã thu nhận</p>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 gap-6">
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs uppercase font-semibold text-slate-500">Tổng số túi máu</p>
-              <p className="text-3xl font-bold text-slate-800 mt-2">{stats.tongSoTui}</p>
-            </div>
-            <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center">
-              <span className="material-symbols-outlined text-3xl text-red-500">vaccines</span>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs uppercase font-semibold text-slate-500">Tổng thể tích (ml)</p>
-              <p className="text-3xl font-bold text-red-600 mt-2">{Math.round(stats.tongTheTich)}</p>
-            </div>
-            <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center">
-              <span className="material-symbols-outlined text-3xl text-blue-500">water_drop</span>
-            </div>
-          </div>
-        </div>
+      {/* Tabs */}
+      <div className="flex gap-4 border-b border-slate-200">
+        <button
+          onClick={() => setActiveTab('pending')}
+          className={`pb-3 px-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'pending' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <span className="material-symbols-outlined text-xl">hourglass_top</span>
+          Danh sách chờ thu nhận
+        </button>
+        <button
+          onClick={() => setActiveTab('collected')}
+          className={`pb-3 px-2 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${
+            activeTab === 'collected' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-700'
+          }`}
+        >
+          <span className="material-symbols-outlined text-xl">bloodtype</span>
+          Túi máu đã thu
+        </button>
       </div>
 
-      {/* Blood Type & Volume Stats */}
-      <div className="grid grid-cols-2 gap-6">
-        {/* By Blood Type */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <span className="material-symbols-outlined text-red-500">bloodtype</span>
-            Thống kê theo nhóm máu
-          </h3>
-          <div className="grid grid-cols-4 gap-2">
-            {BLOOD_TYPES_LIST.map((nhomMau) => (
-              <div key={nhomMau} className="p-3 bg-red-50/50 border border-red-100 rounded-xl text-center">
-                <p className="text-[10px] uppercase font-bold text-slate-400">{nhomMau}</p>
-                <p className="text-xl font-black text-red-700">{stats.theoNhomMau?.[nhomMau] || 0}</p>
-                <p className="text-[10px] text-slate-500 font-medium">túi</p>
-              </div>
-            ))}
+      {activeTab === 'pending' && (
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          <div className="p-4 bg-slate-50 border-b border-slate-200">
+            <h3 className="font-bold text-slate-800 flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary">person_check</span>
+              Tình nguyện viên đủ điều kiện lấy máu (Đã khám lâm sàng Đạt)
+            </h3>
           </div>
-        </div>
-
-        {/* By Volume */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
-            <span className="material-symbols-outlined text-blue-500">database</span>
-            Thống kê theo thể tích
-          </h3>
-          <div className="grid grid-cols-3 gap-2">
-            {['250', '350', '450'].map((theTich) => (
-              <div key={theTich} className="p-3 bg-blue-50/50 border border-blue-100 rounded-xl text-center">
-                <p className="text-[10px] uppercase font-bold text-slate-400">{theTich} ML</p>
-                <p className="text-xl font-black text-blue-700">{stats.theoTheTich?.[theTich] || 0}</p>
-                <p className="text-[10px] text-slate-500 font-medium">túi</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Inventory visual */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 h-[180px] flex flex-col shadow-sm">
-        <div className="w-full flex justify-between items-center mb-6">
-          <h4 className="text-xs font-black uppercase text-slate-500 tracking-wider flex items-center gap-2">
-            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-            Tình trạng lưu trữ tại điểm hiến máu
-          </h4>
-          <span className="text-xs text-red-700 font-bold bg-red-50 px-3 py-1 rounded-full border border-red-100">
-            {stats.tongSoTui} túi trong kho
-          </span>
-        </div>
-        <div className="w-full grid grid-cols-8 gap-4 flex-1">
-          {BLOOD_TYPES_LIST.map((bt) => {
-            const count = stats.theoNhomMau?.[bt] || 0;
-            const fillHeight = `${Math.min((count / maxInStock) * 100, 100)}%`;
-            return (
-              <div key={bt} className="flex flex-col gap-2">
-                <div className="w-full h-16 bg-slate-100 rounded-lg relative overflow-hidden border border-slate-200">
-                  <div 
-                    className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-red-700 to-red-500 transition-all duration-700 ease-out" 
-                    style={{ height: count > 0 ? fillHeight : '0%' }} 
-                  />
-                  {count > 0 && (
-                    <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] font-black text-white mix-blend-overlay">
-                      {count}
-                    </span>
-                  )}
-                </div>
-                <p className={`text-center text-xs font-bold ${count === 0 ? 'text-slate-300' : 'text-slate-600'}`}>
-                  {bt}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Table */}
-      {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <p className="text-slate-500">Đang tải dữ liệu...</p>
-        </div>
-      ) : (
-        <div className="w-full bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-sm">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Mã túi</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Tên TNV</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Nhóm máu</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Thể tích (ml)</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Chiến dịch</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Thời gian lấy</th>
-                  <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Trạng thái</th>
-                  <th className="px-6 py-3 text-center text-xs font-bold text-slate-600 uppercase">Thao tác</th>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-white border-b border-slate-200">
+                  {['Mã đơn', 'Tình nguyện viên', 'Nhóm máu', 'Chiến dịch', 'Thể tích ĐK', 'Bác sĩ khám', 'Thao tác'].map(h => (
+                    <th key={h} className="text-left px-5 py-3 text-xs font-black uppercase text-slate-400 tracking-wider whitespace-nowrap">{h}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {collectionList.length > 0 ? (
-                  collectionList.map((item, idx) => (
-                    <tr key={item.maTuiMau} className={`border-b border-slate-100 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'} hover:bg-slate-100`}>
-                      <td className="px-6 py-4 font-semibold text-slate-700">{item.maTuiMau}</td>
-                      <td className="px-6 py-4 text-slate-700">{item.tenTinhNguyenVien}</td>
-                      <td className="px-6 py-4 text-slate-600">
-                        <span className="font-bold text-red-700">{item.nhomMau}</span>
-                      </td>
-                      <td className="px-6 py-4 text-slate-600">{item.theTich}</td>
-                      <td className="px-6 py-4 text-slate-600">{item.tenChienDich}</td>
-                      <td className="px-6 py-4 text-slate-600">
-                        {item.thoiGianLayMau
-                          ? new Date(item.thoiGianLayMau).toLocaleString('vi-VN')
-                          : '---'}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(item.trangThai)}`}>
-                          {item.trangThai}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex justify-center gap-1">
-                          {item.trangThai === 'Chờ xét nghiệm' && (
-                            <button 
-                              onClick={async () => {
-                                try {
-                                  await thuNhanMauService.updateStatus(item.maTuiMau, 'Nhập kho');
-                                  showToast('Đã cập nhật trạng thái: Nhập kho');
-                                  fetchCollectionList();
-                                } catch {
-                                  showToast('Lỗi khi cập nhật', 'error');
-                                }
-                              }}
-                              title="Xác nhận nhập kho"
-                              className="p-1 hover:bg-blue-50 text-slate-400 hover:text-blue-600 rounded-lg transition-colors"
-                            >
-                              <span className="material-symbols-outlined text-lg">inventory_2</span>
-                            </button>
-                          )}
-                          <button 
-                            onClick={async () => {
-                              if (confirm('Xác nhận xóa túi máu này?')) {
-                                try {
-                                  await thuNhanMauService.delete(item.maTuiMau);
-                                  showToast('Đã xóa túi máu');
-                                  fetchCollectionList();
-                                } catch {
-                                  showToast('Lỗi khi xóa', 'error');
-                                }
-                              }
-                            }}
-                            title="Xóa túi máu"
-                            className="p-1 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors"
-                          >
-                            <span className="material-symbols-outlined text-lg">delete</span>
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="7" className="px-6 py-8 text-center text-slate-500">
-                      Không có dữ liệu túi máu
+                {pendingLoading ? (
+                  <tr><td colSpan={7} className="text-center py-8 text-slate-400">Đang tải...</td></tr>
+                ) : pendingList.length === 0 ? (
+                  <tr><td colSpan={7} className="text-center py-8 text-slate-400">Không có đơn nào chờ thu nhận máu.</td></tr>
+                ) : pendingList.map(don => (
+                  <tr key={don.maDon} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <td className="px-5 py-4 font-mono text-xs font-bold text-primary">{don.maDon}</td>
+                    <td className="px-5 py-4">
+                      <p className="font-semibold text-slate-800">{don.tinhNguyenVien?.hoVaTen}</p>
+                      <p className="text-xs text-slate-400">{don.tinhNguyenVien?.soCCCD}</p>
+                    </td>
+                    <td className="px-5 py-4 font-bold text-red-600">{don.tinhNguyenVien?.nhomMau || '---'}</td>
+                    <td className="px-5 py-4 font-mono text-xs text-slate-600">{don.maChienDich || '---'}</td>
+                    <td className="px-5 py-4"><span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-lg">{don.theTich || 0} ml</span></td>
+                    <td className="px-5 py-4 text-xs font-semibold text-slate-600">{don.tenBacSi || '---'}</td>
+                    <td className="px-5 py-4">
+                      <button
+                        onClick={() => setModalDon(don)}
+                        className="flex items-center gap-2 h-9 px-4 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 rounded-xl font-bold text-xs transition-colors shadow-sm"
+                      >
+                        <span className="material-symbols-outlined text-base">vaccines</span>
+                        Tạo túi máu
+                      </button>
                     </td>
                   </tr>
-                )}
+                ))}
               </tbody>
             </table>
           </div>
+          {pendingTotalPages > 1 && (
+            <div className="flex justify-between items-center px-5 py-3 border-t border-slate-100 bg-slate-50">
+              <span className="text-xs text-slate-500">Trang {pendingPage + 1} / {pendingTotalPages}</span>
+              <div className="flex gap-2">
+                <button onClick={() => setPendingPage(p => Math.max(0, p - 1))} disabled={pendingPage === 0} className="w-8 h-8 rounded border border-slate-200 flex justify-center items-center hover:bg-slate-100 disabled:opacity-50"><span className="material-symbols-outlined text-sm">chevron_left</span></button>
+                <button onClick={() => setPendingPage(p => Math.min(pendingTotalPages - 1, p + 1))} disabled={pendingPage === pendingTotalPages - 1} className="w-8 h-8 rounded border border-slate-200 flex justify-center items-center hover:bg-slate-100 disabled:opacity-50"><span className="material-symbols-outlined text-sm">chevron_right</span></button>
+              </div>
+            </div>
+          )}
         </div>
+      )}
+
+      {activeTab === 'collected' && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs uppercase font-semibold text-slate-500">Tổng số túi máu</p>
+                  <p className="text-3xl font-bold text-slate-800 mt-2">{stats.tongSoTui}</p>
+                </div>
+                <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center"><span className="material-symbols-outlined text-3xl text-red-500">vaccines</span></div>
+              </div>
+            </div>
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-xs uppercase font-semibold text-slate-500">Tổng thể tích (ml)</p>
+                  <p className="text-3xl font-bold text-red-600 mt-2">{Math.round(stats.tongTheTich)}</p>
+                </div>
+                <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center"><span className="material-symbols-outlined text-3xl text-blue-500">water_drop</span></div>
+              </div>
+            </div>
+          </div>
+
+          {collectedLoading ? (
+            <div className="py-8 text-center text-slate-400">Đang tải dữ liệu...</div>
+          ) : (
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Mã túi</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Tên TNV</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Nhóm máu</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Thể tích</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Thời gian lấy</th>
+                      <th className="px-6 py-3 text-left text-xs font-bold text-slate-600 uppercase">Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {collectionList.length > 0 ? (
+                      collectionList.map((item, idx) => (
+                        <tr key={item.maTuiMau} className={`border-b border-slate-100 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
+                          <td className="px-6 py-4 font-semibold text-slate-700">{item.maTuiMau}</td>
+                          <td className="px-6 py-4 text-slate-700">{item.tenTinhNguyenVien}</td>
+                          <td className="px-6 py-4 text-slate-600"><span className="font-bold text-red-700">{item.nhomMau}</span></td>
+                          <td className="px-6 py-4 text-slate-600">{item.theTich} ml</td>
+                          <td className="px-6 py-4 text-slate-600">
+                            {item.thoiGianLayMau ? new Date(item.thoiGianLayMau).toLocaleString('vi-VN') : '---'}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase ${getStatusColor(item.trangThai)}`}>
+                              {item.trangThai}
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr><td colSpan="6" className="px-6 py-8 text-center text-slate-500">Không có dữ liệu túi máu</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {modalDon && (
+        <TuiMauModal
+          don={modalDon}
+          nhanVien={nhanVien}
+          onClose={() => setModalDon(null)}
+          onSaved={handleSaved}
+        />
       )}
     </div>
   );

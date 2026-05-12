@@ -20,14 +20,14 @@ const NAV_ITEMS = [
     path: '/nvyt/khai-bao-y-te',
   },
   {
-    label: 'Thu nhận máu',
-    icon: 'vaccines',
-    path: '/nvyt/thu-nhan-mau',
-  },
-  {
     label: 'Cập nhật XN',
     icon: 'biotech',
     path: '/nvyt/cap-nhat-xet-nghiem',
+  },
+  {
+    label: 'Thu nhận máu',
+    icon: 'vaccines',
+    path: '/nvyt/thu-nhan-mau',
   },
 ];
 
@@ -43,20 +43,36 @@ export default function NVYTLayout() {
   // Lấy thông tin nhân viên từ localStorage → API
   useEffect(() => {
     const role = localStorage.getItem('role');
-    const email = localStorage.getItem('email');
+    const userId = (localStorage.getItem('userId') || '').trim();
+    const email = (localStorage.getItem('email') || '').trim();
+
     if (role !== 'NVYT') {
       navigate('/login', { replace: true });
       return;
     }
-    if (email) {
-      nhanVienService.getByMaTaiKhoan(email).then((data) => {
-        if (data) {
-          setNhanVien(data);
-        } else {
-          setNhanVien({ hoVaTen: 'Tài khoản NVYT', maNV: '---' });
-        }
-      });
-    }
+
+    const cachedMaNV = (localStorage.getItem('maNV') || '').trim();
+
+    const loadNhanVien = async () => {
+      let data = null;
+      if (userId) data = await nhanVienService.getByMaTaiKhoan(userId);
+      if (!data && email) data = await nhanVienService.getByMaTaiKhoan(email);
+
+      if (data) {
+        setNhanVien({
+          ...data,
+          maNV: (data.maNV && String(data.maNV).trim()) || cachedMaNV || undefined,
+          hoVaTen: data.hoVaTen || email || 'Nhân viên y tế',
+        });
+      } else {
+        setNhanVien({
+          hoVaTen: email || 'Tài khoản NVYT',
+          maNV: cachedMaNV || '---',
+        });
+      }
+    };
+
+    loadNhanVien();
   }, [navigate]);
 
   const handleLogout = () => {
@@ -99,6 +115,9 @@ export default function NVYTLayout() {
               </p>
               <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
                 Nhân viên y tế
+              </p>
+              <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                Mã NV: {nhanVien?.maNV || '---'}
               </p>
             </div>
           </div>
@@ -197,6 +216,9 @@ export default function NVYTLayout() {
                   </p>
                   <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
                     Nhân viên y tế
+                  </p>
+                  <p className="text-[9px] text-slate-400 font-medium">
+                    ID: {nhanVien?.maNV || '---'}
                   </p>
                 </div>
                 <span className="material-symbols-outlined text-slate-400 text-base">expand_more</span>

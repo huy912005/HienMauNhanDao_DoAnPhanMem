@@ -4,14 +4,22 @@ import http from '../utils/http';
 
 export const nhanVienService = {
   /**
-   * Lấy thông tin nhân viên theo maTaiKhoan (email).
-   * Backend: GET /nhanvien/tai-khoan/{maTaiKhoan}
+   * Lấy thông tin nhân viên theo mã tài khoản hoặc email (backend findByAccount).
    */
   getByMaTaiKhoan: async (maTaiKhoan) => {
     try {
-      const res = await http.get(`/nhanvien/tai-khoan/${encodeURIComponent(maTaiKhoan)}`);
-      return res?.data || null;
-    } catch {
+      const id = String(maTaiKhoan ?? '').trim();
+      if (!id) return null;
+      const res = await http.get(`/nhanvien/tai-khoan/${encodeURIComponent(id)}`);
+      // Backend: ApiResponse { status, message, data: NhanVienResponse }
+      if (res && typeof res === 'object') {
+        if (res.status === false) return null;
+        if (res.data != null && typeof res.data === 'object') return res.data;
+        if ('maNV' in res || 'hoVaTen' in res) return res;
+      }
+      return null;
+    } catch (error) {
+      console.error('Lỗi lấy dữ liệu nhân viên:', error);
       return null;
     }
   },
@@ -107,6 +115,25 @@ export const donDangKyNvytService = {
       throw err;
     }
   },
+
+  /**
+   * Lấy danh sách đơn đăng ký chờ thu nhận máu (Đã khám lâm sàng đạt)
+   */
+  getReadyForCollection: async (page = 0, size = 10) => {
+    try {
+      const params = new URLSearchParams({ page, size });
+      const res = await http.get(`/dondangky/cho-thu-nhan?${params.toString()}`);
+      const data = res?.data || res;
+      if (Array.isArray(data)) {
+        return { content: data, totalElements: data.length, totalPages: 1 };
+      }
+      return data || { content: [], totalElements: 0, totalPages: 0 };
+    } catch (err) {
+      console.error('Error fetching danh sách chờ thu nhận:', err);
+      throw err;
+    }
+  },
+
 
   /**
    * Tạo đơn đăng ký (NVYT tạo cho TNV).

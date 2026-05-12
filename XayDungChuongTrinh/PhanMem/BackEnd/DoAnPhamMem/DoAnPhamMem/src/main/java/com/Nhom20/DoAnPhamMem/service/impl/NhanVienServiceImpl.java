@@ -20,20 +20,26 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public ApiResponse<NhanVienResponse> getByMaTaiKhoan(String maTaiKhoan) {
-        Optional<NhanVienEntity> nhanVien = nhanVienRepository.findByTaiKhoan_MaTaiKhoan(maTaiKhoan);
+        String key = maTaiKhoan != null ? maTaiKhoan.trim() : "";
+        System.out.println("DEBUG: Dang tim nhan vien cho tai khoan/email: [" + key + "]");
+        
+        Optional<NhanVienEntity> nhanVien = key.isEmpty() ? Optional.empty() : nhanVienRepository.findByAccount(key);
+        
         if (nhanVien.isEmpty()) {
-            nhanVien = nhanVienRepository.findByTaiKhoan_Email(maTaiKhoan);
-        }
-        if (nhanVien.isEmpty()) {
+            System.out.println("DEBUG: KHONG tim thay nhan vien trong DB!");
             return ApiResponse.<NhanVienResponse>builder()
                     .status(false)
-                    .message("Không tìm thấy nhân viên")
+                    .message("Không tìm thấy nhân viên liên kết với tài khoản này")
                     .build();
         }
+
+        NhanVienResponse response = nhanVienMapper.toResponse(nhanVien.get());
+        System.out.println("DEBUG: Da tim thay nhan vien: " + response.getMaNV() + " - " + response.getHoVaTen());
+        
         return ApiResponse.<NhanVienResponse>builder()
                 .status(true)
-                .message("Lấy thông tin thành công")
-                .data(nhanVienMapper.toResponse(nhanVien.get()))
+                .message("Lấy thông tin nhân viên thành công")
+                .data(response)
                 .build();
     }
 }

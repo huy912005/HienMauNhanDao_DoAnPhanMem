@@ -124,4 +124,15 @@ public class DonDangKyServiceImpl implements DonDangKyService {
         repository.deleteById(maDon);
         return ApiResponse.<Void>builder().status(true).message("Xóa thành công").build();
     }
+
+    @Override
+    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getReadyForCollection(org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Page<DonDangKyEntity> page = repository.findReadyForCollection(pageable);
+        org.springframework.data.domain.Page<DonDangKyResponse> responsePage = page.map(mapper::toResponse);
+        return ApiResponse.<org.springframework.data.domain.Page<DonDangKyResponse>>builder()
+                .status(true)
+                .message("Lấy danh sách chờ thu nhận thành công")
+                .data(responsePage)
+                .build();
+    }
 }

@@ -92,4 +92,16 @@ public class DonDangKyController {
     public ResponseEntity<ApiResponse<DonDangKyResponse>> cancel(@PathVariable String maDon) {
         return ResponseEntity.ok(donDangKyService.cancelDonDangKy(maDon));
     }
+
+    /**
+     * Lấy danh sách chờ thu nhận máu
+     * GET /api/dondangky/cho-thu-nhan
+     */
+    @GetMapping("/cho-thu-nhan")
+    public ResponseEntity<ApiResponse<?>> getReadyForCollection(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return ResponseEntity.ok(donDangKyService.getReadyForCollection(pageable));
+    }
 }

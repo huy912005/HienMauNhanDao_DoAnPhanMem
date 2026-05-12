@@ -24,8 +24,8 @@ import TinhNguyenVien from './pages/nvyt/TinhNguyenVien';
 import KhaiBaoYTeNVYT from './pages/nvyt/KhaiBaoYTeNVYT';
 import KhamLamSang from './pages/bacsi/KhamLamSang';
 import DanhSachChoKham from './pages/bacsi/DanhSachChoKham';
-import ThuNhanMau from './pages/nvyt/ThuNhanMau';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
+import ThuNhanMau from './pages/nvyt/ThuNhanMau'; // Trigger Vite reload
 
 const queryClient = new QueryClient();
 
@@ -88,8 +88,8 @@ function App() {
             <Route path="don-dang-ky" element={<DonDangKy />} />
             <Route path="tinh-nguyen-vien" element={<TinhNguyenVien />} />
             <Route path="khai-bao-y-te" element={<KhaiBaoYTeNVYT />} />
-            <Route path="thu-nhan-mau" element={<ThuNhanMau />} />
             <Route path="cap-nhat-xet-nghiem" element={<CapNhatXetNghiem />} />
+            <Route path="thu-nhan-mau" element={<ThuNhanMau />} />
           </Route>
         </Routes>
       </Router>

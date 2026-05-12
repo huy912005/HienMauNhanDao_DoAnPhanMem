@@ -25,4 +25,6 @@ public class DonDangKyResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime thoiGianDangKy;
     private String trangThai;
+    private Integer theTich;
+    private String tenBacSi;
 }

@@ -24,20 +24,29 @@ export default function BacSiLayout() {
 
   useEffect(() => {
     const role = localStorage.getItem('role');
-    const email = localStorage.getItem('email');
     if (role !== 'BS') {
       navigate('/login', { replace: true });
       return;
     }
-    if (email) {
-      nhanVienService.getByMaTaiKhoan(email).then((data) => {
-        if (data) {
-          setNhanVien(data);
-        } else {
-          setNhanVien({ hoVaTen: 'Bác sĩ', maNV: '---' });
-        }
-      });
-    }
+    const email = (localStorage.getItem('email') || '').trim();
+    const userId = (localStorage.getItem('userId') || '').trim();
+    const cachedMaNV = (localStorage.getItem('maNV') || '').trim();
+
+    const load = async () => {
+      let data = null;
+      if (email) data = await nhanVienService.getByMaTaiKhoan(email);
+      if (!data && userId) data = await nhanVienService.getByMaTaiKhoan(userId);
+      if (data) {
+        setNhanVien({
+          ...data,
+          maNV: (data.maNV && String(data.maNV).trim()) || cachedMaNV || undefined,
+          hoVaTen: data.hoVaTen || email || 'Bác sĩ',
+        });
+      } else {
+        setNhanVien({ hoVaTen: 'Bác sĩ', maNV: cachedMaNV || '---' });
+      }
+    };
+    load();
   }, [navigate]);
 
   const handleLogout = () => {

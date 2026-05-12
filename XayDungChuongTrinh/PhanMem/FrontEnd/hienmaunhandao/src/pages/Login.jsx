@@ -14,6 +14,8 @@ export default function Login() {
       const res = await authService.login({ email, matKhau });
       localStorage.setItem('token', res.data.access_token);
       localStorage.setItem('email', res.data.email);
+      localStorage.setItem('userId', res.data.user_id);
+      localStorage.setItem('maNV', res.data.maNV);
       localStorage.setItem('role', res.data.maVaiTro);
       // Redirect theo vai trò
       if (res.data.maVaiTro === 'BS') {
@@ -34,63 +36,63 @@ export default function Login() {
 
   return (
     <div className="flex-1 p-8 flex items-center justify-center bg-[#F3F4F6] min-h-[calc(100vh-100px)]">
-        <div className="w-full max-w-[1024px] bg-white border border-slate-200 rounded-lg overflow-hidden flex shadow-sm">
-            <div className="w-[420px] relative flex items-end p-12 shrink-0">
-                <div className="absolute inset-0 z-0">
-                    <img alt="Blood Donation" className="w-full h-full object-cover opacity-30 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDueaJAaTz0RjLbygBiVaKlLkFa-k5bSzh3hFB8rOEZTroPIavRCetrAXDv-_TSrjqBNwOmHaIjyqdkEZ8AjEpfikCmXmBCK0KXBQhlLR8Ol5Zw9MUnv74Jylcc41QYB6mFMcjnx4m6d8a3WnxZcdCPkxFWhxCi_4Cfxrq8U-m9ENBUTgvwqsNv_hmwBkTnL-4O8qAmZQTOYVe93SOUpTKuXqPXaQSnhULQandiA53FjSrpsyB6dqv2wxg1y4H-eCXtdDfi39hCAVvd"/>
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent"></div>
-                </div>
-                <div className="relative z-10 text-white w-full">
-                    <h1 className="text-3xl font-bold leading-tight mb-4">Hệ thống Quản lý Hiến máu Nhân đạo TP. Đà Nẵng</h1>
-                    <p className="text-primary-fixed-dim text-sm leading-relaxed mb-8">Hành trình của mỗi giọt máu bắt đầu từ sự tự nguyện của bạn. Tham gia cộng đồng tình nguyện viên để cứu sống hàng ngàn người bệnh.</p>
-                    <div className="flex gap-4 items-center">
-                        <div className="flex -space-x-3">
-                            <img alt="Avatar 1" className="w-10 h-10 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhekJIdPkF-QyoAl_qtcuNI3ofx8UcU-Wjx1kkojZVLuvHxNUBvL829pAsO3Z6dPOYCiY978fmgTJf81AlorlhA8ZB07UItddOy27nZFOQ78oUyq4NFdlDB-uMIf1ByiWkdXDfYCDi0D8iGLYR0N6IOJdHIavoBQjtyLGARMiL9eGObl1DnpwtWUbjNPQzG7dduIpCG19AA29I0KWGwy3UMquRndqqHs758gJbl-YBSVPrU8gmUFqkOu753j4JUxMWSqjqc5M4Um6q"/>
-                            <img alt="Avatar 2" className="w-10 h-10 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYs2c1u9I4LLYj0PwXno--xuejWcbyhwRjVoAI0flhk7hVjh5RmY0WQAOIDvQH6ulkxY6OUI7xQunKQtve9939ii_AeoNMX3l3xu4pCfRZa94VU5_gk3pdF_4MtjLYVI4m4GgmQTW84FxIJz6TZ7nl1jfaXqmxC71ZEhVqhxFEA5yBgyorwzGWgUVf9KlzVWE_mFGnol9gheykM7vEQ-4Z27spZIKt23b2RydbokGE4BXPgipv6MX9Pjs_u2X_x9wiBMlfw05TwO14"/>
-                            <img alt="Avatar 3" className="w-10 h-10 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACTIM9Xq4ZtI3pQefWqFM51fQYkjfY7WvbMCEzN-Cn1OEsMx3MD3DGpf27RW15Fl9hoHntk2N4MmZvM6ycrZvPRfu4mKNP8eViDJMuFeA_UHcLFu94VVrviNXzL2KC0DzrfNWHiQUpPexH8MhwdmUPDmeUvA1nIFiwhPV9WPDmTIyA1x0PlU6rkzeD_kNkafaH-OMzK-RhWQgg5erWKBJZfD0c6ajRtm7MtwD1jvAsVxahIzLxNo1EiSH0Z7wZDn5Mkk9N9Qm7K-Yu"/>
-                        </div>
-                        <span className="text-xs font-medium">+5,000 tình nguyện viên</span>
-                    </div>
-                </div>
+      <div className="w-full max-w-[1024px] bg-white border border-slate-200 rounded-lg overflow-hidden flex shadow-sm">
+        <div className="w-[420px] relative flex items-end p-12 shrink-0">
+          <div className="absolute inset-0 z-0">
+            <img alt="Blood Donation" className="w-full h-full object-cover opacity-30 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDueaJAaTz0RjLbygBiVaKlLkFa-k5bSzh3hFB8rOEZTroPIavRCetrAXDv-_TSrjqBNwOmHaIjyqdkEZ8AjEpfikCmXmBCK0KXBQhlLR8Ol5Zw9MUnv74Jylcc41QYB6mFMcjnx4m6d8a3WnxZcdCPkxFWhxCi_4Cfxrq8U-m9ENBUTgvwqsNv_hmwBkTnL-4O8qAmZQTOYVe93SOUpTKuXqPXaQSnhULQandiA53FjSrpsyB6dqv2wxg1y4H-eCXtdDfi39hCAVvd" />
+            <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent"></div>
+          </div>
+          <div className="relative z-10 text-white w-full">
+            <h1 className="text-3xl font-bold leading-tight mb-4">Hệ thống Quản lý Hiến máu Nhân đạo TP. Đà Nẵng</h1>
+            <p className="text-primary-fixed-dim text-sm leading-relaxed mb-8">Hành trình của mỗi giọt máu bắt đầu từ sự tự nguyện của bạn. Tham gia cộng đồng tình nguyện viên để cứu sống hàng ngàn người bệnh.</p>
+            <div className="flex gap-4 items-center">
+              <div className="flex -space-x-3">
+                <img alt="Avatar 1" className="w-10 h-10 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhekJIdPkF-QyoAl_qtcuNI3ofx8UcU-Wjx1kkojZVLuvHxNUBvL829pAsO3Z6dPOYCiY978fmgTJf81AlorlhA8ZB07UItddOy27nZFOQ78oUyq4NFdlDB-uMIf1ByiWkdXDfYCDi0D8iGLYR0N6IOJdHIavoBQjtyLGARMiL9eGObl1DnpwtWUbjNPQzG7dduIpCG19AA29I0KWGwy3UMquRndqqHs758gJbl-YBSVPrU8gmUFqkOu753j4JUxMWSqjqc5M4Um6q" />
+                <img alt="Avatar 2" className="w-10 h-10 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYs2c1u9I4LLYj0PwXno--xuejWcbyhwRjVoAI0flhk7hVjh5RmY0WQAOIDvQH6ulkxY6OUI7xQunKQtve9939ii_AeoNMX3l3xu4pCfRZa94VU5_gk3pdF_4MtjLYVI4m4GgmQTW84FxIJz6TZ7nl1jfaXqmxC71ZEhVqhxFEA5yBgyorwzGWgUVf9KlzVWE_mFGnol9gheykM7vEQ-4Z27spZIKt23b2RydbokGE4BXPgipv6MX9Pjs_u2X_x9wiBMlfw05TwO14" />
+                <img alt="Avatar 3" className="w-10 h-10 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACTIM9Xq4ZtI3pQefWqFM51fQYkjfY7WvbMCEzN-Cn1OEsMx3MD3DGpf27RW15Fl9hoHntk2N4MmZvM6ycrZvPRfu4mKNP8eViDJMuFeA_UHcLFu94VVrviNXzL2KC0DzrfNWHiQUpPexH8MhwdmUPDmeUvA1nIFiwhPV9WPDmTIyA1x0PlU6rkzeD_kNkafaH-OMzK-RhWQgg5erWKBJZfD0c6ajRtm7MtwD1jvAsVxahIzLxNo1EiSH0Z7wZDn5Mkk9N9Qm7K-Yu" />
+              </div>
+              <span className="text-xs font-medium">+5,000 tình nguyện viên</span>
             </div>
-            <div className="flex-1 p-12 flex flex-col justify-center">
-                <div className="mb-8">
-                    <h2 className="text-2xl font-extrabold text-on-surface mb-2 tracking-tight">Đăng nhập Hệ thống</h2>
-                    <p className="text-slate-500 text-sm">Vui lòng đăng nhập để sử dụng các tính năng của hệ thống.</p>
-                </div>
-                {error && <div className="mb-4 text-red-600 text-sm font-bold">{error}</div>}
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-1.5">
-                        <label className="block text-sm font-semibold text-on-surface-variant">Email</label>
-                        <input value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="example@email.com" type="email"/>
-                    </div>
-                    <div className="space-y-1.5">
-                        <label className="block text-sm font-semibold text-on-surface-variant">Mật khẩu</label>
-                        <div className="relative">
-                            <input value={matKhau} onChange={(e) => setMatKhau(e.target.value)} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="••••••••" type="password"/>
-                            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer text-xl">visibility</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between pt-2">
-                        <div className="flex items-center gap-3">
-                            <input className="w-4 h-4 rounded-sm text-primary focus:ring-primary border-slate-300" id="remember" type="checkbox"/>
-                            <label className="text-sm text-slate-600" htmlFor="remember">Ghi nhớ đăng nhập</label>
-                        </div>
-                        <Link to="#" className="text-sm font-bold text-primary hover:underline underline-offset-2">Quên mật khẩu?</Link>
-                    </div>
-                    <button className="w-full h-12 bg-primary-container text-white font-bold rounded-md hover:bg-red-800 transition-all shadow-sm active:opacity-90 flex items-center justify-center gap-2" type="submit">
-                        <span className="text-base">Đăng nhập</span>
-                        <span className="material-symbols-outlined text-xl">arrow_forward</span>
-                    </button>
-                    <div className="text-center pt-2">
-                        <p className="text-sm text-slate-500">
-                            Chưa có tài khoản? 
-                            <Link className="text-primary font-bold hover:underline underline-offset-4 ml-1" to="/register">Đăng ký ngay</Link>
-                        </p>
-                    </div>
-                </form>
-            </div>
+          </div>
         </div>
+        <div className="flex-1 p-12 flex flex-col justify-center">
+          <div className="mb-8">
+            <h2 className="text-2xl font-extrabold text-on-surface mb-2 tracking-tight">Đăng nhập Hệ thống</h2>
+            <p className="text-slate-500 text-sm">Vui lòng đăng nhập để sử dụng các tính năng của hệ thống.</p>
+          </div>
+          {error && <div className="mb-4 text-red-600 text-sm font-bold">{error}</div>}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-1.5">
+              <label className="block text-sm font-semibold text-on-surface-variant">Email</label>
+              <input value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="example@email.com" type="email" />
+            </div>
+            <div className="space-y-1.5">
+              <label className="block text-sm font-semibold text-on-surface-variant">Mật khẩu</label>
+              <div className="relative">
+                <input value={matKhau} onChange={(e) => setMatKhau(e.target.value)} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="••••••••" type="password" />
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer text-xl">visibility</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between pt-2">
+              <div className="flex items-center gap-3">
+                <input className="w-4 h-4 rounded-sm text-primary focus:ring-primary border-slate-300" id="remember" type="checkbox" />
+                <label className="text-sm text-slate-600" htmlFor="remember">Ghi nhớ đăng nhập</label>
+              </div>
+              <Link to="#" className="text-sm font-bold text-primary hover:underline underline-offset-2">Quên mật khẩu?</Link>
+            </div>
+            <button className="w-full h-12 bg-primary-container text-white font-bold rounded-md hover:bg-red-800 transition-all shadow-sm active:opacity-90 flex items-center justify-center gap-2" type="submit">
+              <span className="text-base">Đăng nhập</span>
+              <span className="material-symbols-outlined text-xl">arrow_forward</span>
+            </button>
+            <div className="text-center pt-2">
+              <p className="text-sm text-slate-500">
+                Chưa có tài khoản?
+                <Link className="text-primary font-bold hover:underline underline-offset-4 ml-1" to="/register">Đăng ký ngay</Link>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

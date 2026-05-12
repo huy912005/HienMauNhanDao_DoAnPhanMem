@@ -96,25 +96,18 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
 
         ketQuaLamSangRepository.save(entity);
 
-        // Nếu đạt yêu cầu, tự động tạo túi máu
+        // Không cập nhật DonDangKy ở đây để tránh vi phạm Ràng buộc (Constraint) của DB
+        // Chỉ cần lưu KetQuaLamSang là đủ để danh sách Thu nhận máu hiển thị được
+        /*
         if (Boolean.TRUE.equals(request.getKetQua())) {
-            don.setTrangThai(TrangThaiDonDangKy.DA_HIEN);
+            don.setTrangThai(TrangThaiDonDangKy.DA_KHAM);
             don.setTheTich(TheTich.fromDbValue(request.getTheTichHien()));
-            
-            TuiMauEntity tuiMau = new TuiMauEntity();
-            tuiMau.setMaTuiMau("TM" + String.format("%05d", System.currentTimeMillis() % 100000));
-            tuiMau.setDonDangKy(don);
-            tuiMau.setTheTich(TheTichTuiMau.fromMl(request.getTheTichHien()));
-            tuiMau.setThoiGianLayMau(LocalDateTime.now());
-            tuiMau.setTrangThai(TrangThaiTuiMau.CHO_XET_NGHIEM);
-            tuiMau.setNhanVien(nhanVienRepository.findById(request.getMaNhanVien()).orElse(null));
-            tuiMauRepository.save(tuiMau);
         } else {
             don.setTrangThai(TrangThaiDonDangKy.CHUA_HIEN);
             don.setTheTich(TheTich.fromDbValue(0));
         }
-        
         donDangKyRepository.save(don);
+        */
     }
 
     @Override
