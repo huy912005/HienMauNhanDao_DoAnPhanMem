@@ -1,5 +1,6 @@
 package com.Nhom20.DoAnPhamMem.service;
 
+import com.Nhom20.DoAnPhamMem.dto.request.KetQuaLamSangRequest;
 import com.Nhom20.DoAnPhamMem.dto.response.KetQuaLamSangResponse;
 import com.Nhom20.DoAnPhamMem.dto.response.ScreeningStatsResponse;
 import java.util.List;
@@ -9,9 +10,11 @@ public interface KetQuaLamSangService {
 
     ScreeningStatsResponse getStats();
 
-    void save(com.Nhom20.DoAnPhamMem.dto.request.KetQuaLamSangRequest request);
+    void save(KetQuaLamSangRequest request);
 
     List<KetQuaLamSangResponse> getWaiting();
 
     void delete(String maKQ);
+
+    void update(String maKQ, KetQuaLamSangRequest request);
 }
