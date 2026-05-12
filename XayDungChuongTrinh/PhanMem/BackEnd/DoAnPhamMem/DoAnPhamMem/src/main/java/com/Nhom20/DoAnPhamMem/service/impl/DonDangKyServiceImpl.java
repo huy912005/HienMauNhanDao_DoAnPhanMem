@@ -50,6 +50,14 @@ public class DonDangKyServiceImpl implements DonDangKyService {
         if (request.getMaNV() != null && !request.getMaNV().isBlank()) {
             entity.setNhanVienPhuTrach(nhanVienRepository.findById(request.getMaNV()).orElse(null));
         }
+        // Set mã tài khoản của nhân viên y tế
+        if (request.getMaTaiKhoan() != null && !request.getMaTaiKhoan().isBlank()) {
+            entity.setMaTaiKhoan(request.getMaTaiKhoan());
+        }
+        // Set ghi chú
+        if (request.getGhiChu() != null) {
+            entity.setGhiChu(request.getGhiChu());
+        }
         DonDangKyEntity saved = repository.save(entity);
         return ApiResponse.<DonDangKyResponse>builder().message("Đăng ký thành công!").status(true).data(mapper.toResponse(saved)).build();
     }

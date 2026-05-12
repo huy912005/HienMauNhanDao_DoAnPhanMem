@@ -56,7 +56,6 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
                         loginRequest.getMatKhau()
                 )
         );
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // Tạo 2 token (access + refresh)
@@ -64,18 +63,8 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
         String refreshToken = tokenProvider.generateRefreshToken(authentication);
         Long expiresIn = tokenProvider.getAccessTokenExpiresIn();
 
-        TaiKhoanEntity taiKhoan = taiKhoanRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return LoginResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .tokenType("Bearer")
-                .expiresIn(expiresIn)
-                .userId(taiKhoan.getMaTaiKhoan())
-                .email(taiKhoan.getEmail())
-                .maVaiTro(taiKhoan.getVaiTro().getMaVaiTro())
-                .build();
+        TaiKhoanEntity taiKhoan = taiKhoanRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+        return LoginResponse.builder().accessToken(accessToken).refreshToken(refreshToken).tokenType("Bearer").expiresIn(expiresIn).userId(taiKhoan.getMaTaiKhoan()).email(taiKhoan.getEmail()).maVaiTro(taiKhoan.getVaiTro().getMaVaiTro()).build();
     }
 
     @Override
@@ -123,5 +112,5 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
         taiKhoan.setTrangThai(true);
 
         taiKhoanRepository.save(taiKhoan);
-    }
+    }
 }

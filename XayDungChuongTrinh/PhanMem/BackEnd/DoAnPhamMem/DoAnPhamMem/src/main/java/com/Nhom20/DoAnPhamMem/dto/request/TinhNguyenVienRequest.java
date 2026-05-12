@@ -30,7 +30,7 @@ public class TinhNguyenVienRequest {
     private NhomMau nhomMau;
     @Size(max = 255)
     private String diaChi;
-    @NotBlank(message = "Mã tài khoản không được để trống")
+//    @NotBlank(message = "Mã tài khoản không được để trống")
     private String maTaiKhoan;
     @NotBlank(message = "Mã phường xã không được để trống")
     private String maPhuongXa;

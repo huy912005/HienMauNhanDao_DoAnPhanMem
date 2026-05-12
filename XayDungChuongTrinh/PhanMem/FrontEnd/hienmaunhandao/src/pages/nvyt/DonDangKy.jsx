@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { donDangKyNvytService, tnvNvytService, nhanVienService } from '../../services/nvytService';
+import { phuongXaService } from '../../services/phuongXaService';
 
 const PAGE_SIZE = 10;
 
@@ -11,7 +12,7 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
   const [tnv, setTnv] = useState(mode === 'edit' ? don?.tinhNguyenVien : null);
   const [searching, setSearching] = useState(false);
   const [notFound, setNotFound] = useState(false);
-  const [newTnv, setNewTnv] = useState({ hoVaTen: '', ngaySinh: '', gioiTinh: 'Nam', soDienThoai: '', diaChi: '', soCCCD: '' });
+  const [newTnv, setNewTnv] = useState({ hoVaTen: '', ngaySinh: '', gioiTinh: 'Nam', soDienThoai: '', diaChi: '', soCCCD: '', maPhuongXa: '' });
   const [form, setForm] = useState({
     maChienDich: don?.maChienDich || '',
     theTich: don?.theTich || 250,
@@ -19,6 +20,11 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [phuongXaList, setPhuongXaList] = useState([]);
+
+  useEffect(() => {
+    phuongXaService.getAll().then(res => setPhuongXaList(res)).catch(e => console.error(e));
+  }, []);
 
   const handleSearchCCCD = async () => {
     if (!cccd.trim()) return;
@@ -49,7 +55,6 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
         maNV: nhanVien?.maNV,
         maChienDich: form.maChienDich,
         theTich: Number(form.theTich),
-        ghiChu: form.ghiChu,
       };
       if (mode === 'create') {
         const saved = await donDangKyNvytService.create(payload);
@@ -126,8 +131,15 @@ function DonModal({ mode, don, nhanVien, onClose, onSaved }) {
                       <option>Nam</option><option>Nữ</option><option>Khác</option>
                     </select>
                   </div>
-                  <button
-                    onClick={handleCreateTnv} disabled={loading}
+                  <div>
+                    <label className="text-xs font-semibold text-slate-600 block mb-1">Phường xã *</label>
+                    <select value={newTnv.maPhuongXa} onChange={e => setNewTnv(p => ({ ...p, maPhuongXa: e.target.value }))}
+                      className="w-full h-10 border border-slate-200 rounded-lg px-3 text-sm outline-none focus:border-primary">
+                      <option value="">Chọn phường xã</option>
+                      {phuongXaList && phuongXaList.length > 0 && phuongXaList.map(px => (<option key={px.maPhuongXa} value={px.maPhuongXa}>{px.tenPhuongXa}</option>))}
+                    </select>
+                  </div>
+                  <button onClick={handleCreateTnv} disabled={loading}
                     className="w-full h-10 bg-amber-600 text-white rounded-lg font-bold text-sm hover:bg-amber-700 transition-colors disabled:opacity-60"
                   >
                     {loading ? 'Đang thêm...' : 'Thêm & Tiếp tục'}

@@ -24,6 +24,8 @@ public class DonDangKyEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maNhanVien")
     private NhanVienEntity nhanVienPhuTrach;
+    @Column(name = "maTaiKhoan", length = 10)
+    private String maTaiKhoan;
     @Column(name = "maQR", length = 255)
     private String maQR;
     @Column(name = "thoiGianDangKy")
@@ -32,4 +34,5 @@ public class DonDangKyEntity {
     private TrangThaiDonDangKy trangThai;
     @Column(name = "theTich")
     private TheTich theTich;
-}
+    @Column(name = "ghiChu", columnDefinition = "TEXT")
+    private String ghiChu;
