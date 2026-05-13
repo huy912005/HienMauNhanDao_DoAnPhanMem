@@ -84,8 +84,7 @@ export default function HomePage() {
 
             {/* Hero Section */}
             <section className="relative h-[480px] w-full overflow-hidden shrink-0">
-                <img alt="Hero Banner" className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLDJIMpiIIYwR-RAVGCwTuYQNHdkZi9FmR54vsaeJFVu7FB_MlvM--0b1AQIRjWz6Adw429PeQBhnpMmWNLyxB4P0z_qX_3LMpl1r2cvnbp3mBWqEkoWjvX88boiqw0R9kjF_TXl4Mu5ZgX9jRdepx5sM4CtVcgqPsLBiBg_Tr_18VqlPTZF1XghZQoagkrLqZGX92uay4YlO-tYZ22c4kdU17N-SovNx5esR-C_YZGkGmwQlfhMXegjekrcGxxmA3iGxL84Ez_F4E" />
+                <img alt="Hero Banner" className="w-full h-full object-cover" src="/images/anhNen.jpg" />
                 <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary/60 to-transparent flex items-center">
                     <div className="w-[1200px] mx-auto px-4">
                         <div className="w-[640px]">
