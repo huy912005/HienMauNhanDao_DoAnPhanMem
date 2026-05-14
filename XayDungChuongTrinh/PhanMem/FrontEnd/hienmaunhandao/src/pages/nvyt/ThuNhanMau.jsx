@@ -4,13 +4,14 @@ import { thuNhanMauService } from '../../services/khamLamSangService';
 import { donDangKyNvytService } from '../../services/nvytService';
 
 // ─── Modal Thu Nhận Máu ─────────────────────────────────────────────────────
-function TuiMauModal({ don, nhanVien, onClose, onSaved }) {
+function TuiMauModal({ don, item, nhanVien, onClose, onSaved }) {
+  const isEdit = !!item;
   const [form, setForm] = useState({
-    maDon: don?.maDon || '',
-    maNV: nhanVien?.maNV || '',
-    theTich: don?.theTich || 250,
-    thoiGianLayMau: new Date().toLocaleString('sv-SE').replace(' ', 'T').slice(0, 16),
-    nhietDoVanChuyen: 4.2
+    maDon: don?.maDon || item?.maDon || '',
+    maNV: nhanVien?.maNV || item?.maNV || '',
+    theTich: item?.theTich || don?.theTich || 250,
+    thoiGianLayMau: item?.thoiGianLayMau ? item.thoiGianLayMau.slice(0, 16) : new Date().toLocaleString('sv-SE').replace(' ', 'T').slice(0, 16),
+    nhietDoVanChuyen: item?.nhietDoVanChuyen || 4.2
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,13 +19,19 @@ function TuiMauModal({ don, nhanVien, onClose, onSaved }) {
   const handleSubmit = async () => {
     setLoading(true); setError('');
     try {
-      await thuNhanMauService.create({
+      const data = {
         ...form,
-        thoiGianLayMau: form.thoiGianLayMau + ':00'
-      });
+        thoiGianLayMau: form.thoiGianLayMau.length === 16 ? form.thoiGianLayMau + ':00' : form.thoiGianLayMau
+      };
+      
+      if (isEdit) {
+        await thuNhanMauService.update(item.maTuiMau, data);
+      } else {
+        await thuNhanMauService.create(data);
+      }
       onSaved();
     } catch (e) {
-      setError(e.response?.data?.message || e.message || 'Lỗi khi tạo túi máu');
+      setError(e.response?.data?.message || e.message || 'Lỗi khi lưu thông tin túi máu');
     } finally {
       setLoading(false);
     }
@@ -35,8 +42,8 @@ function TuiMauModal({ don, nhanVien, onClose, onSaved }) {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200 overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-red-50">
           <div className="flex items-center gap-2 text-red-700">
-            <span className="material-symbols-outlined font-bold">vaccines</span>
-            <h3 className="font-bold">Thu nhận túi máu</h3>
+            <span className="material-symbols-outlined font-bold">{isEdit ? 'edit_note' : 'vaccines'}</span>
+            <h3 className="font-bold">{isEdit ? `Cập nhật túi máu ${item.maTuiMau}` : 'Thu nhận túi máu'}</h3>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-red-100 flex items-center justify-center transition-colors">
             <span className="material-symbols-outlined text-red-500 text-xl font-bold">close</span>
@@ -51,15 +58,23 @@ function TuiMauModal({ don, nhanVien, onClose, onSaved }) {
           <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
             <div className="flex justify-between">
               <span className="text-xs font-bold text-slate-500 uppercase">Đơn đăng ký:</span>
-              <span className="text-xs font-mono font-bold text-primary">{don.maDon}</span>
+              <span className="text-xs font-mono font-bold text-primary">{form.maDon}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-xs font-bold text-slate-500 uppercase">Người hiến:</span>
-              <span className="text-xs font-bold text-slate-800">{don.tinhNguyenVien?.hoVaTen}</span>
-            </div>
+            {isEdit && (
+               <div className="flex justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase">Tình nguyện viên:</span>
+                <span className="text-xs font-bold text-slate-800">{item.tenTinhNguyenVien}</span>
+              </div>
+            )}
+            {!isEdit && (
+               <div className="flex justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase">Người hiến:</span>
+                <span className="text-xs font-bold text-slate-800">{don.tinhNguyenVien?.hoVaTen}</span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-xs font-bold text-slate-500 uppercase">Nhóm máu:</span>
-              <span className="text-xs font-bold text-red-600">{don.tinhNguyenVien?.nhomMau}</span>
+              <span className="text-xs font-bold text-red-600">{isEdit ? item.nhomMau : don.tinhNguyenVien?.nhomMau}</span>
             </div>
           </div>
 
@@ -94,7 +109,7 @@ function TuiMauModal({ don, nhanVien, onClose, onSaved }) {
           <div className="pt-2">
             <button onClick={handleSubmit} disabled={loading}
               className="w-full h-12 bg-red-600 text-white rounded-xl font-bold text-sm hover:bg-red-700 transition-colors shadow-lg shadow-red-100 disabled:opacity-60">
-              {loading ? 'Đang xử lý...' : 'Xác nhận thu nhận máu'}
+              {loading ? 'Đang xử lý...' : (isEdit ? 'Lưu thay đổi' : 'Xác nhận thu nhận máu')}
             </button>
           </div>
         </div>
@@ -113,6 +128,7 @@ export default function ThuNhanMau() {
   const [pendingPage, setPendingPage] = useState(0);
   const [pendingTotalPages, setPendingTotalPages] = useState(1);
   const [modalDon, setModalDon] = useState(null);
+  const [editItem, setEditItem] = useState(null);
 
   // Collected
   const [collectionList, setCollectionList] = useState([]);
@@ -122,6 +138,9 @@ export default function ThuNhanMau() {
   const [collectedLoading, setCollectedLoading] = useState(false);
 
   const [toast, setToast] = useState(null);
+  const [confirmData, setConfirmData] = useState({
+    open: false, title: '', message: '', onConfirm: null, loading: false
+  });
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type });
@@ -178,22 +197,33 @@ export default function ThuNhanMau() {
   }, [activeTab, fetchPendingList, fetchCollectionList]);
 
   const handleSaved = () => {
-    showToast('Thu nhận túi máu thành công!');
+    showToast(editItem ? 'Cập nhật thành công!' : 'Thu nhận túi máu thành công!');
     setModalDon(null);
-    fetchPendingList();
+    setEditItem(null);
+    if (activeTab === 'pending') fetchPendingList();
+    else fetchCollectionList();
   };
 
-  const handleCancelDon = async (maDon) => {
-    console.log('Attempting to cancel registration:', maDon);
-    if (!window.confirm(`Bạn có chắc chắn muốn hủy đơn đăng ký ${maDon}?`)) return;
-    try {
-      await donDangKyNvytService.cancel(maDon, nhanVien?.maNV);
-      showToast('Hủy đơn đăng ký thành công!');
-      fetchPendingList();
-    } catch (error) {
-      console.error('Cancel registration error:', error);
-      showToast(error.message || 'Lỗi khi hủy đơn đăng ký', 'error');
-    }
+  const handleCancelDon = (maDon) => {
+    setConfirmData({
+      open: true,
+      title: 'Hủy đơn đăng ký',
+      message: `Bạn có chắc chắn muốn hủy đơn đăng ký ${maDon}? Thao tác này không thể hoàn tác.`,
+      loading: false,
+      onConfirm: async () => {
+        setConfirmData(p => ({ ...p, loading: true }));
+        try {
+          await donDangKyNvytService.cancel(maDon, nhanVien?.maNV);
+          showToast('Hủy đơn đăng ký thành công!');
+          fetchPendingList();
+          setConfirmData(p => ({ ...p, open: false }));
+        } catch (error) {
+          showToast(error.message || 'Lỗi khi hủy đơn đăng ký', 'error');
+        } finally {
+          setConfirmData(p => ({ ...p, loading: false }));
+        }
+      }
+    });
   };
 
   const getStatusColor = (status) => {
@@ -254,7 +284,7 @@ export default function ThuNhanMau() {
           <div className="p-4 bg-slate-50 border-b border-slate-200">
             <h3 className="font-bold text-slate-800 flex items-center gap-2">
               <span className="material-symbols-outlined text-primary">person_check</span>
-              Tình nguyện viên đủ điều kiện lấy máu (Đã khám lâm sàng Đạt)
+              Tình nguyện viên đủ điều kiện lấy máu
             </h3>
           </div>
           <div className="overflow-x-auto">
@@ -300,10 +330,10 @@ export default function ThuNhanMau() {
                         </button>
                         <button
                           onClick={() => handleCancelDon(don.maDon)}
-                          className="flex items-center justify-center w-9 h-9 bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all border border-slate-200 group active:scale-90"
+                          className="flex items-center justify-center w-9 h-9 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-xl transition-all border border-red-100 group active:scale-90"
                           title="Hủy đơn đăng ký"
                         >
-                          <span className="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">block</span>
+                          <span className="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">delete</span>
                         </button>
                       </div>
                     </td>
@@ -368,7 +398,8 @@ export default function ThuNhanMau() {
                   <tbody>
                     {collectionList.length > 0 ? (
                       collectionList.map((item, idx) => (
-                        <tr key={item.maTuiMau} className={`border-b border-slate-100 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'} hover:bg-slate-100/50 transition-colors`}>
+                        <tr key={item.maTuiMau} className={`border-b border-slate-100 ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50'} 
+                          ${(item.trangThai === 'Nhập kho' || item.trangThai === 'Đã xuất') ? 'opacity-60 grayscale-[0.5]' : 'hover:bg-slate-100/50'} transition-colors`}>
                           <td className="px-5 py-4 font-mono text-xs font-bold text-slate-700">{item.maTuiMau}</td>
                           <td className="px-5 py-4">
                             <p className="font-semibold text-slate-800">{item.tenTinhNguyenVien}</p>
@@ -391,56 +422,48 @@ export default function ThuNhanMau() {
                             </span>
                           </td>
                           <td className="px-5 py-4">
-                            <div className="flex justify-center gap-2">
+                            <div className={`flex justify-center gap-2 ${(item.trangThai === 'Nhập kho' || item.trangThai === 'Đã xuất') ? 'pointer-events-none cursor-not-allowed' : ''}`}>
+                              {(item.trangThai === 'Chờ xét nghiệm' || item.trangThai === 'Hủy') && (
+                                <button
+                                  onClick={() => setEditItem(item)}
+                                  className={`p-2 rounded-lg transition-all ${item.trangThai === 'Hủy' ? 'bg-orange-50 text-orange-600 hover:bg-orange-600 hover:text-white' : 'bg-slate-50 text-slate-600 hover:bg-slate-600 hover:text-white'}`}
+                                  title={item.trangThai === 'Hủy' ? "Tạo lại túi máu" : "Chỉnh sửa thông tin"}
+                                >
+                                  <span className="material-symbols-outlined text-sm">{item.trangThai === 'Hủy' ? 'add_circle' : 'edit'}</span>
+                                </button>
+                              )}
                               {item.trangThai === 'Chờ xét nghiệm' && (
-                                <>
-                                  <button
-                                    onClick={() => handleUpdateStatus(item.maTuiMau, 'Nhập kho')}
-                                    className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition-all"
-                                    title="Nhập kho"
-                                  >
-                                    <span className="material-symbols-outlined text-sm">inventory_2</span>
-                                  </button>
-                                  <button
-                                    onClick={() => {
-                                      if (window.confirm(`Bạn có chắc chắn muốn hủy túi máu ${item.maTuiMau}?`)) {
-                                        handleUpdateStatus(item.maTuiMau, 'Hủy');
+                                <button
+                                  onClick={() => {
+                                    setConfirmData({
+                                      open: true,
+                                      title: 'Hủy túi máu',
+                                      message: `Bạn có chắc chắn muốn hủy túi máu ${item.maTuiMau}? Túi máu này sẽ được đánh dấu là Hủy.`,
+                                      loading: false,
+                                      onConfirm: async () => {
+                                        setConfirmData(p => ({ ...p, loading: true }));
+                                        try {
+                                          await handleUpdateStatus(item.maTuiMau, 'Hủy');
+                                          setConfirmData(p => ({ ...p, open: false }));
+                                        } catch (e) {
+                                          showToast('Lỗi khi hủy túi máu', 'error');
+                                        } finally {
+                                          setConfirmData(p => ({ ...p, loading: false }));
+                                        }
                                       }
-                                    }}
-                                    className="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-all"
-                                    title="Hủy túi máu"
-                                  >
-                                    <span className="material-symbols-outlined text-sm">delete</span>
-                                  </button>
-                                </>
+                                    });
+                                  }}
+                                  className="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-all"
+                                  title="Hủy túi máu"
+                                >
+                                  <span className="material-symbols-outlined text-sm">delete</span>
+                                </button>
                               )}
-                              {item.trangThai === 'Nhập kho' && (
-                                <>
-                                  <button
-                                    onClick={() => handleUpdateStatus(item.maTuiMau, 'Đã xuất')}
-                                    className="p-2 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white rounded-lg transition-all"
-                                    title="Xuất kho"
-                                  >
-                                    <span className="material-symbols-outlined text-sm">output</span>
-                                  </button>
-                                  <button
-                                    onClick={() => {
-                                      if (window.confirm(`Bạn có chắc chắn muốn hủy túi máu ${item.maTuiMau}?`)) {
-                                        handleUpdateStatus(item.maTuiMau, 'Hủy');
-                                      }
-                                    }}
-                                    className="p-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition-all"
-                                    title="Hủy túi máu"
-                                  >
-                                    <span className="material-symbols-outlined text-sm">block</span>
-                                  </button>
-                                </>
-                              )}
-                              {item.trangThai === 'Đã xuất' && (
-                                <span className="text-[10px] text-green-600 font-bold italic">Đã sử dụng</span>
-                              )}
-                              {item.trangThai === 'Hủy' && (
-                                <span className="text-[10px] text-red-400 font-bold italic">Đã hủy</span>
+                              {(item.trangThai === 'Nhập kho' || item.trangThai === 'Đã xuất') && (
+                                <div className="flex items-center gap-1 text-slate-400 opacity-70 justify-center">
+                                  <span className="material-symbols-outlined text-[14px]">lock</span>
+                                  <span className="text-[10px] font-bold italic">Không thể sửa</span>
+                                </div>
                               )}
                             </div>
                           </td>
@@ -465,6 +488,56 @@ export default function ThuNhanMau() {
           onSaved={handleSaved}
         />
       )}
+
+      {editItem && (
+        <TuiMauModal
+          item={editItem}
+          nhanVien={nhanVien}
+          onClose={() => setEditItem(null)}
+          onSaved={handleSaved}
+        />
+      )}
+
+      <ConfirmDialog 
+        {...confirmData} 
+        onCancel={() => setConfirmData(prev => ({ ...prev, open: false }))} 
+      />
     </div>
   );
 }
+
+const ConfirmDialog = ({ open, title, message, onConfirm, onCancel, loading }) => {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+      <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onCancel}></div>
+      <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-sm overflow-hidden relative animate-in zoom-in-95 duration-300 border border-white/20">
+        <div className="p-8 text-center">
+          <div className="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-3 shadow-inner">
+            <span className="material-symbols-outlined text-4xl font-bold">warning</span>
+          </div>
+          <h3 className="text-2xl font-bold text-slate-800 mb-3">{title}</h3>
+          <p className="text-slate-500 text-sm leading-relaxed px-2">{message}</p>
+        </div>
+        <div className="flex p-4 gap-3">
+          <button 
+            onClick={onCancel}
+            disabled={loading}
+            className="flex-1 h-12 rounded-2xl font-bold text-slate-500 hover:bg-slate-100 transition-all text-sm disabled:opacity-50 active:scale-95"
+          >
+            Bỏ qua
+          </button>
+          <button 
+            onClick={onConfirm}
+            disabled={loading}
+            className="flex-1 h-12 rounded-2xl font-bold bg-red-600 text-white hover:bg-red-700 transition-all text-sm disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-red-200 active:scale-95"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+            ) : 'Xác nhận'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -24,6 +24,8 @@ public interface TuiMauService {
     void delete(String maTuiMau);
 
     void updateStatus(String maTuiMau, String status);
+    
+    void updateTuiMau(String maTuiMau, com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request);
 
     void createTuiMau(com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request);
 }

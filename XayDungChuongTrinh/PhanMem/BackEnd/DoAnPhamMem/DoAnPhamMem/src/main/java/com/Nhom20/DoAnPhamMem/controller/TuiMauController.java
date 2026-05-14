@@ -80,4 +80,10 @@ public class TuiMauController {
         tuiMauService.updateStatus(maTuiMau, status);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{maTuiMau}")
+    public ResponseEntity<Void> updateTuiMau(@PathVariable String maTuiMau, @RequestBody com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request) {
+        tuiMauService.updateTuiMau(maTuiMau, request);
+        return ResponseEntity.ok().build();
+    }
 }

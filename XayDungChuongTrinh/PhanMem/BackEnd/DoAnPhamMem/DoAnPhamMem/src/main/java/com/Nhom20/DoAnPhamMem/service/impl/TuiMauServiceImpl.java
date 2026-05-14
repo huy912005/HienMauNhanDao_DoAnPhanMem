@@ -196,6 +196,45 @@ public class TuiMauServiceImpl implements TuiMauService {
 
     @Override
     @Transactional
+    public void updateTuiMau(String maTuiMau, TuiMauRequest request) {
+        TuiMauEntity tuiMau = tuiMauRepository.findById(maTuiMau)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy túi máu: " + maTuiMau));
+        
+        if (request.getTheTich() != null) {
+            tuiMau.setTheTich(TheTichTuiMau.fromMl(request.getTheTich()));
+        }
+        if (request.getThoiGianLayMau() != null) {
+            tuiMau.setThoiGianLayMau(request.getThoiGianLayMau());
+        }
+        if (request.getNhietDoVanChuyen() != null) {
+            tuiMau.setNhietDoVanChuyen(request.getNhietDoVanChuyen());
+        }
+        
+        // Nếu đang là trạng thái Hủy mà sửa thông tin -> Khôi phục về Chờ xét nghiệm
+        if (tuiMau.getTrangThai() == TrangThaiTuiMau.HUY) {
+            tuiMau.setTrangThai(TrangThaiTuiMau.CHO_XET_NGHIEM);
+            
+            // Khôi phục trạng thái đơn đăng ký thành Đã hiến
+            if (tuiMau.getDonDangKy() != null) {
+                DonDangKyEntity don = tuiMau.getDonDangKy();
+                don.setTrangThai(TrangThaiDonDangKy.DA_HIEN);
+                // Thể tích sẽ được cập nhật ở đoạn code phía dưới
+                donDangKyRepository.save(don);
+            }
+        }
+        
+        tuiMauRepository.save(tuiMau);
+        
+        // Cập nhật lại thể tích trong đơn đăng ký nếu túi máu không phải trạng thái Hủy (hoặc vừa được khôi phục)
+        if (tuiMau.getTrangThai() != TrangThaiTuiMau.HUY && tuiMau.getDonDangKy() != null && request.getTheTich() != null) {
+            DonDangKyEntity don = tuiMau.getDonDangKy();
+            don.setTheTich(TheTich.fromDbValue(request.getTheTich()));
+            donDangKyRepository.save(don);
+        }
+    }
+
+    @Override
+    @Transactional
     public void createTuiMau(TuiMauRequest request) {
         // 1. Tìm đơn đăng ký
         DonDangKyEntity don = donDangKyRepository.findById(request.getMaDon())

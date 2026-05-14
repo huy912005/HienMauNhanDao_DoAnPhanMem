@@ -378,28 +378,6 @@ export default function KhamLamSang() {
                               >
                                 <span className="material-symbols-outlined text-lg">edit</span>
                               </button>
-                              <button
-                                type="button"
-                                onClick={async () => {
-                                  if (
-                                    confirm(
-                                      `Xóa kết quả khám ${item.maKQ}${item.tenTinhNguyenVien ? ` — ${item.tenTinhNguyenVien}` : ''}?`
-                                    )
-                                  ) {
-                                    try {
-                                      await khamLamSangService.delete(item.maKQ);
-                                      showToast('Đã xóa kết quả khám');
-                                      fetchScreeningList();
-                                    } catch {
-                                      showToast('Lỗi khi xóa', 'error');
-                                    }
-                                  }
-                                }}
-                                className="p-1.5 hover:bg-red-50 text-slate-400 hover:text-red-600 rounded-lg transition-colors"
-                                title="Xóa"
-                              >
-                                <span className="material-symbols-outlined text-lg">delete</span>
-                              </button>
                             </div>
                           </td>
                         </tr>
