@@ -14,8 +14,9 @@ import ChienDichPage from './pages/ChienDichPage';
 import ThongTinCaNhan from './pages/ThongTinCaNhan';
 import KhaiBaoYTe from './pages/KhaiBaoYTe';
 import XacNhanDangKy from './pages/XacNhanDangKy';
-import ThongKeTonKho from './pages/ThongKeTonKho';
-import QuanLyNhapKho from './pages/QuanLyNhapKho';
+import ThongKeTonKho from './pages/qlk/ThongKeTonKho';
+import QuanLyNhapKho from './pages/qlk/QuanLyNhapKho';
+import QuanLyNhapKhoTheoChienDich from './pages/qlk/QuanLyNhapKhoTheoChienDich';
 import DanhSachDonDangKy from './pages/DanhSachDonDangKy';
 
 // NVYT pages
@@ -73,6 +74,7 @@ function App() {
           <Route path="/quan-ly-kho" element={<QlkGuard><QuanLyKhoLayout /></QlkGuard>}>
             <Route path="thong-ke" element={<ThongKeTonKho />} />
             <Route path="nhap-kho" element={<QuanLyNhapKho />} />
+            <Route path="nhap-kho-chien-dich" element={<QuanLyNhapKhoTheoChienDich />} />
           </Route>
 
           {/* ── Trang bác sĩ (maVaiTro = BS trong TAIKHOAN) ── */}
