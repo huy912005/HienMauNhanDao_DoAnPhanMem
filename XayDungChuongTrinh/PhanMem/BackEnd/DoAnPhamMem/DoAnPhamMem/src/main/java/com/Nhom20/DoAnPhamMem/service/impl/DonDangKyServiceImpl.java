@@ -9,9 +9,14 @@ import com.Nhom20.DoAnPhamMem.dto.request.DonDangKyRequest;
 import com.Nhom20.DoAnPhamMem.dto.response.DonDangKyResponse;
 import com.Nhom20.DoAnPhamMem.entity.ChienDichHienMauEntity;
 import com.Nhom20.DoAnPhamMem.entity.DonDangKyEntity;
+import com.Nhom20.DoAnPhamMem.entity.KhoMauEntity;
+import com.Nhom20.DoAnPhamMem.entity.NhanVienEntity;
 import com.Nhom20.DoAnPhamMem.entity.TinhNguyenVienEntity;
+import com.Nhom20.DoAnPhamMem.entity.TuiMauEntity;
 import com.Nhom20.DoAnPhamMem.enums.TheTich;
+import com.Nhom20.DoAnPhamMem.enums.TheTichTuiMau;
 import com.Nhom20.DoAnPhamMem.enums.TrangThaiDonDangKy;
+import com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau;
 import com.Nhom20.DoAnPhamMem.mapper.DonDangKyMapper;
 import com.Nhom20.DoAnPhamMem.repository.ChienDichHienMauRepository;
 import com.Nhom20.DoAnPhamMem.repository.DonDangKyRepository;
@@ -29,12 +34,17 @@ public class DonDangKyServiceImpl implements DonDangKyService {
     private final TinhNguyenVienRepository tinhNguyenVienRepository;
     private final ChienDichHienMauRepository chienDichRepository;
     private final com.Nhom20.DoAnPhamMem.repository.NhanVienRepository nhanVienRepository;
+    private final com.Nhom20.DoAnPhamMem.repository.TuiMauRepository tuiMauRepository;
+    private final com.Nhom20.DoAnPhamMem.repository.KhoMauRepository khoMauRepository;
 
     @Override
     public ApiResponse<DonDangKyResponse> createDonDangKy(DonDangKyRequest request) {
-        boolean daDangKy = repository.findByTinhNguyenVien_MaTNVAndChienDich_MaChienDich(request.getMaTNV(), request.getMaChienDich()).isPresent();
+        boolean daDangKy = repository
+                .findByTinhNguyenVien_MaTNVAndChienDich_MaChienDich(request.getMaTNV(), request.getMaChienDich())
+                .isPresent();
         if (daDangKy)
-            return ApiResponse.<DonDangKyResponse>builder().status(false).message("Bạn đã đăng ký chiến dịch này rồi!").data(null).build();
+            return ApiResponse.<DonDangKyResponse>builder().status(false).message("Bạn đã đăng ký chiến dịch này rồi!")
+                    .data(null).build();
         DonDangKyEntity entity = mapper.toEntity(request);
         Integer max = repository.findMaxMaDon();
         entity.setMaDon(String.format("DK%05d", (max == null) ? 1 : max + 1));
@@ -59,18 +69,22 @@ public class DonDangKyServiceImpl implements DonDangKyService {
         }
 
         DonDangKyEntity saved = repository.save(entity);
-        return ApiResponse.<DonDangKyResponse>builder().message("Đăng ký thành công!").status(true).data(mapper.toResponse(saved)).build();
+        return ApiResponse.<DonDangKyResponse>builder().message("Đăng ký thành công!").status(true)
+                .data(mapper.toResponse(saved)).build();
     }
 
     @Override
     public ApiResponse<DonDangKyResponse> checkDaDangKy(String maTNV, String maChienDich) {
         return repository.findByTinhNguyenVien_MaTNVAndChienDich_MaChienDich(maTNV, maChienDich)
-                .map(entity -> ApiResponse.<DonDangKyResponse>builder().status(true).message("Đã đăng ký").data(mapper.toResponse(entity)).build())
-                .orElse(ApiResponse.<DonDangKyResponse>builder().status(false).message("Chưa đăng ký").data(null).build());
+                .map(entity -> ApiResponse.<DonDangKyResponse>builder().status(true).message("Đã đăng ký")
+                        .data(mapper.toResponse(entity)).build())
+                .orElse(ApiResponse.<DonDangKyResponse>builder().status(false).message("Chưa đăng ký").data(null)
+                        .build());
     }
 
     @Override
-    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getAll(org.springframework.data.domain.Pageable pageable) {
+    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getAll(
+            org.springframework.data.domain.Pageable pageable) {
         org.springframework.data.domain.Page<DonDangKyEntity> page = repository.findAll(pageable);
         org.springframework.data.domain.Page<DonDangKyResponse> responsePage = page.map(mapper::toResponse);
         return ApiResponse.<org.springframework.data.domain.Page<DonDangKyResponse>>builder()
@@ -82,29 +96,69 @@ public class DonDangKyServiceImpl implements DonDangKyService {
 
     @Override
     public ApiResponse<DonDangKyResponse> updateDonDangKy(String maDon, DonDangKyRequest request) {
-        DonDangKyEntity entity = repository.findById(maDon).orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon));
+        DonDangKyEntity entity = repository.findById(maDon)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon));
         if (request.getTheTich() != null) {
             entity.setTheTich(TheTich.fromDbValue(request.getTheTich()));
         }
         if (request.getMaChienDich() != null) {
-            ChienDichHienMauEntity chienDich = chienDichRepository.findById(request.getMaChienDich()).orElseThrow(() -> new RuntimeException("Không tìm thấy chiến dịch: " + request.getMaChienDich()));
+            ChienDichHienMauEntity chienDich = chienDichRepository.findById(request.getMaChienDich())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy chiến dịch: " + request.getMaChienDich()));
             entity.setChienDich(chienDich);
         }
         DonDangKyEntity saved = repository.save(entity);
-        return ApiResponse.<DonDangKyResponse>builder().status(true).message("Cập nhật thành công").data(mapper.toResponse(saved)).build();
+        return ApiResponse.<DonDangKyResponse>builder().status(true).message("Cập nhật thành công")
+                .data(mapper.toResponse(saved)).build();
     }
 
     @Override
-    public ApiResponse<DonDangKyResponse> cancelDonDangKy(String maDon) {
-        DonDangKyEntity entity = repository.findById(maDon).orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon));
+    @org.springframework.transaction.annotation.Transactional
+    public ApiResponse<DonDangKyResponse> cancelDonDangKy(String maDon, String maNhanVien) {
+        DonDangKyEntity entity = repository.findById(maDon)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon));
+
+        // 1. Cập nhật trạng thái đơn thành 'Chưa hiến' (DA_HUY enum đã map tới 'Chưa
+        // hiến')
         entity.setTrangThai(TrangThaiDonDangKy.DA_HUY);
-        DonDangKyEntity saved = repository.save(entity);
-        return ApiResponse.<DonDangKyResponse>builder().status(true).message("Hủy đăng ký thành công").data(mapper.toResponse(saved)).build();
+        entity.setTheTich(TheTich.ML_0);
+        repository.save(entity);
+
+        // 2. Tạo túi máu với trạng thái 'Hủy' nếu có mã nhân viên (do NVYT thực hiện
+        // hủy)
+        if (maNhanVien != null && !maNhanVien.isBlank()) {
+            NhanVienEntity nv = nhanVienRepository.findById(maNhanVien)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên: " + maNhanVien));
+
+            TinhNguyenVienEntity tnv = entity.getTinhNguyenVien();
+            KhoMauEntity kho = khoMauRepository.findByNhomMau(tnv.getNhomMau())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Không tìm thấy kho máu cho nhóm máu: " + tnv.getNhomMau().getDbValue()));
+
+            Integer maxId = tuiMauRepository.findMaxMaTuiMau();
+            String nextMaTuiMau = "TM" + String.format("%05d", (maxId != null ? maxId + 1 : 1));
+
+            TuiMauEntity tuiMau = new TuiMauEntity();
+            tuiMau.setMaTuiMau(nextMaTuiMau);
+            tuiMau.setDonDangKy(entity);
+            tuiMau.setNhanVien(nv);
+            tuiMau.setKhoMau(kho);
+            tuiMau.setTheTich(TheTichTuiMau.ML_250); // Mặc định cho túi hủy
+            tuiMau.setThoiGianLayMau(LocalDateTime.now());
+            tuiMau.setTrangThai(TrangThaiTuiMau.HUY);
+            tuiMau.setNhietDoVanChuyen(0.0);
+
+            tuiMauRepository.save(tuiMau);
+        }
+
+        return ApiResponse.<DonDangKyResponse>builder().status(true).message("Hủy đăng ký thành công")
+                .data(mapper.toResponse(entity)).build();
     }
 
     @Override
-    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getByMaTNV(String maTNV, org.springframework.data.domain.Pageable pageable) {
-        org.springframework.data.domain.Page<DonDangKyEntity> page = repository.findByTinhNguyenVien_MaTNV(maTNV, pageable);
+    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getByMaTNV(String maTNV,
+            org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Page<DonDangKyEntity> page = repository.findByTinhNguyenVien_MaTNV(maTNV,
+                pageable);
         org.springframework.data.domain.Page<DonDangKyResponse> responsePage = page.map(mapper::toResponse);
         return ApiResponse.<org.springframework.data.domain.Page<DonDangKyResponse>>builder()
                 .status(true)
@@ -126,13 +180,15 @@ public class DonDangKyServiceImpl implements DonDangKyService {
 
     @Override
     public ApiResponse<Void> deleteDonDangKy(String maDon) {
-        if (!repository.existsById(maDon)) throw new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon);
+        if (!repository.existsById(maDon))
+            throw new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon);
         repository.deleteById(maDon);
         return ApiResponse.<Void>builder().status(true).message("Xóa thành công").build();
     }
 
     @Override
-    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getReadyForCollection(org.springframework.data.domain.Pageable pageable) {
+    public ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getReadyForCollection(
+            org.springframework.data.domain.Pageable pageable) {
         org.springframework.data.domain.Page<DonDangKyEntity> page = repository.findReadyForCollection(pageable);
         org.springframework.data.domain.Page<DonDangKyResponse> responsePage = page.map(mapper::toResponse);
         return ApiResponse.<org.springframework.data.domain.Page<DonDangKyResponse>>builder()

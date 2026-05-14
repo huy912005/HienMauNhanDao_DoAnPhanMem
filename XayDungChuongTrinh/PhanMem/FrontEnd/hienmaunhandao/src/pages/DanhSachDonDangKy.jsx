@@ -102,7 +102,7 @@ export default function DanhSachDonDangKy() {
           <div className="flex justify-center items-center py-20">
             <div className="text-slate-500 text-center">
               <div className="mb-4">
-                <span className="material-symbols-outlined text-6xl text-slate-300 animate-spin inline-block" style={{animation: 'spin 1s linear infinite'}}>
+                <span className="material-symbols-outlined text-6xl text-slate-300 animate-spin inline-block" style={{ animation: 'spin 1s linear infinite' }}>
                   sync
                 </span>
               </div>

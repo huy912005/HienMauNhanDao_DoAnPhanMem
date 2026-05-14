@@ -89,8 +89,10 @@ public class DonDangKyController {
     }
 
     @PutMapping("/{maDon}/huy")
-    public ResponseEntity<ApiResponse<DonDangKyResponse>> cancel(@PathVariable String maDon) {
-        return ResponseEntity.ok(donDangKyService.cancelDonDangKy(maDon));
+    public ResponseEntity<ApiResponse<DonDangKyResponse>> cancel(
+            @PathVariable String maDon,
+            @RequestParam(required = false) String maNV) {
+        return ResponseEntity.ok(donDangKyService.cancelDonDangKy(maDon, maNV));
     }
 
     /**

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@org.springframework.transaction.annotation.Transactional
 public class TuiMauServiceImpl implements TuiMauService {
 
     private final TuiMauRepository tuiMauRepository;
@@ -176,10 +177,60 @@ public class TuiMauServiceImpl implements TuiMauService {
 
     @Override
     public void updateStatus(String maTuiMau, String status) {
-        tuiMauRepository.findById(maTuiMau).ifPresent(tuiMau -> {
-            tuiMau.setTrangThai(TrangThaiTuiMau.fromDbValue(status));
-            tuiMauRepository.save(tuiMau);
+        System.out.println("DEBUG: Dang cap nhat trang thai tui mau [" + maTuiMau + "] sang [" + status + "]");
+        tuiMauRepository.findById(maTuiMau).ifPresentOrElse(tuiMau -> {
+            try {
+                TrangThaiTuiMau newTrangThai = TrangThaiTuiMau.fromDbValue(status);
+                tuiMau.setTrangThai(newTrangThai);
+                tuiMauRepository.save(tuiMau);
+                System.out.println("DEBUG: Cap nhat thanh cong tui mau [" + maTuiMau + "]");
+            } catch (Exception e) {
+                System.err.println("DEBUG: Loi khi tim trang thai enum cho [" + status + "]: " + e.getMessage());
+                throw e;
+            }
+        }, () -> {
+            System.err.println("DEBUG: Khong tim thay tui mau [" + maTuiMau + "]");
+            throw new RuntimeException("Không tìm thấy túi máu: " + maTuiMau);
         });
+    }
+
+    @Override
+    @Transactional
+    public void updateTuiMau(String maTuiMau, TuiMauRequest request) {
+        TuiMauEntity tuiMau = tuiMauRepository.findById(maTuiMau)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy túi máu: " + maTuiMau));
+        
+        if (request.getTheTich() != null) {
+            tuiMau.setTheTich(TheTichTuiMau.fromMl(request.getTheTich()));
+        }
+        if (request.getThoiGianLayMau() != null) {
+            tuiMau.setThoiGianLayMau(request.getThoiGianLayMau());
+        }
+        if (request.getNhietDoVanChuyen() != null) {
+            tuiMau.setNhietDoVanChuyen(request.getNhietDoVanChuyen());
+        }
+        
+        // Nếu đang là trạng thái Hủy mà sửa thông tin -> Khôi phục về Chờ xét nghiệm
+        if (tuiMau.getTrangThai() == TrangThaiTuiMau.HUY) {
+            tuiMau.setTrangThai(TrangThaiTuiMau.CHO_XET_NGHIEM);
+            
+            // Khôi phục trạng thái đơn đăng ký thành Đã hiến
+            if (tuiMau.getDonDangKy() != null) {
+                DonDangKyEntity don = tuiMau.getDonDangKy();
+                don.setTrangThai(TrangThaiDonDangKy.DA_HIEN);
+                // Thể tích sẽ được cập nhật ở đoạn code phía dưới
+                donDangKyRepository.save(don);
+            }
+        }
+        
+        tuiMauRepository.save(tuiMau);
+        
+        // Cập nhật lại thể tích trong đơn đăng ký nếu túi máu không phải trạng thái Hủy (hoặc vừa được khôi phục)
+        if (tuiMau.getTrangThai() != TrangThaiTuiMau.HUY && tuiMau.getDonDangKy() != null && request.getTheTich() != null) {
+            DonDangKyEntity don = tuiMau.getDonDangKy();
+            don.setTheTich(TheTich.fromDbValue(request.getTheTich()));
+            donDangKyRepository.save(don);
+        }
     }
 
     @Override
@@ -211,7 +262,7 @@ public class TuiMauServiceImpl implements TuiMauService {
         tuiMau.setKhoMau(kho);
         tuiMau.setTheTich(TheTichTuiMau.fromMl(request.getTheTich()));
         tuiMau.setThoiGianLayMau(request.getThoiGianLayMau());
-        tuiMau.setTrangThai(TrangThaiTuiMau.NHAP_KHO);
+        tuiMau.setTrangThai(TrangThaiTuiMau.CHO_XET_NGHIEM);
         tuiMau.setNhietDoVanChuyen(request.getNhietDoVanChuyen());
 
         tuiMauRepository.save(tuiMau);
@@ -220,9 +271,5 @@ public class TuiMauServiceImpl implements TuiMauService {
         don.setTrangThai(TrangThaiDonDangKy.DA_HIEN);
         don.setTheTich(TheTich.fromDbValue(request.getTheTich()));
         donDangKyRepository.save(don);
-
-        // 7. Cập nhật số lượng tồn trong kho máu
-        kho.setSoLuongTon((kho.getSoLuongTon() != null ? kho.getSoLuongTon() : 0) + 1);
-        khoMauRepository.save(kho);
     }
 }
