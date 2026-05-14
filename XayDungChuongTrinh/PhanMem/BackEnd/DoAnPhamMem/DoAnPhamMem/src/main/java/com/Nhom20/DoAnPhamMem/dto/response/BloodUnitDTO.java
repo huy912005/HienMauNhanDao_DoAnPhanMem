@@ -14,6 +14,7 @@ public class BloodUnitDTO {
     private Date ngayThuNhan;
     private String trangThai;
     private Integer theTich;
+    private Double nhietDoVanChuyen;
     private Date ngayHetHan;
     private String tinhTrangHSD;
 }

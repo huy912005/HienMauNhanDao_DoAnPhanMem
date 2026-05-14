@@ -20,11 +20,11 @@ export default function Login() {
       localStorage.setItem('maNV', loginData.maNV);
       localStorage.setItem('role', loginData.maVaiTro);
       // Redirect theo vai trò
-      if (res.data.maVaiTro === 'BS') {
+      if (loginData.maVaiTro === 'BS') {
         navigate('/bac-si/danh-sach-cho-kham', { replace: true });
-      } else if (res.data.maVaiTro === 'NVYT') {
+      } else if (loginData.maVaiTro === 'NVYT') {
         navigate('/nvyt/don-dang-ky', { replace: true });
-      } else if (res.data.maVaiTro === 'QLK') {
+      } else if (loginData.maVaiTro === 'QLK') {
         navigate('/quan-ly-kho/thong-ke', { replace: true });
       } else if (res.data.maVaiTro === 'AD') {
         navigate('/admin', { replace: true });

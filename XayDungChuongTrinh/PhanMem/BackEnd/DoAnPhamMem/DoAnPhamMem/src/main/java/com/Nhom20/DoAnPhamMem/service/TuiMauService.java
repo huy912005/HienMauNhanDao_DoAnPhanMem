@@ -10,7 +10,7 @@ public interface TuiMauService {
 
     List<MonthlyCollectionStatDTO> getBloodCollectionByMonth(int year);
 
-    Page<BloodUnitDTO> getBloodUnits(int page, int size, String search, String bloodType);
+    Page<BloodUnitDTO> getBloodUnits(int page, int size, String search, String bloodType, String maChienDich);
 
     void deleteBloodUnit(String maTuiMau);
 

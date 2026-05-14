@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nhập Kho theo Chiến dịch - Hệ thống Hiến máu TP. Đà Nẵng</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: { primary: "#af101a", "primary-container": "#d32f2f", "tertiary-container": "#00799c" },
+                fontFamily: { sans: ["Public Sans", "sans-serif"] }
+            }
+        }
+    }
+</script>
+<style>
+    body { font-family: 'Public Sans', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .expanded .expand-icon { transform: rotate(180deg); }
+    .campaign-details { display: none; }
+    .expanded .campaign-details { display: block; }
+</style>
+</head>
+<body class="bg-[#F3F4F6] text-slate-800 antialiased min-h-screen">
+<div class="w-full min-h-screen flex">
+  
+  <!-- Sidebar Placeholder -->
+  <aside class="w-64 min-h-screen bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0">
+    <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+        <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-white">bloodtype</span>
+        </div>
+        <div class="font-bold text-primary">QL KHO MÁU</div>
+    </div>
+    <nav class="flex-1 p-4 space-y-2">
+        <div class="flex items-center gap-3 p-3 rounded-lg text-slate-500 hover:bg-slate-50">
+            <span class="material-symbols-outlined">pie_chart</span>
+            <span class="text-sm font-semibold">Thống kê tồn kho</span>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-lg text-slate-500 hover:bg-slate-50">
+            <span class="material-symbols-outlined">add_box</span>
+            <span class="text-sm font-semibold">Quản lý nhập kho</span>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-50 text-primary font-bold">
+            <span class="material-symbols-outlined">event_repeat</span>
+            <span class="text-sm">Nhập kho theo chiến dịch</span>
+        </div>
+    </nav>
+  </aside>
+
+  <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+    
+    <!-- Header -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8">
+        <h2 class="text-lg font-bold">Nhập kho theo Chiến dịch</h2>
+        <div class="flex items-center gap-4">
+            <div class="text-right">
+                <div class="text-sm font-bold">Trần Minh Hưng</div>
+                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Quản lý kho</div>
+            </div>
+            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-slate-400">person</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 p-8 space-y-6">
+        
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">Thống kê Nhập kho theo Sự kiện</h1>
+            <p class="text-slate-500 text-sm mt-1">Xem danh sách các túi máu đã nhập kho được phân loại theo từng chiến dịch hiến máu.</p>
+        </div>
+
+        <!-- Filter/Search -->
+        <div class="flex gap-4">
+            <div class="relative flex-1 max-w-md">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <input type="text" placeholder="Tìm kiếm chiến dịch..." class="w-full pl-10 pr-4 h-11 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+            </div>
+            <button class="h-11 px-6 bg-white border border-slate-200 rounded-xl font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2">
+                <span class="material-symbols-outlined">filter_list</span>
+                Bộ lọc
+            </button>
+        </div>
+
+        <!-- Campaign List -->
+        <div class="space-y-4">
+            
+            <!-- Campaign Item 1 -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition-all hover:shadow-md" id="campaign-1">
+                <div class="p-6 flex items-center justify-between cursor-pointer" onclick="toggleCampaign(1)">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-3xl">event</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">Lễ hội Xuân Hồng UTE 2026</h3>
+                            <div class="flex items-center gap-4 mt-1">
+                                <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                                    <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    10/02/2026 - 12/02/2026
+                                </div>
+                                <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                                    <span class="material-symbols-outlined text-sm">location_on</span>
+                                    ĐH Sư phạm Kỹ thuật (UTE)
+                                </div>
+                                <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Đã kết thúc</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-8">
+                        <div class="text-right">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tổng túi máu</div>
+                            <div class="text-xl font-black text-slate-900">42 đơn vị</div>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-400 expand-icon transition-transform">expand_more</span>
+                    </div>
+                </div>
+
+                <!-- Expanded Content -->
+                <div class="campaign-details border-t border-slate-50 bg-slate-50/50">
+                    <div class="p-6">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-200 pb-2">
+                                    <th class="py-3 px-4">Mã túi máu</th>
+                                    <th class="py-3 px-4">Nhóm máu</th>
+                                    <th class="py-3 px-4">Thể tích</th>
+                                    <th class="py-3 px-4">Ngày lấy mẫu</th>
+                                    <th class="py-3 px-4">Ngày hết hạn</th>
+                                    <th class="py-3 px-4">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="text-sm hover:bg-white transition-colors">
+                                    <td class="py-4 px-4 font-mono font-bold">TM00001</td>
+                                    <td class="py-4 px-4"><span class="px-3 py-1 bg-red-100 text-red-700 rounded-full font-black text-xs">O+</span></td>
+                                    <td class="py-4 px-4 text-slate-600">350ml</td>
+                                    <td class="py-4 px-4 text-slate-600">10/02/2026</td>
+                                    <td class="py-4 px-4 text-slate-600">10/02/2027</td>
+                                    <td class="py-4 px-4"><span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-bold">NHẬP KHO</span></td>
+                                </tr>
+                                <tr class="text-sm hover:bg-white transition-colors">
+                                    <td class="py-4 px-4 font-mono font-bold">TM00002</td>
+                                    <td class="py-4 px-4"><span class="px-3 py-1 bg-red-100 text-red-700 rounded-full font-black text-xs">A+</span></td>
+                                    <td class="py-4 px-4 text-slate-600">250ml</td>
+                                    <td class="py-4 px-4 text-slate-600">11/02/2026</td>
+                                    <td class="py-4 px-4 text-slate-600">11/02/2027</td>
+                                    <td class="py-4 px-4"><span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-bold">NHẬP KHO</span></td>
+                                </tr>
+                                <tr class="text-sm hover:bg-white transition-colors">
+                                    <td class="py-4 px-4 font-mono font-bold">TM00003</td>
+                                    <td class="py-4 px-4"><span class="px-3 py-1 bg-red-100 text-red-700 rounded-full font-black text-xs">B+</span></td>
+                                    <td class="py-4 px-4 text-slate-600">450ml</td>
+                                    <td class="py-4 px-4 text-slate-600">12/02/2026</td>
+                                    <td class="py-4 px-4 text-slate-600">12/02/2027</td>
+                                    <td class="py-4 px-4"><span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-bold">NHẬP KHO</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-4 flex justify-end">
+                            <button class="text-xs font-bold text-primary hover:underline">Xem tất cả 42 túi máu →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campaign Item 2 -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm transition-all hover:shadow-md" id="campaign-2">
+                <div class="p-6 flex items-center justify-between cursor-pointer" onclick="toggleCampaign(2)">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined text-3xl">event</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">Hiến máu thường xuyên Chữ Thập Đỏ</h3>
+                            <div class="flex items-center gap-4 mt-1">
+                                <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                                    <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    01/05/2026 - 31/05/2026
+                                </div>
+                                <div class="flex items-center gap-1.5 text-xs text-slate-500">
+                                    <span class="material-symbols-outlined text-sm">location_on</span>
+                                    Hội Chữ thập đỏ TP Đà Nẵng
+                                </div>
+                                <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold uppercase tracking-wider">Đang diễn ra</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-8">
+                        <div class="text-right">
+                            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tổng túi máu</div>
+                            <div class="text-xl font-black text-slate-900">15 đơn vị</div>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-400 expand-icon transition-transform">expand_more</span>
+                    </div>
+                </div>
+
+                <!-- Expanded Content -->
+                <div class="campaign-details border-t border-slate-50 bg-slate-50/50">
+                    <div class="p-6">
+                        <div class="text-center py-8">
+                            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="material-symbols-outlined text-slate-400">inventory_2</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Đang tải danh sách túi máu của chiến dịch này...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+    function toggleCampaign(id) {
+        const el = document.getElementById('campaign-' + id);
+        el.classList.toggle('expanded');
+    }
+</script>
+</body>
+</html>

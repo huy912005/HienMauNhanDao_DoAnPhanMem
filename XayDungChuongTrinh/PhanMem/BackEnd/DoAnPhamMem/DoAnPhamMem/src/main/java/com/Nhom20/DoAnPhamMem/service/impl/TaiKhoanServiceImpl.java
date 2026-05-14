@@ -118,22 +118,10 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
                 if (taiKhoanRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
                         throw new RuntimeException("Email already exists");
                 }
-
-                // Đoạn code cũ của Leader (Đã comment lại vì lỗi Duplicate Key khi tên vai trò
-                // là "Tình nguyện viên")
-                // VaiTroEntity vaiTro = vaiTroRepository.findByTenVaiTro("TNV") // Mặc định là
-                // Tình nguyện viên
-                // Đoạn code mới sửa: dùng findById để tìm theo Mã Vai Trò thay vì Tên
-                VaiTroEntity vaiTro = vaiTroRepository.findById("TNV")
-                                .orElseGet(() -> {
-                                        VaiTroEntity newRole = new VaiTroEntity();
-                                        newRole.setMaVaiTro("TNV");
-                                        newRole.setTenVaiTro("Tình nguyện viên");
-                                        return vaiTroRepository.save(newRole);
-                                });
+                VaiTroEntity vaiTro = vaiTroRepository.findById("TNV").orElseGet(() -> {VaiTroEntity newRole = new VaiTroEntity();newRole.setMaVaiTro("TNV");newRole.setTenVaiTro("Tình nguyện viên");return vaiTroRepository.save(newRole);});
 
                 TaiKhoanEntity taiKhoan = new TaiKhoanEntity();
-                int soDuoiMaTaiKhoan = taiKhoanRepository.findMaMax();
+                int soDuoiMaTaiKhoan = taiKhoanRepository.findMaMax() + 1;
                 taiKhoan.setMaTaiKhoan(String.format("TK%05d", soDuoiMaTaiKhoan));
                 taiKhoan.setEmail(registerRequest.getEmail());
                 taiKhoan.setMatKhau(passwordEncoder.encode(registerRequest.getMatKhau()));
