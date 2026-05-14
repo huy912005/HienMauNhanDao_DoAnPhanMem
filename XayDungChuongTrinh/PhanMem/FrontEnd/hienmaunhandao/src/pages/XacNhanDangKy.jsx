@@ -181,7 +181,7 @@ export default function XacNhanDangKy() {
                 IN PHIẾU
               </button>
             )}
-            
+
             {isRegistered && (
               <button
                 onClick={handleCancel}
