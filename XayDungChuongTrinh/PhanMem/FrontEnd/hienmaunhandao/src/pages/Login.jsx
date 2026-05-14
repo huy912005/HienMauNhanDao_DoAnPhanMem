@@ -5,6 +5,7 @@ import { authService } from '../services/api';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [matKhau, setMatKhau] = useState('');
+  const [showMatKhau, setShowMatKhau] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -71,8 +72,23 @@ export default function Login() {
             <div className="space-y-1.5">
               <label className="block text-sm font-semibold text-on-surface-variant">Mật khẩu</label>
               <div className="relative">
-                <input value={matKhau} onChange={(e) => setMatKhau(e.target.value)} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="••••••••" type="password" />
-                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer text-xl">visibility</span>
+                <input
+                  value={matKhau}
+                  onChange={(e) => setMatKhau(e.target.value)}
+                  required
+                  className="w-full h-12 pl-4 pr-12 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all"
+                  placeholder="Nhập mật khẩu"
+                  type={showMatKhau ? 'text' : 'password'}
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  aria-label={showMatKhau ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                  className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer text-xl p-0.5 border-0 bg-transparent leading-none"
+                  onClick={() => setShowMatKhau((v) => !v)}
+                >
+                  {showMatKhau ? 'visibility_off' : 'visibility'}
+                </button>
               </div>
             </div>
             <div className="flex items-center justify-between pt-2">

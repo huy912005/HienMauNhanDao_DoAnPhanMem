@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/free-vite-ports.ps1",
+    "free-ports": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/free-vite-ports.ps1",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",

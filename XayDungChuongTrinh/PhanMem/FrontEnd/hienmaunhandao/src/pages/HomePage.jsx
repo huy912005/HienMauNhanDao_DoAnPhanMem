@@ -4,6 +4,7 @@ import { chienDichService } from '../services/chienDichService';
 import { DiaDiemService } from '../services/DiaDiemService';
 import { tinhNguyenVienService } from '../services/tinhNguyenVienService';
 import { useQuery } from '@tanstack/react-query';
+import http from '../utils/http';
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -57,6 +58,14 @@ export default function HomePage() {
         queryFn: async () => {
             const response = await tinhNguyenVienService.getAll();
             return response?.totalElements || response?.data?.totalElements || 0;
+        }
+    });
+
+    const { data: bloodStats } = useQuery({
+        queryKey: ['bloodStats'],
+        queryFn: async () => {
+            const response = await http.get('/tuimau/stats');
+            return response?.data || response;
         }
     });
 
@@ -121,7 +130,9 @@ export default function HomePage() {
                         <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
                             <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>bloodtype</span>
                         </div>
-                        <h3 className="text-4xl font-black text-slate-900 mb-2">50,000+</h3>
+                        <h3 className="text-4xl font-black text-slate-900 mb-2">
+                            {bloodStats?.tongTheTich ? bloodStats.tongTheTich.toLocaleString() : '0'}+
+                        </h3>
                         <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Đơn vị máu tiếp nhận</p>
                     </div>
                     <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 flex flex-col items-center text-center group hover:-translate-y-2 transition-all duration-300">

@@ -5,6 +5,7 @@ import { authService } from '../services/api';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [matKhau, setMatKhau] = useState('');
+  const [showMatKhau, setShowMatKhau] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -35,11 +36,24 @@ export default function LoginPage() {
         </div>
         <div>
           <label className="block text-sm font-bold text-slate-700 mb-1">Mật khẩu</label>
-          <input 
-            type="password" required 
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
-            value={matKhau} onChange={(e) => setMatKhau(e.target.value)} 
-          />
+          <div className="relative">
+            <input
+              type={showMatKhau ? 'text' : 'password'}
+              required
+              autoComplete="current-password"
+              className="w-full pl-4 pr-11 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary outline-none"
+              value={matKhau}
+              onChange={(e) => setMatKhau(e.target.value)}
+            />
+            <button
+              type="button"
+              aria-label={showMatKhau ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xl p-1 border-0 bg-transparent cursor-pointer leading-none"
+              onClick={() => setShowMatKhau((v) => !v)}
+            >
+              {showMatKhau ? 'visibility_off' : 'visibility'}
+            </button>
+          </div>
         </div>
         <button type="submit" className="w-full py-3 bg-primary text-white rounded-lg font-bold mt-2 hover:bg-red-800">
           Đăng nhập

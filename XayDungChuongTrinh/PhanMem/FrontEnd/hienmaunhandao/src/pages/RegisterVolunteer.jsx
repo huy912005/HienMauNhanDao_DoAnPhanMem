@@ -11,6 +11,8 @@ export default function RegisterVolunteer() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showMatKhau, setShowMatKhau] = useState(false);
+  const [showNhapLaiMatKhau, setShowNhapLaiMatKhau] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -76,15 +78,15 @@ export default function RegisterVolunteer() {
                         <div className="space-y-1.5">
                             <label className="block text-sm font-semibold text-on-surface-variant">Mật khẩu</label>
                             <div className="relative">
-                                <input name="matKhau" value={formData.matKhau} onChange={handleChange} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="••••••••" type="password"/>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer text-xl">visibility</span>
+                                <input name="matKhau" value={formData.matKhau} onChange={handleChange} required className="w-full h-12 pl-4 pr-12 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="••••••••" type={showMatKhau ? 'text' : 'password'} autoComplete="new-password"/>
+                                <button type="button" aria-label={showMatKhau ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'} className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer text-xl p-0.5 border-0 bg-transparent leading-none" onClick={() => setShowMatKhau((v) => !v)}>{showMatKhau ? 'visibility_off' : 'visibility'}</button>
                             </div>
                         </div>
                         <div className="space-y-1.5">
                             <label className="block text-sm font-semibold text-on-surface-variant">Xác nhận mật khẩu</label>
                             <div className="relative">
-                                <input name="nhapLaiMatKhau" value={formData.nhapLaiMatKhau} onChange={handleChange} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="••••••••" type="password"/>
-                                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer text-xl">visibility</span>
+                                <input name="nhapLaiMatKhau" value={formData.nhapLaiMatKhau} onChange={handleChange} required className="w-full h-12 pl-4 pr-12 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="••••••••" type={showNhapLaiMatKhau ? 'text' : 'password'} autoComplete="new-password"/>
+                                <button type="button" aria-label={showNhapLaiMatKhau ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'} className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer text-xl p-0.5 border-0 bg-transparent leading-none" onClick={() => setShowNhapLaiMatKhau((v) => !v)}>{showNhapLaiMatKhau ? 'visibility_off' : 'visibility'}</button>
                             </div>
                         </div>
                     </div>
