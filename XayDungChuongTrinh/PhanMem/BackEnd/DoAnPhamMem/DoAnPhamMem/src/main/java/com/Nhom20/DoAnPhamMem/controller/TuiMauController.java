@@ -41,8 +41,9 @@ public class TuiMauController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) String bloodType) {
-        return ResponseEntity.ok(tuiMauService.getBloodUnits(page, size, search, bloodType));
+            @RequestParam(required = false) String bloodType,
+            @RequestParam(required = false) String maChienDich) {
+        return ResponseEntity.ok(tuiMauService.getBloodUnits(page, size, search, bloodType, maChienDich));
     }
 
     @DeleteMapping("/blood-units/{maTuiMau}")

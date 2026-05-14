@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import http from '../../utils/http';
 import { chienDichService } from '../../services/chienDichService';
+import {
+    Document,
+    Packer,
+    Paragraph,
+    Table,
+    TableRow,
+    TableCell,
+    TextRun,
+    HeadingLevel,
+    AlignmentType,
+    BorderStyle,
+    WidthType,
+    ShadingType,
+} from "docx";
+import { saveAs } from "file-saver";
 
 const QuanLyNhapKhoTheoChienDich = () => {
     const [campaigns, setCampaigns] = useState([]);
@@ -19,26 +34,8 @@ const QuanLyNhapKhoTheoChienDich = () => {
             const res = await chienDichService.getChienDichs();
             setCampaigns(res.data || res || []);
         } catch (err) {
-            console.error('Lỗi tải danh sách chiến dịch, sử dụng dữ liệu mẫu:', err);
-            // Dữ liệu mẫu để xem giao diện
-            setCampaigns([
-                {
-                    maChienDich: 'CD00001',
-                    tenChienDich: 'Lễ hội Xuân Hồng UTE 2026 (Dữ liệu mẫu)',
-                    thoiGianBD: '2026-02-10T07:00:00',
-                    thoiGianKT: '2026-02-12T17:00:00',
-                    trangThai: 'Đã kết thúc',
-                    diaDiem: { tenDiaDiem: 'ĐH Sư phạm Kỹ thuật (UTE)' }
-                },
-                {
-                    maChienDich: 'CD00003',
-                    tenChienDich: 'Hiến máu thường xuyên Chữ Thập Đỏ (Dữ liệu mẫu)',
-                    thoiGianBD: '2026-05-01T07:00:00',
-                    thoiGianKT: '2026-05-31T17:00:00',
-                    trangThai: 'Đang diễn ra',
-                    diaDiem: { tenDiaDiem: 'Hội Chữ thập đỏ TP Đà Nẵng' }
-                }
-            ]);
+            console.error('Lỗi tải danh sách chiến dịch:', err);
+            setCampaigns([]);
         } finally {
             setLoading(false);
         }
@@ -52,16 +49,8 @@ const QuanLyNhapKhoTheoChienDich = () => {
             const res = await http.get(`/tuimau/blood-units?maChienDich=${campaignId}&size=100`);
             setBloodUnits(prev => ({ ...prev, [campaignId]: res.content || [] }));
         } catch (err) {
-            console.error(`Lỗi tải túi máu, sử dụng dữ liệu mẫu cho ${campaignId}:`, err);
-            // Dữ liệu mẫu cho túi máu
-            setBloodUnits(prev => ({ 
-                ...prev, 
-                [campaignId]: [
-                    { maTuiMau: 'TM00001', nhomMau: 'O+', theTich: 350, thoiGianLayMau: '2026-02-10T08:00:00', nhietDoVanChuyen: 4.5, trangThai: 'Nhập kho' },
-                    { maTuiMau: 'TM00002', nhomMau: 'A+', theTich: 250, thoiGianLayMau: '2026-02-11T09:30:00', nhietDoVanChuyen: 4.2, trangThai: 'Nhập kho' },
-                    { maTuiMau: 'TM00003', nhomMau: 'B+', theTich: 450, thoiGianLayMau: '2026-02-12T10:15:00', nhietDoVanChuyen: 4.0, trangThai: 'Nhập kho' }
-                ] 
-            }));
+            console.error(`Lỗi tải túi máu cho ${campaignId}:`, err);
+            setBloodUnits(prev => ({ ...prev, [campaignId]: [] }));
         } finally {
             setLoadingUnits(prev => ({ ...prev, [campaignId]: false }));
         }
@@ -74,6 +63,188 @@ const QuanLyNhapKhoTheoChienDich = () => {
             setExpandedId(id);
             fetchBloodUnits(id);
         }
+    };
+
+    // Helper tạo ô bảng cho Word
+    const makeCell = (text, opts = {}) =>
+        new TableCell({
+            width: opts.width ? { size: opts.width, type: WidthType.DXA } : undefined,
+            shading: opts.shading ? { type: ShadingType.CLEAR, fill: opts.shading } : undefined,
+            children: [
+                new Paragraph({
+                    alignment: opts.center ? AlignmentType.CENTER : AlignmentType.LEFT,
+                    children: [
+                        new TextRun({
+                            text: String(text ?? ""),
+                            bold: opts.bold || false,
+                            size: opts.size || 22,
+                            color: opts.color || "000000",
+                            font: "Times New Roman",
+                        }),
+                    ],
+                }),
+            ],
+            borders: {
+                top: { style: BorderStyle.SINGLE, size: 1 },
+                bottom: { style: BorderStyle.SINGLE, size: 1 },
+                left: { style: BorderStyle.SINGLE, size: 1 },
+                right: { style: BorderStyle.SINGLE, size: 1 },
+            },
+            margins: { top: 60, bottom: 60, left: 100, right: 100 },
+        });
+
+    const makeHeaderRow = (cols) =>
+        new TableRow({
+            children: cols.map((c) =>
+                makeCell(c, {
+                    bold: true,
+                    shading: "C62828",
+                    color: "FFFFFF",
+                    center: true,
+                    size: 22,
+                }),
+            ),
+            tableHeader: true,
+        });
+
+    const handleExportCampaignReport = async (camp) => {
+        const units = bloodUnits[camp.maChienDich] || [];
+        const today = new Date().toLocaleDateString("vi-VN");
+        
+        // Thống kê theo nhóm máu trong chiến dịch
+        const stats = {};
+        units.forEach(u => {
+            stats[u.nhomMau] = (stats[u.nhomMau] || 0) + 1;
+        });
+
+        const headerSection = [
+            new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                    new TextRun({ text: "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", bold: true, size: 26, font: "Times New Roman" }),
+                ],
+            }),
+            new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                    new TextRun({ text: "Độc lập – Tự do – Hạnh phúc", bold: true, size: 24, font: "Times New Roman" }),
+                ],
+            }),
+            new Paragraph({ children: [new TextRun({ text: "───────────────", size: 24, font: "Times New Roman" })], alignment: AlignmentType.CENTER }),
+            new Paragraph({ children: [] }),
+            new Paragraph({
+                alignment: AlignmentType.CENTER,
+                heading: HeadingLevel.HEADING_1,
+                children: [
+                    new TextRun({ text: "BÁO CÁO CHI TIẾT NHẬP KHO CHIẾN DỊCH", bold: true, size: 28, color: "C62828", font: "Times New Roman" }),
+                ],
+            }),
+            new Paragraph({
+                alignment: AlignmentType.CENTER,
+                children: [
+                    new TextRun({ text: camp.tenChienDich.toUpperCase(), bold: true, size: 24, font: "Times New Roman" }),
+                ],
+            }),
+            new Paragraph({ children: [] }),
+            new Paragraph({
+                children: [
+                    new TextRun({ text: `Mã chiến dịch: ${camp.maChienDich}`, size: 24, font: "Times New Roman" }),
+                ],
+            }),
+            new Paragraph({
+                children: [
+                    new TextRun({ text: `Địa điểm: ${camp.diaDiem?.tenDiaDiem || 'N/A'}`, size: 24, font: "Times New Roman" }),
+                ],
+            }),
+            new Paragraph({
+                children: [
+                    new TextRun({ text: `Thời gian: ${new Date(camp.thoiGianBD).toLocaleDateString('vi-VN')} - ${new Date(camp.thoiGianKT).toLocaleDateString('vi-VN')}`, size: 24, font: "Times New Roman" }),
+                ],
+            }),
+            new Paragraph({ children: [] }),
+        ];
+
+        const unitRows = units.map((u, i) => new TableRow({
+            children: [
+                makeCell(i + 1, { center: true }),
+                makeCell(u.maTuiMau, { font: "Courier New", center: true }),
+                makeCell(u.nhomMau, { bold: true, center: true, color: "B71C1C" }),
+                makeCell(`${u.theTich}ml`, { center: true }),
+                makeCell(u.thoiGianLayMau ? new Date(u.thoiGianLayMau).toLocaleDateString('vi-VN') : '—', { center: true }),
+                makeCell(u.nhietDoVanChuyen ? `${u.nhietDoVanChuyen}°C` : '—', { center: true }),
+            ]
+        }));
+
+        const tableSection = [
+            new Paragraph({
+                children: [new TextRun({ text: "I. DANH SÁCH CHI TIẾT TÚI MÁU THU NHẬN", bold: true, size: 24, font: "Times New Roman", color: "C62828" })],
+            }),
+            new Paragraph({ children: [] }),
+            new Table({
+                width: { size: 9500, type: WidthType.DXA },
+                rows: [
+                    makeHeaderRow(["STT", "MÃ TÚI MÁU", "NHÓM MÁU", "THỂ TÍCH", "NGÀY LẤY", "NHIỆT ĐỘ"]),
+                    ...unitRows
+                ]
+            }),
+            new Paragraph({ children: [] }),
+        ];
+
+        const summaryRows = Object.entries(stats).map(([nhom, count], i) => new TableRow({
+            children: [
+                makeCell(i + 1, { center: true }),
+                makeCell(nhom, { bold: true, center: true }),
+                makeCell(count, { center: true, bold: true }),
+                makeCell("túi", { center: true }),
+            ]
+        }));
+
+        const summarySection = [
+            new Paragraph({
+                children: [new TextRun({ text: "II. TỔNG HỢP THEO NHÓM MÁU", bold: true, size: 24, font: "Times New Roman", color: "C62828" })],
+            }),
+            new Paragraph({ children: [] }),
+            new Table({
+                width: { size: 6000, type: WidthType.DXA },
+                rows: [
+                    makeHeaderRow(["STT", "NHÓM MÁU", "SỐ LƯỢNG", "ĐƠN VỊ"]),
+                    ...summaryRows,
+                    new TableRow({
+                        children: [
+                            makeCell("", { shading: "FFEBEE" }),
+                            makeCell("TỔNG CỘNG", { bold: true, center: true, shading: "FFEBEE" }),
+                            makeCell(units.length, { bold: true, center: true, shading: "FFEBEE" }),
+                            makeCell("túi", { center: true, shading: "FFEBEE" }),
+                        ]
+                    })
+                ]
+            }),
+            new Paragraph({ children: [] }),
+            new Paragraph({ children: [] }),
+            new Paragraph({
+                alignment: AlignmentType.RIGHT,
+                children: [
+                    new TextRun({ text: `Đà Nẵng, ngày ${today}`, size: 24, italics: true, font: "Times New Roman" }),
+                ],
+            }),
+            new Paragraph({ children: [] }),
+            new Paragraph({
+                alignment: AlignmentType.RIGHT,
+                children: [
+                    new TextRun({ text: "NGƯỜI LẬP BÁO CÁO", bold: true, size: 24, font: "Times New Roman" }),
+                ],
+            }),
+        ];
+
+        const doc = new Document({
+            sections: [{
+                properties: { page: { margin: { top: 1000, bottom: 1000, left: 1200, right: 900 } } },
+                children: [...headerSection, ...tableSection, ...summarySection],
+            }],
+        });
+
+        const blob = await Packer.toBlob(doc);
+        saveAs(blob, `BaoCao_ChienDich_${camp.maChienDich}.docx`);
     };
 
     if (loading) {
@@ -136,11 +307,9 @@ const QuanLyNhapKhoTheoChienDich = () => {
                                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Mã chiến dịch</div>
                                         <div className="text-sm font-black text-slate-600">
                                             {camp.maChienDich} 
-                                            {bloodUnits[camp.maChienDich] && (
-                                                <span className="text-primary ml-1 text-xs">
-                                                    ({bloodUnits[camp.maChienDich].length} túi máu)
-                                                </span>
-                                            )}
+                                            <span className="text-primary ml-1 text-xs">
+                                                ({camp.luongMauDaThu || 0} túi máu)
+                                            </span>
                                         </div>
                                     </div>
                                     <span className={`material-symbols-outlined text-slate-400 transition-transform duration-300 ${expandedId === camp.maChienDich ? 'rotate-180 text-primary' : ''}`}>
@@ -208,8 +377,14 @@ const QuanLyNhapKhoTheoChienDich = () => {
                                         <div className="mt-4 flex justify-between items-center px-2">
                                             <p className="text-xs text-slate-400 font-medium">Hiển thị {bloodUnits[camp.maChienDich]?.length || 0} đơn vị máu</p>
                                             {bloodUnits[camp.maChienDich]?.length > 0 && (
-                                                <button className="text-xs font-bold text-primary hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
-                                                    Xem báo cáo chi tiết <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                                                <button 
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleExportCampaignReport(camp);
+                                                    }}
+                                                    className="text-xs font-bold text-primary hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all flex items-center gap-1 active:scale-95 border border-transparent hover:border-primary/20"
+                                                >
+                                                    Xuất báo cáo chiến dịch (.docx) <span className="material-symbols-outlined text-sm">description</span>
                                                 </button>
                                             )}
                                         </div>

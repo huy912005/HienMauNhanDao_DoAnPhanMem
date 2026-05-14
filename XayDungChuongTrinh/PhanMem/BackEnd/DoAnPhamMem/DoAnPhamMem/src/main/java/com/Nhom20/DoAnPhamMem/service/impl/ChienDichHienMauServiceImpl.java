@@ -22,6 +22,7 @@ public class ChienDichHienMauServiceImpl implements ChienDichHienMauService {
     private final ChienDichHienMauRepository chienDichHienMauRepository;
     private final DonDangKyRepository donDangKyRepository;
     private final ChiendichHienMauMapper mapper;
+
     @Override
     public ApiResponse<List<ChiendichHienMauResponse>> getAll() {
         List<ChienDichHienMauEntity> campaigns = chienDichHienMauRepository.findAll();

@@ -59,22 +59,12 @@ public class TuiMauServiceImpl implements TuiMauService {
     @Override
     public Page<BloodUnitDTO> getBloodUnits(int page, int size, String search, String bloodType) {
         Pageable pageable = PageRequest.of(page, size);
-        NhomMau enumNhomMau = null;
-        if (bloodType != null && !bloodType.isEmpty()) {
-            enumNhomMau = NhomMau.fromDbValue(bloodType);
-        }
-        return tuiMauRepository.searchAndFilterBloodUnits(search, enumNhomMau, pageable).map(tuiMau -> {
-            BloodUnitDTO dto = new BloodUnitDTO();
-            dto.setMaTuiMau(tuiMau.getMaTuiMau());
-            dto.setNhomMau(tuiMau.getKhoMau() != null && tuiMau.getKhoMau().getNhomMau() != null
-                    ? tuiMau.getKhoMau().getNhomMau().getDbValue()
-                    : "Chưa rõ");
-            dto.setNgayThuNhan(tuiMau.getThoiGianLayMau() != null
-                    ? Timestamp.valueOf(tuiMau.getThoiGianLayMau())
-                    : null);
-            dto.setTheTich(tuiMau.getTheTich() != null ? tuiMau.getTheTich().getMl() : null);
-            dto.setTrangThai("Nhập kho");
-
+        NhomMau enumNhomMau = (bloodType != null && !bloodType.isEmpty()) ? NhomMau.fromDbValue(bloodType) : null;
+        
+        return tuiMauRepository.findByFilters(search, enumNhomMau, pageable).map(tuiMau -> {
+            BloodUnitDTO dto = tuiMauMapper.toBloodUnitDTO(tuiMau);
+            
+            // Tính toán bổ sung các trường Hạn sử dụng
             if (tuiMau.getThoiGianLayMau() != null) {
                 LocalDateTime hetHan = tuiMau.getThoiGianLayMau().plusDays(365);
                 dto.setNgayHetHan(Timestamp.valueOf(hetHan));
