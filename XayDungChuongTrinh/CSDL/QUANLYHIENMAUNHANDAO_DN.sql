@@ -1000,13 +1000,9 @@ ALTER TABLE DONDANGKY ADD CONSTRAINT chk_theTich CHECK (
     (trangThai = 'Đã nhận chứng nhận'  AND theTich IN (250, 350, 450)) OR
     (trangThai = 'Chưa hiến'           AND theTich = 0)
 );
-
-
 INSERT INTO NHANVIEN (maNhanVien, maTaiKhoan, maKhoa, maDiaDiem, hoTen, CCCD, gioiTinh, soDienThoai) 
-VALUES ('NV00016', 'TK00031', 'KC00001', 'DD00001', 'Huy', '000000000000', 'Nam', '0000000000');
-INSERT INTO NHANVIEN (maNhanVien, maTaiKhoan, maKhoa, maDiaDiem, hoTen, CCCD, gioiTinh, soDienThoai)
-VALUES 
-  ('NV00017', 'TK00033', 'KC00001', 'DD00001', 'Bác sĩ',        '000000000001', 'Nam', '0000000001'),
+VALUES ('NV00016', 'TK00031', 'KC00001', 'DD00001', 'Huy', '000000000000', 'Nam', '0000000000'),
+  ('NV00017', 'TK00033', 'KC00001', 'DD00001', 'Bác sĩ','000000000001', 'Nam', '0000000001'),
   ('NV00018', 'TK00009', 'KC00001', 'DD00001', 'Hoàng Thị Huy', '000000000002', 'Nữ',  '0000000002'),
   ('NV00019', 'TK00010', 'KC00001', 'DD00001', 'Nguyễn Tuyết Mai', '000000000003', 'Nữ', '0000000003');
 
