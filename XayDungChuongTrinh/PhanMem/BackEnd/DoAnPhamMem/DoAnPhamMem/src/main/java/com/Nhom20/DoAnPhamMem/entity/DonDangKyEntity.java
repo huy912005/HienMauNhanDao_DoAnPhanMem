@@ -32,4 +32,7 @@ public class DonDangKyEntity {
     private TrangThaiDonDangKy trangThai;
     @Column(name = "theTich")
     private TheTich theTich;
+
+    @OneToMany(mappedBy = "donDangKy", fetch = FetchType.LAZY)
+    private java.util.List<KetQuaLamSangEntity> ketQuaLamSangList;
 }

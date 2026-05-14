@@ -75,9 +75,16 @@ public class TuiMauController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{maTuiMau}/status")
+    @PutMapping("/{maTuiMau}/status")
     public ResponseEntity<Void> updateStatus(@PathVariable String maTuiMau, @RequestParam String status) {
+        System.out.println("CONTROLLER: Cap nhat trang thai tui mau ma [" + maTuiMau + "] trang thai [" + status + "]");
         tuiMauService.updateStatus(maTuiMau, status);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{maTuiMau}")
+    public ResponseEntity<Void> updateTuiMau(@PathVariable String maTuiMau, @RequestBody com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request) {
+        tuiMauService.updateTuiMau(maTuiMau, request);
         return ResponseEntity.ok().build();
     }
 }

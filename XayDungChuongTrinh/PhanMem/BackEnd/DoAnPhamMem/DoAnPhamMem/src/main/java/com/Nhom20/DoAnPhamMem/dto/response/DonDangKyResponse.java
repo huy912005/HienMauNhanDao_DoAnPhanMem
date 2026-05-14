@@ -27,4 +27,5 @@ public class DonDangKyResponse {
     private String trangThai;
     private Integer theTich;
     private String tenBacSi;
+    private String maBacSi;
 }

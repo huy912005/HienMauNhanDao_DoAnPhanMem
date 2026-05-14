@@ -3,6 +3,7 @@ package com.Nhom20.DoAnPhamMem.enums;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum TheTich {
+    ML_0(0),
     ML_250(250),
     ML_350(350),
     ML_450(450);

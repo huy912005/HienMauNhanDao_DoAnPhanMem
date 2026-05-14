@@ -9,6 +9,7 @@ public class TheTichConverter implements AttributeConverter<TheTich, Integer> {
 
     @Override
     public Integer convertToDatabaseColumn(TheTich theTich) {
+        System.out.println("Converting TheTich to DB: " + (theTich != null ? theTich.getValue() : "null"));
         if(theTich == null)
             return null;
         return theTich.getValue();

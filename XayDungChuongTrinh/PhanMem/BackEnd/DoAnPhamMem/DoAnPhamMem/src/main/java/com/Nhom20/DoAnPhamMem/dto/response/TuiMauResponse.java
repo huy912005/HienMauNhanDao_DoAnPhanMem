@@ -17,4 +17,6 @@ public class TuiMauResponse {
     private LocalDateTime thoiGianLayMau;
     private String trangThai;
     private String tenChienDich;
+    private String tenBacSi;
+    private String maBacSi;
 }

@@ -14,6 +14,8 @@ public interface TuiMauMapper {
     @Mapping(target = "theTich", source = "theTich.ml")
     @Mapping(target = "trangThai", source = "trangThai.dbValue")
     @Mapping(target = "tenChienDich", source = "donDangKy.chienDich.tenChienDich")
+    @Mapping(target = "tenBacSi", expression = "java(entity.getDonDangKy().getKetQuaLamSangList() != null && !entity.getDonDangKy().getKetQuaLamSangList().isEmpty() ? entity.getDonDangKy().getKetQuaLamSangList().get(0).getBacSiKham().getHoTen() : null)")
+    @Mapping(target = "maBacSi", expression = "java(entity.getDonDangKy().getKetQuaLamSangList() != null && !entity.getDonDangKy().getKetQuaLamSangList().isEmpty() ? entity.getDonDangKy().getKetQuaLamSangList().get(0).getBacSiKham().getMaNhanVien() : null)")
     TuiMauResponse toResponse(TuiMauEntity entity);
 
     @Mapping(target = "nhomMau", source = "khoMau.nhomMau.dbValue")

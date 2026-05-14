@@ -30,6 +30,8 @@ public interface DonDangKyMapper {
     @Mapping(target = "trangThai", source = "trangThai.dbValue")
     @Mapping(target = "theTich", source = "theTich.value")
     @Mapping(target = "chienDich", source = "chienDich")
+    @Mapping(target = "tenBacSi", expression = "java(entity.getKetQuaLamSangList() != null && !entity.getKetQuaLamSangList().isEmpty() ? entity.getKetQuaLamSangList().get(0).getBacSiKham().getHoTen() : null)")
+    @Mapping(target = "maBacSi", expression = "java(entity.getKetQuaLamSangList() != null && !entity.getKetQuaLamSangList().isEmpty() ? entity.getKetQuaLamSangList().get(0).getBacSiKham().getMaNhanVien() : null)")
     DonDangKyResponse toResponse(DonDangKyEntity entity);
 
     @Mapping(target = "tenChienDich", source = "tenChienDich")

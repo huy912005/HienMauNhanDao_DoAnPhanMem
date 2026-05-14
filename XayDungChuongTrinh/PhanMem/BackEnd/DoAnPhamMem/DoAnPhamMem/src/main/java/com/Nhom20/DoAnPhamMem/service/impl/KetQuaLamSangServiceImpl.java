@@ -46,19 +46,19 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
     public List<KetQuaLamSangResponse> getWaiting() {
         // Lấy tất cả đơn ở trạng thái Đã đăng ký, Chờ khám hoặc Chưa hiến
         return donDangKyRepository.findAll().stream()
-                .filter(don -> don.getTrangThai() == TrangThaiDonDangKy.DA_DANG_KY || 
-                               don.getTrangThai() == TrangThaiDonDangKy.CHO_KHAM ||
-                               don.getTrangThai() == TrangThaiDonDangKy.CHUA_HIEN)
+                .filter(don -> don.getTrangThai() == TrangThaiDonDangKy.DA_DANG_KY ||
+                        don.getTrangThai() == TrangThaiDonDangKy.CHO_KHAM ||
+                        don.getTrangThai() == TrangThaiDonDangKy.CHUA_HIEN)
                 .map(don -> {
-                        TinhNguyenVienEntity tnv = don.getTinhNguyenVien();
-                        return KetQuaLamSangResponse.builder()
-                                .maDon(don.getMaDon())
-                                .tenTinhNguyenVien(tnv.getHoTen())
-                                .ngaySinh(tnv.getNgaySinh() != null ? tnv.getNgaySinh().toString() : "---")
-                                .gioiTinh(tnv.getGioiTinh() != null ? tnv.getGioiTinh().getDbValue() : "---")
-                                .nhomMau(tnv.getNhomMau() != null ? tnv.getNhomMau().getDbValue() : "---")
-                                .tenChienDich(don.getChienDich().getTenChienDich())
-                                .build();
+                    TinhNguyenVienEntity tnv = don.getTinhNguyenVien();
+                    return KetQuaLamSangResponse.builder()
+                            .maDon(don.getMaDon())
+                            .tenTinhNguyenVien(tnv.getHoTen())
+                            .ngaySinh(tnv.getNgaySinh() != null ? tnv.getNgaySinh().toString() : "---")
+                            .gioiTinh(tnv.getGioiTinh() != null ? tnv.getGioiTinh().getDbValue() : "---")
+                            .nhomMau(tnv.getNhomMau() != null ? tnv.getNhomMau().getDbValue() : "---")
+                            .tenChienDich(don.getChienDich().getTenChienDich())
+                            .build();
                 })
                 .collect(Collectors.toList());
     }
@@ -99,15 +99,15 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
         // Không cập nhật DonDangKy ở đây để tránh vi phạm Ràng buộc (Constraint) của DB
         // Chỉ cần lưu KetQuaLamSang là đủ để danh sách Thu nhận máu hiển thị được
         /*
-        if (Boolean.TRUE.equals(request.getKetQua())) {
-            don.setTrangThai(TrangThaiDonDangKy.DA_KHAM);
-            don.setTheTich(TheTich.fromDbValue(request.getTheTichHien()));
-        } else {
-            don.setTrangThai(TrangThaiDonDangKy.CHUA_HIEN);
-            don.setTheTich(TheTich.fromDbValue(0));
-        }
-        donDangKyRepository.save(don);
-        */
+         * if (Boolean.TRUE.equals(request.getKetQua())) {
+         * don.setTrangThai(TrangThaiDonDangKy.DA_KHAM);
+         * don.setTheTich(TheTich.fromDbValue(request.getTheTichHien()));
+         * } else {
+         * don.setTrangThai(TrangThaiDonDangKy.CHUA_HIEN);
+         * don.setTheTich(TheTich.fromDbValue(0));
+         * }
+         * donDangKyRepository.save(don);
+         */
     }
 
     @Override
