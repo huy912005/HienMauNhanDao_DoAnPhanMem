@@ -14,13 +14,16 @@ public interface TuiMauRepository extends JpaRepository<TuiMauEntity, String> {
         java.util.List<com.Nhom20.DoAnPhamMem.dto.response.MonthlyCollectionStatDTO> countBloodUnitsByMonth(
                         @org.springframework.data.repository.query.Param("year") int year);
 
-        @org.springframework.data.jpa.repository.Query("SELECT t FROM TuiMauEntity t " +
-            "WHERE (:search IS NULL OR t.maTuiMau LIKE %:search%) " +
-            "AND (:bloodType IS NULL OR t.khoMau.nhomMau = :bloodType)")
-        org.springframework.data.domain.Page<TuiMauEntity> findByFilters(
-            @org.springframework.data.repository.query.Param("search") String search,
-            @org.springframework.data.repository.query.Param("bloodType") com.Nhom20.DoAnPhamMem.enums.NhomMau bloodType,
-            org.springframework.data.domain.Pageable pageable);
+        @org.springframework.data.jpa.repository.Query("SELECT t FROM TuiMauEntity t JOIN t.khoMau k " +
+                        "WHERE t.trangThai = com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau.NHAP_KHO " +
+                        "AND (:search IS NULL OR t.maTuiMau LIKE %:search%) " +
+                        "AND (:bloodType IS NULL OR k.nhomMau = :bloodType) " +
+                        "AND (:maChienDich IS NULL OR t.donDangKy.chienDich.maChienDich = :maChienDich)")
+        org.springframework.data.domain.Page<TuiMauEntity> searchAndFilterBloodUnits(
+                        @org.springframework.data.repository.query.Param("search") String search,
+                        @org.springframework.data.repository.query.Param("bloodType") com.Nhom20.DoAnPhamMem.enums.NhomMau bloodType,
+                        @org.springframework.data.repository.query.Param("maChienDich") String maChienDich,
+                        org.springframework.data.domain.Pageable pageable);
 
         @org.springframework.data.jpa.repository.Query(value = "SELECT MAX(CAST(SUBSTRING(maTuiMau, 3) AS UNSIGNED)) FROM tuimau", nativeQuery = true)
         Integer findMaxMaTuiMau();

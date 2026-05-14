@@ -170,8 +170,8 @@ const QuanLyNhapKhoTheoChienDich = () => {
                 makeCell(u.maTuiMau, { font: "Courier New", center: true }),
                 makeCell(u.nhomMau, { bold: true, center: true, color: "B71C1C" }),
                 makeCell(`${u.theTich}ml`, { center: true }),
-                makeCell(u.thoiGianLayMau ? new Date(u.thoiGianLayMau).toLocaleDateString('vi-VN') : '—', { center: true }),
-                makeCell(u.nhietDoVanChuyen ? `${u.nhietDoVanChuyen}°C` : '—', { center: true }),
+                makeCell(u.ngayThuNhan ? new Date(u.ngayThuNhan).toLocaleDateString('vi-VN') : '—', { center: true }),
+                makeCell(u.nhietDoVanChuyen != null ? `${u.nhietDoVanChuyen}°C` : '—', { center: true }),
             ]
         }));
 
@@ -358,10 +358,10 @@ const QuanLyNhapKhoTheoChienDich = () => {
                                                                 </td>
                                                                 <td className="py-4 px-6 text-slate-600 font-medium">{unit.theTich}ml</td>
                                                                 <td className="py-4 px-6 text-slate-500">
-                                                                    {unit.thoiGianLayMau ? new Date(unit.thoiGianLayMau).toLocaleDateString('vi-VN') : 'N/A'}
+                                                                    {unit.ngayThuNhan ? new Date(unit.ngayThuNhan).toLocaleDateString('vi-VN') : 'N/A'}
                                                                 </td>
                                                                 <td className="py-4 px-6 text-slate-500">
-                                                                    {unit.nhietDoVanChuyen ? `${unit.nhietDoVanChuyen}°C` : '—'}
+                                                                    {unit.nhietDoVanChuyen != null ? `${unit.nhietDoVanChuyen}°C` : '—'}
                                                                 </td>
                                                                 <td className="py-4 px-6">
                                                                     <span className="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-[10px] font-bold uppercase border border-blue-100">

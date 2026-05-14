@@ -57,11 +57,13 @@ public class TuiMauServiceImpl implements TuiMauService {
     }
 
     @Override
-    public Page<BloodUnitDTO> getBloodUnits(int page, int size, String search, String bloodType) {
+    public Page<BloodUnitDTO> getBloodUnits(int page, int size, String search, String bloodType, String maChienDich) {
         Pageable pageable = PageRequest.of(page, size);
-        NhomMau enumNhomMau = (bloodType != null && !bloodType.isEmpty()) ? NhomMau.fromDbValue(bloodType) : null;
-        
-        return tuiMauRepository.findByFilters(search, enumNhomMau, pageable).map(tuiMau -> {
+        NhomMau enumNhomMau = null;
+        if (bloodType != null && !bloodType.isEmpty()) {
+            enumNhomMau = NhomMau.fromDbValue(bloodType);
+        }
+        return tuiMauRepository.searchAndFilterBloodUnits(search, enumNhomMau, maChienDich, pageable).map(tuiMau -> {
             BloodUnitDTO dto = tuiMauMapper.toBloodUnitDTO(tuiMau);
             
             // Tính toán bổ sung các trường Hạn sử dụng
