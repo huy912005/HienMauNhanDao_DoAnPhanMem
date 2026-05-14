@@ -11,7 +11,7 @@ public interface DonDangKyService {
     ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getByMaTNV(String maTNV, org.springframework.data.domain.Pageable pageable);
     ApiResponse<DonDangKyResponse> getById(String maDon);
     ApiResponse<DonDangKyResponse> updateDonDangKy(String maDon, DonDangKyRequest request);
-    ApiResponse<DonDangKyResponse> cancelDonDangKy(String maDon);
+    ApiResponse<DonDangKyResponse> cancelDonDangKy(String maDon, String maNhanVien);
     ApiResponse<Void> deleteDonDangKy(String maDon);
     ApiResponse<org.springframework.data.domain.Page<DonDangKyResponse>> getReadyForCollection(org.springframework.data.domain.Pageable pageable);
 }

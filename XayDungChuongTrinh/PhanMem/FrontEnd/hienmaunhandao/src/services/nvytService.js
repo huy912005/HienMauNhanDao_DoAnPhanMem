@@ -190,9 +190,10 @@ export const donDangKyNvytService = {
   /**
    * Hủy đơn đăng ký.
    */
-  cancel: async (maDon) => {
+  cancel: async (maDon, maNV) => {
     try {
-      const res = await http.put(`/dondangky/${maDon}/huy`);
+      const url = maNV ? `/dondangky/${maDon}/huy?maNV=${encodeURIComponent(maNV)}` : `/dondangky/${maDon}/huy`;
+      const res = await http.put(url);
       return res?.data || res;
     } catch (err) {
       throw {

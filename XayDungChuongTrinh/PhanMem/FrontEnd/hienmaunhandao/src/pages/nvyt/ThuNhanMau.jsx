@@ -187,7 +187,7 @@ export default function ThuNhanMau() {
     console.log('Attempting to cancel registration:', maDon);
     if (!window.confirm(`Bạn có chắc chắn muốn hủy đơn đăng ký ${maDon}?`)) return;
     try {
-      await donDangKyNvytService.cancel(maDon);
+      await donDangKyNvytService.cancel(maDon, nhanVien?.maNV);
       showToast('Hủy đơn đăng ký thành công!');
       fetchPendingList();
     } catch (error) {

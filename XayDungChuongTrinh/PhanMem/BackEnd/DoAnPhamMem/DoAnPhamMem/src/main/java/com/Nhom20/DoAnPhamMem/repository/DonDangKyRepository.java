@@ -26,13 +26,13 @@ public interface DonDangKyRepository extends JpaRepository<DonDangKyEntity, Stri
     // Lấy danh sách đơn đăng ký của một tình nguyện viên
     Page<DonDangKyEntity> findByTinhNguyenVien_MaTNV(String maTNV, Pageable pageable);
 
-    // Lấy danh sách chờ thu nhận máu (Chuẩn: Khám đạt, Chưa hiến, Chưa có túi máu, không lặp lại)
+    // Lấy danh sách chờ thu nhận máu (Chuẩn: Khám đạt, Chưa hiến, Chưa có túi máu,
+    // không lặp lại)
     @Query(value = "SELECT DISTINCT d.* FROM dondangky d INNER JOIN ketqualamsang k ON d.maDon = k.maDon " +
-                   "WHERE k.ketQua = 1 AND d.trangThai <> 'Đã hiến' " +
-                   "AND d.maDon NOT IN (SELECT maDon FROM tuimau)", 
-           countQuery = "SELECT count(DISTINCT d.maDon) FROM dondangky d INNER JOIN ketqualamsang k ON d.maDon = k.maDon " +
-                        "WHERE k.ketQua = 1 AND d.trangThai <> 'Đã hiến' " +
-                        "AND d.maDon NOT IN (SELECT maDon FROM tuimau)",
-           nativeQuery = true)
+            "WHERE k.ketQua = 1 AND d.trangThai <> 'Đã hiến' " +
+            "AND d.maDon NOT IN (SELECT maDon FROM tuimau)", countQuery = "SELECT count(DISTINCT d.maDon) FROM dondangky d INNER JOIN ketqualamsang k ON d.maDon = k.maDon "
+                    +
+                    "WHERE k.ketQua = 1 AND d.trangThai <> 'Đã hiến' " +
+                    "AND d.maDon NOT IN (SELECT maDon FROM tuimau)", nativeQuery = true)
     Page<DonDangKyEntity> findReadyForCollection(Pageable pageable);
 }

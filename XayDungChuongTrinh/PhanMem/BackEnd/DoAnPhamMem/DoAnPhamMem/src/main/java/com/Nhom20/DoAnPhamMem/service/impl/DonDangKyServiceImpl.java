@@ -9,9 +9,14 @@ import com.Nhom20.DoAnPhamMem.dto.request.DonDangKyRequest;
 import com.Nhom20.DoAnPhamMem.dto.response.DonDangKyResponse;
 import com.Nhom20.DoAnPhamMem.entity.ChienDichHienMauEntity;
 import com.Nhom20.DoAnPhamMem.entity.DonDangKyEntity;
+import com.Nhom20.DoAnPhamMem.entity.KhoMauEntity;
+import com.Nhom20.DoAnPhamMem.entity.NhanVienEntity;
 import com.Nhom20.DoAnPhamMem.entity.TinhNguyenVienEntity;
+import com.Nhom20.DoAnPhamMem.entity.TuiMauEntity;
 import com.Nhom20.DoAnPhamMem.enums.TheTich;
+import com.Nhom20.DoAnPhamMem.enums.TheTichTuiMau;
 import com.Nhom20.DoAnPhamMem.enums.TrangThaiDonDangKy;
+import com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau;
 import com.Nhom20.DoAnPhamMem.mapper.DonDangKyMapper;
 import com.Nhom20.DoAnPhamMem.repository.ChienDichHienMauRepository;
 import com.Nhom20.DoAnPhamMem.repository.DonDangKyRepository;
@@ -29,6 +34,8 @@ public class DonDangKyServiceImpl implements DonDangKyService {
     private final TinhNguyenVienRepository tinhNguyenVienRepository;
     private final ChienDichHienMauRepository chienDichRepository;
     private final com.Nhom20.DoAnPhamMem.repository.NhanVienRepository nhanVienRepository;
+    private final com.Nhom20.DoAnPhamMem.repository.TuiMauRepository tuiMauRepository;
+    private final com.Nhom20.DoAnPhamMem.repository.KhoMauRepository khoMauRepository;
 
     @Override
     public ApiResponse<DonDangKyResponse> createDonDangKy(DonDangKyRequest request) {
@@ -95,11 +102,41 @@ public class DonDangKyServiceImpl implements DonDangKyService {
     }
 
     @Override
-    public ApiResponse<DonDangKyResponse> cancelDonDangKy(String maDon) {
+    @org.springframework.transaction.annotation.Transactional
+    public ApiResponse<DonDangKyResponse> cancelDonDangKy(String maDon, String maNhanVien) {
         DonDangKyEntity entity = repository.findById(maDon).orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + maDon));
+        
+        // 1. Cập nhật trạng thái đơn thành 'Chưa hiến' (DA_HUY enum đã map tới 'Chưa hiến')
         entity.setTrangThai(TrangThaiDonDangKy.DA_HUY);
-        DonDangKyEntity saved = repository.save(entity);
-        return ApiResponse.<DonDangKyResponse>builder().status(true).message("Hủy đăng ký thành công").data(mapper.toResponse(saved)).build();
+        entity.setTheTich(TheTich.ML_0);
+        repository.save(entity);
+
+        // 2. Tạo túi máu với trạng thái 'Hủy' nếu có mã nhân viên (do NVYT thực hiện hủy)
+        if (maNhanVien != null && !maNhanVien.isBlank()) {
+            NhanVienEntity nv = nhanVienRepository.findById(maNhanVien)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên: " + maNhanVien));
+            
+            TinhNguyenVienEntity tnv = entity.getTinhNguyenVien();
+            KhoMauEntity kho = khoMauRepository.findByNhomMau(tnv.getNhomMau())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy kho máu cho nhóm máu: " + tnv.getNhomMau().getDbValue()));
+
+            Integer maxId = tuiMauRepository.findMaxMaTuiMau();
+            String nextMaTuiMau = "TM" + String.format("%05d", (maxId != null ? maxId + 1 : 1));
+
+            TuiMauEntity tuiMau = new TuiMauEntity();
+            tuiMau.setMaTuiMau(nextMaTuiMau);
+            tuiMau.setDonDangKy(entity);
+            tuiMau.setNhanVien(nv);
+            tuiMau.setKhoMau(kho);
+            tuiMau.setTheTich(TheTichTuiMau.ML_250); // Mặc định cho túi hủy
+            tuiMau.setThoiGianLayMau(LocalDateTime.now());
+            tuiMau.setTrangThai(TrangThaiTuiMau.HUY);
+            tuiMau.setNhietDoVanChuyen(0.0);
+
+            tuiMauRepository.save(tuiMau);
+        }
+
+        return ApiResponse.<DonDangKyResponse>builder().status(true).message("Hủy đăng ký thành công").data(mapper.toResponse(entity)).build();
     }
 
     @Override
