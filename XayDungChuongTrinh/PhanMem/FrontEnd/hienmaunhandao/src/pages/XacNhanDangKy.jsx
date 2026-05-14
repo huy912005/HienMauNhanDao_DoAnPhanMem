@@ -144,6 +144,15 @@ export default function XacNhanDangKy() {
                 <span className="text-xs font-bold text-slate-400 uppercase">Số điện thoại</span>
                 <p className="text-sm font-bold text-slate-800">{thongTinCaNhan?.soDienThoai}</p>
               </div>
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-slate-400 uppercase">Nhóm máu</span>
+                <p className="text-sm font-bold text-slate-800">
+                  {thongTinCaNhan?.nhomMau
+                    ? <span className="inline-block px-2 py-0.5 bg-red-100 text-primary rounded-md">{thongTinCaNhan.nhomMau}</span>
+                    : <span className="text-slate-400 italic">Chưa xác định</span>
+                  }
+                </p>
+              </div>
               <div className="col-span-2 space-y-1">
                 <span className="text-xs font-bold text-slate-400 uppercase">Địa chỉ cư trú</span>
                 <p className="text-sm font-bold text-slate-800">{thongTinCaNhan?.diaChi}</p>

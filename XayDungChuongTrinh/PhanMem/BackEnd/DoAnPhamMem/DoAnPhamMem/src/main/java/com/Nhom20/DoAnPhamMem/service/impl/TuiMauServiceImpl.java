@@ -199,7 +199,7 @@ public class TuiMauServiceImpl implements TuiMauService {
     public void updateTuiMau(String maTuiMau, TuiMauRequest request) {
         TuiMauEntity tuiMau = tuiMauRepository.findById(maTuiMau)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy túi máu: " + maTuiMau));
-        
+
         if (request.getTheTich() != null) {
             tuiMau.setTheTich(TheTichTuiMau.fromMl(request.getTheTich()));
         }
@@ -209,11 +209,11 @@ public class TuiMauServiceImpl implements TuiMauService {
         if (request.getNhietDoVanChuyen() != null) {
             tuiMau.setNhietDoVanChuyen(request.getNhietDoVanChuyen());
         }
-        
+
         // Nếu đang là trạng thái Hủy mà sửa thông tin -> Khôi phục về Chờ xét nghiệm
         if (tuiMau.getTrangThai() == TrangThaiTuiMau.HUY) {
             tuiMau.setTrangThai(TrangThaiTuiMau.CHO_XET_NGHIEM);
-            
+
             // Khôi phục trạng thái đơn đăng ký thành Đã hiến
             if (tuiMau.getDonDangKy() != null) {
                 DonDangKyEntity don = tuiMau.getDonDangKy();
@@ -222,11 +222,13 @@ public class TuiMauServiceImpl implements TuiMauService {
                 donDangKyRepository.save(don);
             }
         }
-        
+
         tuiMauRepository.save(tuiMau);
-        
-        // Cập nhật lại thể tích trong đơn đăng ký nếu túi máu không phải trạng thái Hủy (hoặc vừa được khôi phục)
-        if (tuiMau.getTrangThai() != TrangThaiTuiMau.HUY && tuiMau.getDonDangKy() != null && request.getTheTich() != null) {
+
+        // Cập nhật lại thể tích trong đơn đăng ký nếu túi máu không phải trạng thái Hủy
+        // (hoặc vừa được khôi phục)
+        if (tuiMau.getTrangThai() != TrangThaiTuiMau.HUY && tuiMau.getDonDangKy() != null
+                && request.getTheTich() != null) {
             DonDangKyEntity don = tuiMau.getDonDangKy();
             don.setTheTich(TheTich.fromDbValue(request.getTheTich()));
             donDangKyRepository.save(don);
@@ -244,11 +246,13 @@ public class TuiMauServiceImpl implements TuiMauService {
         NhanVienEntity nv = nhanVienRepository.findById(request.getMaNV())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên: " + request.getMaNV()));
 
-        // 3. Tìm kho máu tương ứng với nhóm máu của TNV
+        // 3. Tìm kho máu tương ứng với nhóm máu của TNV (nếu có)
         TinhNguyenVienEntity tnv = don.getTinhNguyenVien();
-        KhoMauEntity kho = khoMauRepository.findByNhomMau(tnv.getNhomMau())
-                .orElseThrow(() -> new RuntimeException(
-                        "Không tìm thấy kho máu cho nhóm máu: " + tnv.getNhomMau().getDbValue()));
+        KhoMauEntity kho = null;
+        if (tnv.getNhomMau() != null) {
+            kho = khoMauRepository.findByNhomMau(tnv.getNhomMau())
+                    .orElse(null);
+        }
 
         // 4. Sinh mã túi máu mới
         Integer maxId = tuiMauRepository.findMaxMaTuiMau();

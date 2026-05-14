@@ -18,6 +18,7 @@ export default function ThongTinCaNhan() {
     soDienThoai: '',
     diaChi: '',
     phuongXa: '',
+    nhomMau: '',
     dungTichMau: '350'
   });
   const [error, setError] = useState('');
@@ -53,6 +54,7 @@ export default function ThongTinCaNhan() {
             soDienThoai: tnvData.soDienThoai || '',
             diaChi: tnvData.diaChi || '',
             phuongXa: tnvData.maPhuongXa || '',
+            nhomMau: tnvData.nhomMau || '',
           }));
         }
       });
@@ -98,6 +100,7 @@ export default function ThongTinCaNhan() {
         soDienThoai: formData.soDienThoai,
         diaChi: formData.diaChi,
         maPhuongXa: formData.phuongXa,
+        nhomMau: formData.nhomMau || null,
         maTaiKhoan: email  // Backend sẽ resolve theo email
       };
 
@@ -311,6 +314,20 @@ export default function ThongTinCaNhan() {
                         <option key={px.maPhuongXa} value={px.maPhuongXa}>
                           {px.tenPhuongXa}
                         </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="block text-sm font-bold text-slate-700">Nhóm máu <span className="text-slate-400 font-normal text-xs">(nếu biết)</span></label>
+                    <select
+                      name="nhomMau"
+                      value={formData.nhomMau}
+                      onChange={handleInputChange}
+                      className="w-full h-11 border border-slate-300 rounded-md text-sm focus:ring-primary focus:border-primary outline-none px-3"
+                    >
+                      <option value="">-- Chưa biết --</option>
+                      {['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'].map(nm => (
+                        <option key={nm} value={nm}>{nm}</option>
                       ))}
                     </select>
                   </div>
