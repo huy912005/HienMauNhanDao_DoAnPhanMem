@@ -264,4 +264,74 @@ public class TuiMauServiceImpl implements TuiMauService {
         don.setTheTich(TheTich.fromDbValue(request.getTheTich()));
         donDangKyRepository.save(don);
     }
+
+    @Override
+    public List<BloodExpiryDTO> getExpiryManagementData(String viewMode, String search) {
+        List<TuiMauEntity> units = tuiMauRepository.findAllAvailableUnits();
+        LocalDateTime now = LocalDateTime.now();
+
+        return units.stream()
+                .map(t -> {
+                    BloodExpiryDTO dto = new BloodExpiryDTO();
+                    dto.setMaTuiMau(t.getMaTuiMau());
+                    dto.setMaChienDich(t.getDonDangKy() != null && t.getDonDangKy().getChienDich() != null
+                            ? t.getDonDangKy().getChienDich().getMaChienDich()
+                            : "N/A");
+                    dto.setNhomMau(t.getKhoMau() != null && t.getKhoMau().getNhomMau() != null
+                            ? t.getKhoMau().getNhomMau().getDbValue()
+                            : "Chưa rõ");
+                    dto.setTheTich(t.getTheTich() != null ? t.getTheTich().getMl() : 0);
+                    dto.setThoiGianLayMau(t.getThoiGianLayMau());
+
+                    if (t.getThoiGianLayMau() != null) {
+                        LocalDateTime hetHan = t.getThoiGianLayMau().plusDays(365); // 365 ngày theo yêu cầu
+                        dto.setNgayHetHan(hetHan);
+                        long daysRemaining = ChronoUnit.DAYS.between(now, hetHan);
+                        dto.setDaysRemaining(daysRemaining);
+
+                        if (daysRemaining < 0) {
+                            dto.setTrangThaiHan("EXPIRED");
+                        } else if (daysRemaining <= 7) {
+                            dto.setTrangThaiHan("NEAR_EXPIRY");
+                        } else {
+                            dto.setTrangThaiHan("SAFE");
+                        }
+                    }
+                    return dto;
+                })
+                .filter(dto -> {
+                    // Filter by search
+                    if (search != null && !search.isEmpty()) {
+                        return dto.getMaTuiMau().toLowerCase().contains(search.toLowerCase());
+                    }
+                    return true;
+                })
+                .filter(dto -> {
+                    // Filter by viewMode
+                    if ("expired".equalsIgnoreCase(viewMode)) return "EXPIRED".equals(dto.getTrangThaiHan());
+                    if ("near".equalsIgnoreCase(viewMode)) return "NEAR_EXPIRY".equals(dto.getTrangThaiHan());
+                    return true;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ExpiryStatsDTO getExpiryStats() {
+        List<BloodExpiryDTO> allData = getExpiryManagementData("all", null);
+        ExpiryStatsDTO stats = new ExpiryStatsDTO();
+        stats.setExpiredCount(allData.stream().filter(d -> "EXPIRED".equals(d.getTrangThaiHan())).count());
+        stats.setNearExpiryCount(allData.stream().filter(d -> "NEAR_EXPIRY".equals(d.getTrangThaiHan())).count());
+        stats.setSafeCount(allData.stream().filter(d -> "SAFE".equals(d.getTrangThaiHan())).count());
+        return stats;
+    }
+
+    @Override
+    @Transactional
+    public void deleteExpiredUnits() {
+        List<BloodExpiryDTO> expired = getExpiryManagementData("expired", null);
+        List<String> ids = expired.stream().map(BloodExpiryDTO::getMaTuiMau).collect(Collectors.toList());
+        if (!ids.isEmpty()) {
+            tuiMauRepository.deleteByMaTuiMauIn(ids);
+        }
+    }
 }
