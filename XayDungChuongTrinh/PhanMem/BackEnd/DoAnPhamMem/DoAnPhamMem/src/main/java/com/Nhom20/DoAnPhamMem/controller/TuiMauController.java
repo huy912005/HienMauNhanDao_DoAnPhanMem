@@ -57,6 +57,27 @@ public class TuiMauController {
         return ResponseEntity.ok(tuiMauService.scanBloodUnit(maTuiMau));
     }
 
+    // --- Expiry Management ---
+    @GetMapping("/expiry-management")
+    public ResponseEntity<List<BloodExpiryDTO>> getExpiryManagement(
+            @RequestParam(defaultValue = "all") String viewMode,
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "30") int size) {
+        return ResponseEntity.ok(tuiMauService.getExpiryManagementData(viewMode, search));
+    }
+
+    @GetMapping("/expiry-stats")
+    public ResponseEntity<ExpiryStatsDTO> getExpiryStats() {
+        return ResponseEntity.ok(tuiMauService.getExpiryStats());
+    }
+
+    @DeleteMapping("/delete-expired")
+    public ResponseEntity<String> deleteExpiredUnits() {
+        tuiMauService.deleteExpiredUnits();
+        return ResponseEntity.ok("Đã tiêu hủy tất cả các túi máu hết hạn thành công.");
+    }
+
     // --- Develop Features ---
 
     @GetMapping

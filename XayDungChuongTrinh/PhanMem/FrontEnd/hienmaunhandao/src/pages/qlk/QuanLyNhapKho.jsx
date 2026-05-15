@@ -67,7 +67,11 @@ const QuanLyNhapKho = () => {
     if (!confirm(`Xác nhận nhập kho ${scannedUnits.length} túi máu này?`)) return;
     try {
       setImporting(true);
-      const maNhanVien = localStorage.getItem('maNhanVien') || 'NV00012';
+      const maNhanVien = localStorage.getItem('maNhanVien');
+      if (!maNhanVien) {
+        alert('Phiên đăng nhập hết hạn hoặc không tìm thấy thông tin nhân viên. Vui lòng đăng nhập lại.');
+        return;
+      }
       await http.post('/phieunhapxuat/import', {
         maNhanVien,
         maTuiMauList: scannedUnits.map(u => u.maTuiMau)
@@ -163,6 +167,7 @@ const QuanLyNhapKho = () => {
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50">
                   <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Mã túi máu</th>
+                  <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Chiến dịch</th>
                   <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Nhóm máu</th>
                   <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Thể tích (ml)</th>
                   <th className="px-6 py-3 text-xs font-bold text-slate-500 uppercase">Ngày thu nhận</th>
@@ -175,6 +180,7 @@ const QuanLyNhapKho = () => {
                 {scannedUnits.map((unit, idx) => (
                   <tr key={idx} className="hover:bg-slate-50">
                     <td className="px-6 py-4 font-bold text-slate-700">{unit.maTuiMau}</td>
+                    <td className="px-6 py-4 text-sm text-slate-500 font-semibold">{unit.maChienDich || 'N/A'}</td>
                     <td className="px-6 py-4">
                       <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold">{unit.nhomMau}</span>
                     </td>
@@ -224,6 +230,7 @@ const QuanLyNhapKho = () => {
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50">
                 <th className="px-5 py-3 text-xs font-bold text-slate-500 uppercase">Mã túi</th>
+                <th className="px-5 py-3 text-xs font-bold text-slate-500 uppercase">Chiến dịch</th>
                 <th className="px-5 py-3 text-xs font-bold text-slate-500 uppercase">Nhóm máu</th>
                 <th className="px-5 py-3 text-xs font-bold text-slate-500 uppercase">Thể tích (ml)</th>
                 <th className="px-5 py-3 text-xs font-bold text-slate-500 uppercase">Ngày thu nhận</th>
@@ -242,6 +249,7 @@ const QuanLyNhapKho = () => {
                 inventoryList.map((unit, idx) => (
                   <tr key={idx} className="hover:bg-slate-50">
                     <td className="px-5 py-3 font-mono font-bold text-slate-700 text-sm">{unit.maTuiMau}</td>
+                    <td className="px-5 py-3 text-xs text-slate-500 font-semibold">{unit.maChienDich || 'N/A'}</td>
                     <td className="px-5 py-3">
                       <span className="px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs font-bold">{unit.nhomMau}</span>
                     </td>

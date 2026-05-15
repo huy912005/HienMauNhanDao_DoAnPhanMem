@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quản lý Hạn dùng - Hệ thống Hiến máu TP. Đà Nẵng</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: { primary: "#af101a", "primary-container": "#d32f2f", "tertiary-container": "#00799c" },
+                fontFamily: { sans: ["Public Sans", "sans-serif"] }
+            }
+        }
+    }
+</script>
+<style>
+    body { font-family: 'Public Sans', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .tab-active { @apply bg-white text-primary shadow-sm; }
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .pulse-expired { animation: pulse-red 2s infinite; }
+</style>
+</head>
+<body class="bg-[#F3F4F6] text-slate-800 antialiased min-h-screen">
+<div class="w-full min-h-screen flex">
+  
+  <!-- Sidebar (Same as other QLK pages) -->
+  <aside class="w-64 min-h-screen bg-white border-r border-slate-200 hidden lg:flex flex-col sticky top-0">
+    <div class="p-6 border-b border-slate-100 flex items-center gap-3">
+        <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-white">bloodtype</span>
+        </div>
+        <div class="font-bold text-primary">QL KHO MÁU</div>
+    </div>
+    <nav class="flex-1 p-4 space-y-2">
+        <div class="flex items-center gap-3 p-3 rounded-lg text-slate-500 hover:bg-slate-50 cursor-pointer">
+            <span class="material-symbols-outlined">pie_chart</span>
+            <span class="text-sm font-semibold">Thống kê tồn kho</span>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-50 text-primary font-bold">
+            <span class="material-symbols-outlined">timer_off</span>
+            <span class="text-sm">Quản lý hạn dùng</span>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-lg text-slate-500 hover:bg-slate-50 cursor-pointer">
+            <span class="material-symbols-outlined">event_repeat</span>
+            <span class="text-sm font-semibold">Nhập kho theo chiến dịch</span>
+        </div>
+    </nav>
+  </aside>
+
+  <div class="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+    
+    <!-- Header -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8">
+        <h2 class="text-lg font-bold">Quản lý Hạn dùng & Tiêu hủy</h2>
+        <div class="flex items-center gap-4">
+            <div class="text-right">
+                <div class="text-sm font-bold">Trần Minh Hưng</div>
+                <div class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Quản lý kho</div>
+            </div>
+            <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-slate-400">person</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 p-8 space-y-6">
+        
+        <!-- Summary Stats Area -->
+        <div class="grid grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5">
+                <div class="w-14 h-14 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">dangerous</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Đã hết hạn</p>
+                    <h3 class="text-2xl font-black text-red-600">12 túi</h3>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5">
+                <div class="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">warning</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sắp hết hạn (< 7 ngày)</p>
+                    <h3 class="text-2xl font-black text-orange-600">28 túi</h3>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-5">
+                <div class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl">check_circle</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">An toàn</p>
+                    <h3 class="text-2xl font-black text-green-600">1,244 túi</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls & Tabs -->
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <!-- 3 Chế độ xem Tabs -->
+            <div class="flex bg-slate-200 p-1 rounded-xl w-fit">
+                <button onclick="changeView('all', this)" class="px-6 py-2 rounded-lg text-sm font-bold transition-all bg-white text-primary shadow-sm" id="tab-all">
+                    Tổng quan
+                </button>
+                <button onclick="changeView('expired', this)" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-700" id="tab-expired">
+                    Đã hết hạn
+                </button>
+                <button onclick="changeView('near', this)" class="px-6 py-2 rounded-lg text-sm font-bold transition-all text-slate-500 hover:text-slate-700" id="tab-near">
+                    Sắp hết hạn
+                </button>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3">
+                <button class="h-11 px-5 bg-white border border-slate-200 rounded-xl font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-lg">file_download</span>
+                    Xuất báo cáo
+                </button>
+                <button id="btn-delete-all" class="h-11 px-5 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 flex items-center gap-2 shadow-md hidden">
+                    <span class="material-symbols-outlined text-lg">delete_sweep</span>
+                    Tiêu hủy tất cả đã hết hạn
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Table Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+                <h3 id="table-title" class="font-bold text-slate-900">Danh sách túi máu trong kho</h3>
+                <div class="relative w-64">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                    <input type="text" placeholder="Tìm mã túi máu..." class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:ring-1 focus:ring-primary outline-none">
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-white border-b border-slate-100">
+                            <th class="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Mã túi máu</th>
+                            <th class="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Nhóm máu</th>
+                            <th class="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ngày lấy mẫu</th>
+                            <th class="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Hạn sử dụng</th>
+                            <th class="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Trạng thái hạn</th>
+                            <th class="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body" class="divide-y divide-slate-50">
+                        <!-- Row: Safe -->
+                        <tr class="hover:bg-slate-50/80 transition-colors" data-type="near">
+                            <td class="py-4 px-6 font-mono font-bold text-slate-900">BB-2024-0091</td>
+                            <td class="py-4 px-6"><span class="w-10 h-6 flex items-center justify-center bg-red-100 text-red-700 rounded-full font-black text-xs">O+</span></td>
+                            <td class="py-4 px-6 text-sm text-slate-500">10/04/2026</td>
+                            <td class="py-4 px-6 text-sm text-slate-900 font-semibold">22/05/2026</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-[10px] font-bold uppercase">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-600 animate-pulse"></span> Còn 7 ngày
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button class="p-2 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+                            </td>
+                        </tr>
+                        <!-- Row: Expired -->
+                        <tr class="bg-red-50/30 hover:bg-red-50/50 transition-colors" data-type="expired">
+                            <td class="py-4 px-6 font-mono font-bold text-red-700">BB-2024-0012</td>
+                            <td class="py-4 px-6"><span class="w-10 h-6 flex items-center justify-center bg-red-100 text-red-700 rounded-full font-black text-xs">B-</span></td>
+                            <td class="py-4 px-6 text-sm text-slate-500">01/03/2026</td>
+                            <td class="py-4 px-6 text-sm text-red-600 font-bold">12/04/2026</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-600 text-white rounded-full text-[10px] font-bold uppercase pulse-expired">
+                                    Quá hạn 33 ngày
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button onclick="deleteRow(this)" class="p-2 text-red-400 hover:text-red-700 transition-colors" title="Tiêu hủy"><span class="material-symbols-outlined">delete_forever</span></button>
+                            </td>
+                        </tr>
+                        <!-- Row: Safe -->
+                        <tr class="hover:bg-slate-50/80 transition-colors" data-type="safe">
+                            <td class="py-4 px-6 font-mono font-bold text-slate-900">BB-2024-1102</td>
+                            <td class="py-4 px-6"><span class="w-10 h-6 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full font-black text-xs">A+</span></td>
+                            <td class="py-4 px-6 text-sm text-slate-500">01/05/2026</td>
+                            <td class="py-4 px-6 text-sm text-slate-900 font-semibold">12/06/2026</td>
+                            <td class="py-4 px-6">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold uppercase">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> An toàn
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-right">
+                                <button class="p-2 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-between items-center text-xs text-slate-500">
+                <span>Hiển thị 3 đơn vị</span>
+                <div class="flex gap-2">
+                    <button class="px-3 py-1 border border-slate-200 rounded hover:bg-white transition-all">Trước</button>
+                    <button class="px-3 py-1 bg-primary text-white rounded font-bold">1</button>
+                    <button class="px-3 py-1 border border-slate-200 rounded hover:bg-white transition-all">Sau</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+function changeView(type, btn) {
+    // Switch active tab style
+    const buttons = btn.parentElement.querySelectorAll('button');
+    buttons.forEach(b => {
+        b.classList.remove('bg-white', 'text-primary', 'shadow-sm');
+        b.classList.add('text-slate-500');
+    });
+    btn.classList.add('bg-white', 'text-primary', 'shadow-sm');
+    btn.classList.remove('text-slate-500');
+
+    // Filter table
+    const rows = document.querySelectorAll('#inventory-body tr');
+    const tableTitle = document.getElementById('table-title');
+    const btnDelete = document.getElementById('btn-delete-all');
+
+    if (type === 'all') {
+        rows.forEach(r => r.classList.remove('hidden'));
+        tableTitle.innerText = "Danh sách túi máu trong kho";
+        btnDelete.classList.add('hidden');
+    } else if (type === 'expired') {
+        rows.forEach(r => r.dataset.type === 'expired' ? r.classList.remove('hidden') : r.classList.add('hidden'));
+        tableTitle.innerText = "Danh sách túi máu ĐÃ HẾT HẠN";
+        btnDelete.classList.remove('hidden');
+    } else if (type === 'near') {
+        rows.forEach(r => r.dataset.type === 'near' ? r.classList.remove('hidden') : r.classList.add('hidden'));
+        tableTitle.innerText = "Danh sách túi máu SẮP HẾT HẠN";
+        btnDelete.classList.add('hidden');
+    }
+}
+
+function deleteRow(btn) {
+    if(confirm('Bạn có chắc chắn muốn TIÊU HỦY túi máu đã hết hạn này? Hành động này không thể hoàn tác.')) {
+        btn.closest('tr').remove();
+    }
+}
+</script>
+</body>
+</html>

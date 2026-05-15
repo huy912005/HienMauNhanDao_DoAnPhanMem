@@ -17,4 +17,5 @@ public class BloodUnitDTO {
     private Double nhietDoVanChuyen;
     private Date ngayHetHan;
     private String tinhTrangHSD;
+    private String maChienDich; // Thêm trường mã chiến dịch
 }

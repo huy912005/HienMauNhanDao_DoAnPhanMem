@@ -22,8 +22,8 @@ import XacNhanDangKy from "./pages/XacNhanDangKy";
 import ThongKeTonKho from "./pages/qlk/ThongKeTonKho";
 import QuanLyNhapKho from "./pages/qlk/QuanLyNhapKho";
 import QuanLyNhapKhoTheoChienDich from "./pages/qlk/QuanLyNhapKhoTheoChienDich";
+import QuanLyHanDung from "./pages/qlk/QuanLyHanDung";
 import DanhSachDonDangKy from "./pages/DanhSachDonDangKy";
-import DebugLogin from "./pages/qlk/DebugLogin";
 
 // NVYT pages
 import DonDangKy from "./pages/nvyt/DonDangKy";
@@ -81,7 +81,6 @@ function App() {
             <Route path="khai-bao-y-te" element={<KhaiBaoYTe />} />
             <Route path="xac-nhan-dang-ky" element={<XacNhanDangKy />} />
             <Route path="xac-nhan-dang-ky/:maDon" element={<XacNhanDangKy />} />
-            <Route path="debug-login" element={<DebugLogin />} />
           </Route>
           {/* Quản Lý Kho Routes */}
           <Route
@@ -98,6 +97,7 @@ function App() {
               path="nhap-kho-chien-dich"
               element={<QuanLyNhapKhoTheoChienDich />}
             />
+            <Route path="quan-ly-han-dung" element={<QuanLyHanDung />} />
           </Route>
 
           {/* ── Trang bác sĩ (maVaiTro = BS trong TAIKHOAN) ── */}
