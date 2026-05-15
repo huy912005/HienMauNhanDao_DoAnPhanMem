@@ -24,7 +24,7 @@ export default function DebugLogin() {
         </div>
         <h1 className="text-2xl font-bold text-slate-800 mb-4">Debug Login Mode</h1>
         <p className="text-slate-500 mb-8 leading-relaxed">
-          Sửa code xong rồi! Giờ bạn có thể vào thẳng hệ thống <b>Quản lý kho</b> bằng nút bên dưới.
+          Đã khôi phục lối đi tắt! Bạn có thể vào thẳng hệ thống <b>Quản lý kho</b> bằng nút bên dưới.
         </p>
         <button 
           onClick={handleBypass}

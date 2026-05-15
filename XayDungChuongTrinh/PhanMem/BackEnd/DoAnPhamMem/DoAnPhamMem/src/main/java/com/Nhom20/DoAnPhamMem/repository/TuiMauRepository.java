@@ -6,7 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TuiMauRepository extends JpaRepository<TuiMauEntity, String> {
-        long countByTrangThai(com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau trangThai);
+        @org.springframework.data.jpa.repository.Query("SELECT COUNT(t) FROM TuiMauEntity t WHERE t.trangThai = com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau.NHAP_KHO")
+    long countAvailableUnits();
 
         @org.springframework.data.jpa.repository.Query("SELECT new com.Nhom20.DoAnPhamMem.dto.response.MonthlyCollectionStatDTO(MONTH(t.thoiGianLayMau), CAST(COUNT(t) AS int)) "
                         +
