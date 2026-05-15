@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext, useLocation } from 'react-router-dom';
-import { khamLamSangService } from '../../services/khamLamSangService';
+import { khamLamSangService, ketQuaXetNghiemService, thuNhanMauService } from '../../services/khamLamSangService';
 
 export default function KhamLamSang() {
   const { nhanVien } = useOutletContext();
@@ -29,6 +29,8 @@ export default function KhamLamSang() {
     lyDoTuChoi: '',
   });
   const [editSaving, setEditSaving] = useState(false);
+
+
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type });
@@ -522,7 +524,9 @@ export default function KhamLamSang() {
               </div>
             </div>
           )}
+
         </div>
+
       ) : (
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-4 bg-white border border-slate-200 rounded-2xl p-6 h-[320px] flex flex-col items-center justify-center text-center relative overflow-hidden group shadow-sm">

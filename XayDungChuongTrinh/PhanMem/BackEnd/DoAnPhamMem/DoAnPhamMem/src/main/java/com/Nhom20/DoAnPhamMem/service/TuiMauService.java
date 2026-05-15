@@ -27,5 +27,5 @@ public interface TuiMauService {
     
     void updateTuiMau(String maTuiMau, com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request);
 
-    void createTuiMau(com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request);
+    String createTuiMau(com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request);
 }

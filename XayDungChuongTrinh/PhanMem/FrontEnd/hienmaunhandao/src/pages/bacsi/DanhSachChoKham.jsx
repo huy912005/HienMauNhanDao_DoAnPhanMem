@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { donDangKyNvytService } from '../../services/nvytService';
+import { khamLamSangService } from '../../services/khamLamSangService';
 
 const PAGE_SIZE = 10;
 /** Lấy một lần rồi lọc + phân trang client (API chưa hỗ trợ lọc theo trạng thái) */
@@ -23,6 +24,7 @@ function trangThaiBadgeClass(don) {
 export default function DanhSachChoKham() {
   const navigate = useNavigate();
   const [filteredAll, setFilteredAll] = useState([]);
+  const [maDonDaKham, setMaDonDaKham] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState('');
@@ -37,9 +39,18 @@ export default function DanhSachChoKham() {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await donDangKyNvytService.getAll(0, FETCH_CHUNK, keyword);
+      const [res, khamRes] = await Promise.all([
+        donDangKyNvytService.getAll(0, FETCH_CHUNK, keyword),
+        khamLamSangService.getAll()
+      ]);
       const raw = Array.isArray(res) ? res : (res.content || []);
-      setFilteredAll(raw.filter((don) => !laTrangThaiDaHien(don.trangThai)));
+      const khamData = Array.isArray(khamRes) ? khamRes : (khamRes?.data || []);
+      
+      const khamMaDonSet = new Set(khamData.map(k => k.maDon));
+      setMaDonDaKham(Array.from(khamMaDonSet));
+      
+      // Lọc bỏ những đơn đã có kết quả khám sàng lọc
+      setFilteredAll(raw.filter((don) => !laTrangThaiDaHien(don.trangThai) && !khamMaDonSet.has(don.maDon)));
     } catch {
       showToast('Lỗi khi tải danh sách đơn đăng ký', 'error');
     } finally {
@@ -203,15 +214,22 @@ export default function DanhSachChoKham() {
                         )}
                       </td>
                       <td className="px-5 py-4">
-                        <button
-                          type="button"
-                          onClick={() => goKham(don.maDon)}
-                          className="h-9 px-3 rounded-lg bg-primary text-white text-xs font-bold hover:bg-red-800 transition-colors inline-flex items-center gap-1"
-                          title="Khám lâm sàng"
-                        >
-                          <span className="material-symbols-outlined text-base">clinical_notes</span>
-                          Khám
-                        </button>
+                        {maDonDaKham.includes(don.maDon) ? (
+                          <span className="h-9 px-3 rounded-lg bg-slate-100 text-slate-400 text-xs font-bold inline-flex items-center gap-1 cursor-not-allowed">
+                            <span className="material-symbols-outlined text-base">check_circle</span>
+                            Đã khám
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => goKham(don.maDon)}
+                            className="h-9 px-3 rounded-lg bg-primary text-white text-xs font-bold hover:bg-red-800 transition-colors inline-flex items-center gap-1"
+                            title="Khám lâm sàng"
+                          >
+                            <span className="material-symbols-outlined text-base">clinical_notes</span>
+                            Khám
+                          </button>
+                        )}
                       </td>
                     </tr>
                   );

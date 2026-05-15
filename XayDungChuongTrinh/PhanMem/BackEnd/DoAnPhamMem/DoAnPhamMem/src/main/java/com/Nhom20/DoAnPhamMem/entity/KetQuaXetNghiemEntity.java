@@ -20,6 +20,12 @@ public class KetQuaXetNghiemEntity {
     @JoinColumn(name = "maNhanVien")
     private NhanVienEntity nhanVienXetNghiem;
     @Column(name = "nhomMau", length = 5)
+    // NhomMauConverter (autoApply=true) sẽ tự chuyển đổi - không dùng @Enumerated
     private NhomMau nhomMau;
+    @Column(name = "soLanXetNghiem")
+    private Integer soLanXetNghiem;
+    @Column(name = "ketQua")
+    private Boolean ketQua;
+    @Column(name = "moTa", length = 500)
     private String moTa;
-}
+}

@@ -227,7 +227,7 @@ public class TuiMauServiceImpl implements TuiMauService {
 
     @Override
     @Transactional
-    public void createTuiMau(TuiMauRequest request) {
+    public String createTuiMau(TuiMauRequest request) {
         // 1. Tìm đơn đăng ký
         DonDangKyEntity don = donDangKyRepository.findById(request.getMaDon())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + request.getMaDon()));
@@ -236,13 +236,15 @@ public class TuiMauServiceImpl implements TuiMauService {
         NhanVienEntity nv = nhanVienRepository.findById(request.getMaNV())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy nhân viên: " + request.getMaNV()));
 
-        // 3. Tìm kho máu tương ứng với nhóm máu của TNV
+        // 3. Tìm kho máu tương ứng với nhóm máu của TNV (nếu TNV đã có nhóm máu)
+        // Nếu TNV chưa có nhóm máu, kho sẽ được gán sau khi có kết quả xét nghiệm
         TinhNguyenVienEntity tnv = don.getTinhNguyenVien();
-        KhoMauEntity kho = khoMauRepository.findByNhomMau(tnv.getNhomMau())
-                .orElseThrow(() -> new RuntimeException(
-                        "Không tìm thấy kho máu cho nhóm máu: " + tnv.getNhomMau().getDbValue()));
+        KhoMauEntity kho = null;
+        if (tnv != null && tnv.getNhomMau() != null) {
+            kho = khoMauRepository.findByNhomMau(tnv.getNhomMau()).orElse(null);
+        }
 
-        // 4. Sinh mã túi máu mới
+        // 4. Sinh mã túi máu mới: đếm max số, tách prefix "TM" và số, sau đó +1
         Integer maxId = tuiMauRepository.findMaxMaTuiMau();
         String nextMaTuiMau = "TM" + String.format("%05d", (maxId != null ? maxId + 1 : 1));
 
@@ -263,5 +265,7 @@ public class TuiMauServiceImpl implements TuiMauService {
         don.setTrangThai(TrangThaiDonDangKy.DA_HIEN);
         don.setTheTich(TheTich.fromDbValue(request.getTheTich()));
         donDangKyRepository.save(don);
+
+        return nextMaTuiMau;
     }
 }

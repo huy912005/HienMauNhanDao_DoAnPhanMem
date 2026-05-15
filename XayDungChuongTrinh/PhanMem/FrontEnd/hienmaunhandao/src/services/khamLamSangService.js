@@ -18,3 +18,15 @@ export const khamLamSangService = {
     http.post(`/ketqualamsang/${encodeURIComponent(String(maKQ).trim())}/cap-nhat`, data),
   delete: (id) => http.delete(`/ketqualamsang/${id}`),
 };
+
+export const ketQuaXetNghiemService = {
+  // Lấy tất cả kết quả xét nghiệm
+  getAll: () => http.get('/ketquaxetnghiem'),
+  // Tạo kết quả xét nghiệm mới khi có túi máu (mã KQ tự sinh)
+  create: (data) => http.post('/ketquaxetnghiem', data),
+  // Lấy kết quả xét nghiệm theo mã túi máu
+  getByMaTuiMau: (maTuiMau) => http.get(`/ketquaxetnghiem/tui-mau/${encodeURIComponent(maTuiMau)}`),
+  // Bác sĩ cập nhật kết quả: nhóm máu, số lần xét nghiệm, mô tả
+  update: (maKQ, data) => http.put(`/ketquaxetnghiem/${encodeURIComponent(maKQ)}`, data),
+};
+

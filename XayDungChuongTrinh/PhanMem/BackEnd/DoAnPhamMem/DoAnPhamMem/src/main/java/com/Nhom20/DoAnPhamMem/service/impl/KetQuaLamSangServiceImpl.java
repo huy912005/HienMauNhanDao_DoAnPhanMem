@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,13 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
     private final NhanVienRepository nhanVienRepository;
     private final TuiMauRepository tuiMauRepository;
 
+    @Transactional(readOnly = true)
+    public List<String> getMaDonDaKham() {
+        return ketQuaLamSangRepository.findAllMaDonDaKham();
+    }
+
     @Override
+    @Transactional(readOnly = true)
     public List<KetQuaLamSangResponse> getAll() {
         return ketQuaLamSangRepository.findAll().stream()
                 .map(ketQuaLamSangMapper::toResponse)
@@ -43,6 +48,7 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<KetQuaLamSangResponse> getWaiting() {
         // Lấy tất cả đơn ở trạng thái Đã đăng ký, Chờ khám hoặc Chưa hiến
         return donDangKyRepository.findAll().stream()
@@ -53,17 +59,18 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
                     TinhNguyenVienEntity tnv = don.getTinhNguyenVien();
                     return KetQuaLamSangResponse.builder()
                             .maDon(don.getMaDon())
-                            .tenTinhNguyenVien(tnv.getHoTen())
-                            .ngaySinh(tnv.getNgaySinh() != null ? tnv.getNgaySinh().toString() : "---")
-                            .gioiTinh(tnv.getGioiTinh() != null ? tnv.getGioiTinh().getDbValue() : "---")
-                            .nhomMau(tnv.getNhomMau() != null ? tnv.getNhomMau().getDbValue() : "---")
-                            .tenChienDich(don.getChienDich().getTenChienDich())
+                            .tenTinhNguyenVien(tnv != null ? tnv.getHoTen() : null)
+                            .ngaySinh(tnv != null && tnv.getNgaySinh() != null ? tnv.getNgaySinh().toString() : null)
+                            .gioiTinh(tnv != null && tnv.getGioiTinh() != null ? tnv.getGioiTinh().getDbValue() : null)
+                            .nhomMau(tnv != null && tnv.getNhomMau() != null ? tnv.getNhomMau().getDbValue() : null)
+                            .tenChienDich(don.getChienDich() != null ? don.getChienDich().getTenChienDich() : null)
                             .build();
                 })
                 .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ScreeningStatsResponse getStats() {
         List<KetQuaLamSangEntity> all = ketQuaLamSangRepository.findAll();
         long tongSo = all.size();
@@ -84,7 +91,10 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn đăng ký: " + request.getMaDon()));
 
         KetQuaLamSangEntity entity = new KetQuaLamSangEntity();
-        entity.setMaKQ("KQ" + String.format("%05d", System.currentTimeMillis() % 100000));
+        // Sinh mã KQ theo format: tìm max số, tách prefix "KQ" và số, cộng 1
+        Integer maxNum = ketQuaLamSangRepository.findMaxMaKQ();
+        int nextNum = (maxNum != null ? maxNum : 0) + 1;
+        entity.setMaKQ("KL" + String.format("%05d", nextNum));
         entity.setDonDangKy(don);
         entity.setBacSiKham(nhanVienRepository.findById(request.getMaNhanVien()).orElse(null));
         entity.setHuyetAp(request.getHuyetAp());
@@ -98,16 +108,6 @@ public class KetQuaLamSangServiceImpl implements KetQuaLamSangService {
 
         // Không cập nhật DonDangKy ở đây để tránh vi phạm Ràng buộc (Constraint) của DB
         // Chỉ cần lưu KetQuaLamSang là đủ để danh sách Thu nhận máu hiển thị được
-        /*
-         * if (Boolean.TRUE.equals(request.getKetQua())) {
-         * don.setTrangThai(TrangThaiDonDangKy.DA_KHAM);
-         * don.setTheTich(TheTich.fromDbValue(request.getTheTichHien()));
-         * } else {
-         * don.setTrangThai(TrangThaiDonDangKy.CHUA_HIEN);
-         * don.setTheTich(TheTich.fromDbValue(0));
-         * }
-         * donDangKyRepository.save(don);
-         */
     }
 
     @Override
