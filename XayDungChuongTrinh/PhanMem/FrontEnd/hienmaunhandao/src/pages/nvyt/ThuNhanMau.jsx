@@ -31,6 +31,7 @@ function TuiMauModal({ don, item, nhanVien, onClose, onSaved }) {
       }
       onSaved();
     } catch (e) {
+      console.log("Lỗi từ đây : "+e.response || e.message || e);
       setError(e.response?.data?.message || e.message || 'Lỗi khi lưu thông tin túi máu');
     } finally {
       setLoading(false);
