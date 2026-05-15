@@ -17,10 +17,12 @@ public interface TuiMauRepository extends JpaRepository<TuiMauEntity, String> {
         @org.springframework.data.jpa.repository.Query("SELECT t FROM TuiMauEntity t JOIN t.khoMau k " +
                         "WHERE t.trangThai = com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau.NHAP_KHO " +
                         "AND (:search IS NULL OR t.maTuiMau LIKE %:search%) " +
-                        "AND (:bloodType IS NULL OR k.nhomMau = :bloodType)")
+                        "AND (:bloodType IS NULL OR k.nhomMau = :bloodType) " +
+                        "AND (:maChienDich IS NULL OR t.donDangKy.chienDich.maChienDich = :maChienDich)")
         org.springframework.data.domain.Page<TuiMauEntity> searchAndFilterBloodUnits(
                         @org.springframework.data.repository.query.Param("search") String search,
                         @org.springframework.data.repository.query.Param("bloodType") com.Nhom20.DoAnPhamMem.enums.NhomMau bloodType,
+                        @org.springframework.data.repository.query.Param("maChienDich") String maChienDich,
                         org.springframework.data.domain.Pageable pageable);
 
         @org.springframework.data.jpa.repository.Query(value = "SELECT MAX(CAST(SUBSTRING(maTuiMau, 3) AS UNSIGNED)) FROM tuimau", nativeQuery = true)

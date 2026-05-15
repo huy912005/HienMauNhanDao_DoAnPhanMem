@@ -11,7 +11,6 @@ public class TrangThaiTuiMauConverter implements AttributeConverter<TrangThaiTui
         if (attribute == null) return null;
         return attribute.getDbValue();
     }
-
     @Override
     public TrangThaiTuiMau convertToEntityAttribute(String dbData) {
         if (dbData == null) return null;

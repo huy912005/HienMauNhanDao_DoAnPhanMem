@@ -11,7 +11,6 @@ public class NhomMauConverter implements AttributeConverter<NhomMau, String> {
         if (attribute == null) return null;
         return attribute.getDbValue();
     }
-
     @Override
     public NhomMau convertToEntityAttribute(String dbData) {
         if (dbData == null) return null;

@@ -11,7 +11,6 @@ public class TheTichTuiMauConverter implements AttributeConverter<TheTichTuiMau,
         if (attribute == null) return null;
         return attribute.getMl();
     }
-
     @Override
     public TheTichTuiMau convertToEntityAttribute(Integer dbData) {
         if (dbData == null) return null;

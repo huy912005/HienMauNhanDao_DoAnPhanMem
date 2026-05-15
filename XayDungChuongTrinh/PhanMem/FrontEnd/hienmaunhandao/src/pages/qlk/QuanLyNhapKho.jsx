@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import http from '../utils/http';
+import http from '../../utils/http';
 
 const QuanLyNhapKho = () => {
   const [barcode, setBarcode] = useState('');
