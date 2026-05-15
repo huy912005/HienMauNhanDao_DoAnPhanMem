@@ -317,7 +317,11 @@ const QuanLyHanDung = () => {
                                                 {new Date(unit.ngayHetHan).toLocaleDateString('vi-VN')}
                                             </td>
                                             <td className="py-4 px-6">
-                                                {unit.trangThaiHan === 'EXPIRED' ? (
+                                                {unit.trangThaiHan === 'CRITICAL_EXPIRED' ? (
+                                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white rounded-full text-[10px] font-bold uppercase shadow-lg animate-bounce">
+                                                        <span className="material-symbols-outlined text-[12px]">priority_high</span> Quá hạn {Math.abs(unit.daysRemaining)} ngày
+                                                    </span>
+                                                ) : unit.trangThaiHan === 'EXPIRED' ? (
                                                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-600 text-white rounded-full text-[10px] font-bold uppercase shadow-sm">
                                                         Quá hạn {Math.abs(unit.daysRemaining)} ngày
                                                     </span>

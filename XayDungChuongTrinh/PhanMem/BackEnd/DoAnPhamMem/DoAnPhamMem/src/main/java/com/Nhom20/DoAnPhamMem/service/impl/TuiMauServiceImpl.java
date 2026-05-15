@@ -289,7 +289,9 @@ public class TuiMauServiceImpl implements TuiMauService {
                         long daysRemaining = ChronoUnit.DAYS.between(now, hetHan);
                         dto.setDaysRemaining(daysRemaining);
 
-                        if (daysRemaining < 0) {
+                        if (daysRemaining < -30) {
+                            dto.setTrangThaiHan("CRITICAL_EXPIRED");
+                        } else if (daysRemaining < 0) {
                             dto.setTrangThaiHan("EXPIRED");
                         } else if (daysRemaining <= 7) {
                             dto.setTrangThaiHan("NEAR_EXPIRY");
@@ -308,7 +310,9 @@ public class TuiMauServiceImpl implements TuiMauService {
                 })
                 .filter(dto -> {
                     // Filter by viewMode
-                    if ("expired".equalsIgnoreCase(viewMode)) return "EXPIRED".equals(dto.getTrangThaiHan());
+                    if ("expired".equalsIgnoreCase(viewMode)) {
+                        return "EXPIRED".equals(dto.getTrangThaiHan()) || "CRITICAL_EXPIRED".equals(dto.getTrangThaiHan());
+                    }
                     if ("near".equalsIgnoreCase(viewMode)) return "NEAR_EXPIRY".equals(dto.getTrangThaiHan());
                     return true;
                 })
@@ -319,7 +323,7 @@ public class TuiMauServiceImpl implements TuiMauService {
     public ExpiryStatsDTO getExpiryStats() {
         List<BloodExpiryDTO> allData = getExpiryManagementData("all", null);
         ExpiryStatsDTO stats = new ExpiryStatsDTO();
-        stats.setExpiredCount(allData.stream().filter(d -> "EXPIRED".equals(d.getTrangThaiHan())).count());
+        stats.setExpiredCount(allData.stream().filter(d -> "EXPIRED".equals(d.getTrangThaiHan()) || "CRITICAL_EXPIRED".equals(d.getTrangThaiHan())).count());
         stats.setNearExpiryCount(allData.stream().filter(d -> "NEAR_EXPIRY".equals(d.getTrangThaiHan())).count());
         stats.setSafeCount(allData.stream().filter(d -> "SAFE".equals(d.getTrangThaiHan())).count());
         return stats;
