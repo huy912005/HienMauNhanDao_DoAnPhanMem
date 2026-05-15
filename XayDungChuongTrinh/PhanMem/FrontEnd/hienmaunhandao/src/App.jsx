@@ -26,7 +26,6 @@ import TinhNguyenVien from './pages/nvyt/TinhNguyenVien';
 import KhaiBaoYTeNVYT from './pages/nvyt/KhaiBaoYTeNVYT';
 import KhamLamSang from './pages/bacsi/KhamLamSang';
 import DanhSachChoKham from './pages/bacsi/DanhSachChoKham';
-import KetQuaXetNghiem from './pages/bacsi/KetQuaXetNghiem';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
 import ThuNhanMau from './pages/nvyt/ThuNhanMau'; // Trigger Vite reload
 
@@ -85,7 +84,6 @@ function App() {
             <Route index element={<Navigate to="danh-sach-cho-kham" replace />} />
             <Route path="danh-sach-cho-kham" element={<DanhSachChoKham />} />
             <Route path="kham-lam-sang" element={<KhamLamSang />} />
-            <Route path="ket-qua-xet-nghiem" element={<KetQuaXetNghiem />} />
           </Route>
 
           {/* ── Trang nhân viên y tế ── */}
