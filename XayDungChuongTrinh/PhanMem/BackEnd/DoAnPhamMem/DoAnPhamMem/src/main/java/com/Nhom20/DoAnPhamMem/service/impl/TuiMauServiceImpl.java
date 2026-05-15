@@ -290,7 +290,9 @@ public class TuiMauServiceImpl implements TuiMauService {
                         dto.setDaysRemaining(daysRemaining);
 
                         if (daysRemaining < -30) {
-                            dto.setTrangThaiHan("CRITICAL_EXPIRED");
+                            dto.setTrangThaiHan("ARCHIVED_EXPIRED"); // Quá hạn trên 30 ngày -> Làm mờ
+                        } else if (daysRemaining <= -20) {
+                            dto.setTrangThaiHan("WARNING_EXPIRED"); // Quá hạn 20-30 ngày -> Chớp đỏ
                         } else if (daysRemaining < 0) {
                             dto.setTrangThaiHan("EXPIRED");
                         } else if (daysRemaining <= 7) {
@@ -311,9 +313,12 @@ public class TuiMauServiceImpl implements TuiMauService {
                 .filter(dto -> {
                     // Filter by viewMode
                     if ("expired".equalsIgnoreCase(viewMode)) {
-                        return "EXPIRED".equals(dto.getTrangThaiHan()) || "CRITICAL_EXPIRED".equals(dto.getTrangThaiHan());
+                        return "EXPIRED".equals(dto.getTrangThaiHan()) 
+                            || "WARNING_EXPIRED".equals(dto.getTrangThaiHan())
+                            || "ARCHIVED_EXPIRED".equals(dto.getTrangThaiHan());
                     }
                     if ("near".equalsIgnoreCase(viewMode)) return "NEAR_EXPIRY".equals(dto.getTrangThaiHan());
+                    if ("safe".equalsIgnoreCase(viewMode)) return "SAFE".equals(dto.getTrangThaiHan());
                     return true;
                 })
                 .collect(Collectors.toList());
@@ -323,9 +328,18 @@ public class TuiMauServiceImpl implements TuiMauService {
     public ExpiryStatsDTO getExpiryStats() {
         List<BloodExpiryDTO> allData = getExpiryManagementData("all", null);
         ExpiryStatsDTO stats = new ExpiryStatsDTO();
-        stats.setExpiredCount(allData.stream().filter(d -> "EXPIRED".equals(d.getTrangThaiHan()) || "CRITICAL_EXPIRED".equals(d.getTrangThaiHan())).count());
+        stats.setExpiredCount(allData.stream().filter(d -> 
+            "EXPIRED".equals(d.getTrangThaiHan()) 
+            || "WARNING_EXPIRED".equals(d.getTrangThaiHan())
+            || "ARCHIVED_EXPIRED".equals(d.getTrangThaiHan())
+        ).count());
         stats.setNearExpiryCount(allData.stream().filter(d -> "NEAR_EXPIRY".equals(d.getTrangThaiHan())).count());
         stats.setSafeCount(allData.stream().filter(d -> "SAFE".equals(d.getTrangThaiHan())).count());
+        
+        // Kiểm tra xem toàn hệ thống có túi nào đang ở mức cảnh báo 20-30 ngày không
+        boolean hasCritical = allData.stream().anyMatch(d -> "WARNING_EXPIRED".equals(d.getTrangThaiHan()));
+        stats.setHasCritical(hasCritical);
+        
         return stats;
     }
 

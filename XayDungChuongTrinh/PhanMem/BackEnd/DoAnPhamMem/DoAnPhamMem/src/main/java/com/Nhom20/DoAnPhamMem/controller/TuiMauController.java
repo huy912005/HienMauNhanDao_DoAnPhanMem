@@ -59,9 +59,11 @@ public class TuiMauController {
 
     // --- Expiry Management ---
     @GetMapping("/expiry-management")
-    public ResponseEntity<List<BloodExpiryDTO>> getExpiryManagementData(
+    public ResponseEntity<List<BloodExpiryDTO>> getExpiryManagement(
             @RequestParam(defaultValue = "all") String viewMode,
-            @RequestParam(required = false) String search) {
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "30") int size) {
         return ResponseEntity.ok(tuiMauService.getExpiryManagementData(viewMode, search));
     }
 
