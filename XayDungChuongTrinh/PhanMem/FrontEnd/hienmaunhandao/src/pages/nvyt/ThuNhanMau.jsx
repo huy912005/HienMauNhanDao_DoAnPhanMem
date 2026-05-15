@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { thuNhanMauService } from '../../services/khamLamSangService';
+import { thuNhanMauService, ketQuaXetNghiemService } from '../../services/khamLamSangService';
 import { donDangKyNvytService } from '../../services/nvytService';
 
 // ─── Modal Thu Nhận Máu ─────────────────────────────────────────────────────
@@ -27,7 +27,20 @@ function TuiMauModal({ don, item, nhanVien, onClose, onSaved }) {
       if (isEdit) {
         await thuNhanMauService.update(item.maTuiMau, data);
       } else {
-        await thuNhanMauService.create(data);
+        // Tạo túi máu → nhận lại maTuiMau mới
+        const res = await thuNhanMauService.create(data);
+        const maTuiMauMoi = res?.data?.maTuiMau || res?.maTuiMau;
+        // Tự động tạo kết quả xét nghiệm với mã khóa ngoại đã có
+        if (maTuiMauMoi && data.maNV) {
+          try {
+            await ketQuaXetNghiemService.create({
+              maTuiMau: maTuiMauMoi,
+              maNhanVien: data.maNV,
+            });
+          } catch (xnErr) {
+            console.warn('Tạo kết quả xét nghiệm thất bại (không ảnh hưởng túi máu):', xnErr);
+          }
+        }
       }
       onSaved();
     } catch (e) {

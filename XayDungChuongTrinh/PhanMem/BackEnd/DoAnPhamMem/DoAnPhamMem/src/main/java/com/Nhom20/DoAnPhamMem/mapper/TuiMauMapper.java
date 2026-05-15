@@ -10,7 +10,7 @@ public interface TuiMauMapper {
 
     @Mapping(target = "maDon", source = "donDangKy.maDon")
     @Mapping(target = "tenTinhNguyenVien", source = "donDangKy.tinhNguyenVien.hoTen")
-    @Mapping(target = "nhomMau", source = "donDangKy.tinhNguyenVien.nhomMau.dbValue")
+    @Mapping(target = "nhomMau", expression = "java(entity.getDonDangKy() != null && entity.getDonDangKy().getTinhNguyenVien() != null && entity.getDonDangKy().getTinhNguyenVien().getNhomMau() != null ? entity.getDonDangKy().getTinhNguyenVien().getNhomMau().getDbValue() : null)")
     @Mapping(target = "theTich", source = "theTich.ml")
     @Mapping(target = "trangThai", source = "trangThai.dbValue")
     @Mapping(target = "tenChienDich", source = "donDangKy.chienDich.tenChienDich")

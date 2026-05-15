@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum TrangThaiTuiMau {
     CHO_XET_NGHIEM("Chờ xét nghiệm"),
+    YEU_CAU_NHAP_KHO("Yêu cầu nhập kho"),
     NHAP_KHO("Nhập kho"),
     DA_XUAT("Đã xuất"),
     HUY("Hủy");

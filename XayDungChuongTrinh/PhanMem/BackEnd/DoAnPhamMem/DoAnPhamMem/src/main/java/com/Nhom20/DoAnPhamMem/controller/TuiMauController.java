@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tuimau")
@@ -18,9 +19,9 @@ public class TuiMauController {
     private final TuiMauService tuiMauService;
     
     @PostMapping
-    public ResponseEntity<Void> createTuiMau(@RequestBody com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request) {
-        tuiMauService.createTuiMau(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Map<String, String>> createTuiMau(@RequestBody com.Nhom20.DoAnPhamMem.dto.request.TuiMauRequest request) {
+        String maTuiMau = tuiMauService.createTuiMau(request);
+        return ResponseEntity.ok(Map.of("maTuiMau", maTuiMau));
     }
 
     // --- My Features ---
