@@ -4,6 +4,7 @@ import { chienDichService } from '../services/chienDichService';
 import { DiaDiemService } from '../services/DiaDiemService';
 import { tinhNguyenVienService } from '../services/tinhNguyenVienService';
 import { useQuery } from '@tanstack/react-query';
+import { khamLamSangService, thuNhanMauService } from '../services/khamLamSangService';
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -40,18 +41,18 @@ export default function HomePage() {
         fetchCampaigns();
     }, []);
     const { data: countDD, isLoading: loadingDD } = useQuery({
-    queryKey: ['countDiaDiem'],
-    queryFn: async () => {
-        const response = await DiaDiemService.getDiaDiems();
-        console.log("Dữ liệu địa điểm:", response);
-        const data = response?.data || response;
-        if (Array.isArray(data)) {
-            return data.length;
-        }
-        return data?.totalElements || 0;
-    },
-    staleTime: 10 * 60 * 1000, // 10 phút
-});
+        queryKey: ['countDiaDiem'],
+        queryFn: async () => {
+            const response = await DiaDiemService.getDiaDiems();
+            console.log("Dữ liệu địa điểm:", response);
+            const data = response?.data || response;
+            if (Array.isArray(data)) {
+                return data.length;
+            }
+            return data?.totalElements || 0;
+        },
+        staleTime: 10 * 60 * 1000, // 10 phút
+    });
     const { data: countNH, isLoading, isError } = useQuery({
         queryKey: ['countNguoiHien'],
         queryFn: async () => {
@@ -59,6 +60,17 @@ export default function HomePage() {
             return response?.totalElements || response?.data?.totalElements || 0;
         }
     });
+    const{data:countTuiMau}=useQuery({
+        queryKey:['countTuiMau'],
+        queryFn:async()=>{
+            const response = await thuNhanMauService.getAll();
+            const tuiMauNhapKho = response.filter(
+                item => item.trangThai === "Nhập kho"
+            );
+        console.log(tuiMauNhapKho);
+        return tuiMauNhapKho.length;
+        }
+    })
 
     const getCampaignStatus = (campaign) => {
         const now = new Date();
@@ -120,7 +132,7 @@ export default function HomePage() {
                         <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-colors">
                             <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>bloodtype</span>
                         </div>
-                        <h3 className="text-4xl font-black text-slate-900 mb-2">50,000+</h3>
+                        <h3 className="text-4xl font-black text-slate-900 mb-2">{countTuiMau}</h3>
                         <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Số lượng máu tiếp nhận</p>
                     </div>
                     <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 flex flex-col items-center text-center group hover:-translate-y-2 transition-all duration-300">
