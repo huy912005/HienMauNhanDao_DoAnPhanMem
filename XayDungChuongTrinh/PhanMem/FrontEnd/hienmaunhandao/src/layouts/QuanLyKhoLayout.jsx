@@ -26,6 +26,7 @@ export default function QuanLyKhoLayout() {
   const menu = [
     { page: '/quan-ly-kho/thong-ke', icon: 'pie_chart', label: 'Thống kê tồn kho' },
     { page: '/quan-ly-kho/nhap-kho', icon: 'add_box', label: 'Quản lý nhập kho' },
+    { page: '/quan-ly-kho/nhap-kho-chien-dich', icon: 'event_repeat', label: 'Nhập kho theo chiến dịch' },
   ];
 
   return (
