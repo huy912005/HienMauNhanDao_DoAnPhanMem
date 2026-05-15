@@ -136,6 +136,7 @@ const QuanLyHanDung = () => {
                             <thead>
                                 <tr className="bg-white border-b border-slate-100">
                                     <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Mã túi máu</th>
+                                    <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Mã chiến dịch</th>
                                     <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Nhóm máu</th>
                                     <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Thể tích</th>
                                     <th className="py-4 px-6 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ngày lấy mẫu</th>
@@ -147,7 +148,7 @@ const QuanLyHanDung = () => {
                             <tbody className="divide-y divide-slate-50">
                                 {bloodUnits.length === 0 ? (
                                     <tr>
-                                        <td colSpan="7" className="py-20 text-center text-slate-400">
+                                        <td colSpan="8" className="py-20 text-center text-slate-400">
                                             <div className="flex flex-col items-center">
                                                 <span className="material-symbols-outlined text-5xl mb-2 opacity-20">inventory_2</span>
                                                 <p className="text-sm italic">Chưa có dữ liệu túi máu nào được tìm thấy</p>
