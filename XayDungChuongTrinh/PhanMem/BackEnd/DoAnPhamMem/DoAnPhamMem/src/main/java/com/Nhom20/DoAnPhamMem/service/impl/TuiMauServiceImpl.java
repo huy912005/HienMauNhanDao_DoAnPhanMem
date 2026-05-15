@@ -40,7 +40,7 @@ public class TuiMauServiceImpl implements TuiMauService {
     @Override
     public DashboardStatsDTO getDashboardStats() {
         DashboardStatsDTO stats = new DashboardStatsDTO();
-        stats.setTotalBloodUnits((int) tuiMauRepository.countByTrangThai(TrangThaiTuiMau.NHAP_KHO));
+        stats.setTotalBloodUnits((int) tuiMauRepository.countAvailableUnits());
         stats.setNewVolunteers((int) tinhNguyenVienRepository.count());
         stats.setActiveCampaigns((int) chienDichRepository.count());
 
