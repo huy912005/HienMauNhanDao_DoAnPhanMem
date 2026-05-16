@@ -36,10 +36,13 @@ const QuanLyHanDung = () => {
                 http.get('/tuimau/expiry-stats'),
                 http.get(`/tuimau/expiry-management?viewMode=${viewMode}&search=${searchQuery}`)
             ]);
-            setStats(statsRes);
-            setBloodUnits(unitsRes);
+            setStats(statsRes || { expiredCount: 0, nearExpiryCount: 0, safeCount: 0, hasCritical: false });
+            setBloodUnits(Array.isArray(unitsRes) ? unitsRes : []);
         } catch (error) {
             console.error("Lỗi khi lấy dữ liệu hạn dùng:", error);
+            // Don't let it crash, set default values
+            setStats({ expiredCount: 0, nearExpiryCount: 0, safeCount: 0, hasCritical: false });
+            setBloodUnits([]);
         } finally {
             setLoading(false);
         }
@@ -385,7 +388,7 @@ const QuanLyHanDung = () => {
                                         }`}>
                                             <td className={`py-4 px-6 font-mono font-bold ${
                                                 unit.trangThaiHan === 'ARCHIVED_EXPIRED' ? 'text-slate-400' :
-                                                unit.trangThaiHan.includes('EXPIRED') ? 'text-red-700' : 'text-slate-900'
+                                                (unit.trangThaiHan?.includes('EXPIRED')) ? 'text-red-700' : 'text-slate-900'
                                             }`}>
                                                 {unit.maTuiMau}
                                             </td>
@@ -393,11 +396,11 @@ const QuanLyHanDung = () => {
                                             <td className="py-4 px-6">
                                                 <span className={`w-10 h-6 flex items-center justify-center rounded-full font-black text-xs ${
                                                     unit.trangThaiHan === 'ARCHIVED_EXPIRED' ? 'bg-slate-200 text-slate-400' :
-                                                    unit.nhomMau.startsWith('O') ? 'bg-red-100 text-red-700' : 
-                                                    unit.nhomMau.startsWith('A') ? 'bg-blue-100 text-blue-700' :
+                                                    unit.nhomMau?.startsWith('O') ? 'bg-red-100 text-red-700' : 
+                                                    unit.nhomMau?.startsWith('A') ? 'bg-blue-100 text-blue-700' :
                                                     'bg-purple-100 text-purple-700'
                                                 }`}>
-                                                    {unit.nhomMau}
+                                                    {unit.nhomMau || 'N/A'}
                                                 </span>
                                             </td>
                                             <td className="py-4 px-6 text-sm text-slate-700 text-center font-medium">{unit.theTich}ml</td>
@@ -406,7 +409,7 @@ const QuanLyHanDung = () => {
                                             </td>
                                             <td className={`py-4 px-6 text-sm font-bold ${
                                                 unit.trangThaiHan === 'ARCHIVED_EXPIRED' ? 'text-slate-400' :
-                                                unit.trangThaiHan.includes('EXPIRED') ? 'text-red-600' : 'text-slate-700'
+                                                (unit.trangThaiHan?.includes('EXPIRED')) ? 'text-red-600' : 'text-slate-700'
                                             }`}>
                                                 {new Date(unit.ngayHetHan).toLocaleDateString('vi-VN')}
                                             </td>
