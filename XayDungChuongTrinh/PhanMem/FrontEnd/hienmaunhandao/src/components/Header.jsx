@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { donDangKyService } from '../services/donDangKy';
 import { tinhNguyenVienService } from '../services/tinhNguyenVienService';
@@ -31,6 +31,13 @@ export default function Header() {
   // --- Notification state ---
   const [notifications, setNotifications] = useState([]);
   const [notifLoading, setNotifLoading] = useState(false);
+  // Set chứa maDon đã đọc, lưu vào localStorage
+  const [readIds, setReadIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('readNotifIds');
+      return new Set(saved ? JSON.parse(saved) : []);
+    } catch { return new Set(); }
+  });
 
   useEffect(() => {
     const campaign = localStorage.getItem('selectedCampaign');
@@ -58,6 +65,29 @@ export default function Header() {
     };
     fetchNotifications();
   }, [token, userEmail]);
+
+  // Đánh dấu tất cả thông báo hiện tại là đã đọc
+  const markAllAsRead = useCallback(() => {
+    if (notifications.length === 0) return;
+    setReadIds(prev => {
+      const next = new Set(prev);
+      notifications.forEach(n => next.add(String(n.maDon)));
+      localStorage.setItem('readNotifIds', JSON.stringify([...next]));
+      return next;
+    });
+  }, [notifications]);
+
+  // Đánh dấu một thông báo đã đọc khi click
+  const markOneAsRead = useCallback((maDon) => {
+    setReadIds(prev => {
+      const next = new Set(prev);
+      next.add(String(maDon));
+      localStorage.setItem('readNotifIds', JSON.stringify([...next]));
+      return next;
+    });
+  }, []);
+
+  const unreadCount = notifications.filter(n => !readIds.has(String(n.maDon))).length;
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -114,7 +144,14 @@ export default function Header() {
             {token ? (
               <>
                 {/* === CHUÔNG THÔNG BÁO - HOVER === */}
-                <div className="relative group/notif" id="notif-bell-wrapper">
+                <div
+                  className="relative group/notif"
+                  id="notif-bell-wrapper"
+                  onMouseEnter={() => {
+                    // Delay nhỏ để user thấy badge unread trước khi tự động đánh dấu đọc
+                    setTimeout(markAllAsRead, 1500);
+                  }}
+                >
                   {/* Nút chuông */}
                   <button
                     id="notif-bell-btn"
@@ -125,8 +162,12 @@ export default function Header() {
                     <span
                       className="material-symbols-outlined transition-all duration-200 group-hover/notif:[font-variation-settings:'FILL'_1]"
                     >notifications</span>
-                    {notifications.length > 0 && (
-                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-600 rounded-full ring-2 ring-white animate-pulse"></span>
+                    {unreadCount > 0 && (
+                      <span className="absolute top-1 right-1 min-w-[16px] h-4 bg-red-600 rounded-full ring-2 ring-white animate-pulse flex items-center justify-center">
+                        <span className="text-white text-[9px] font-black leading-none px-0.5">
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      </span>
                     )}
                   </button>
 
@@ -152,9 +193,9 @@ export default function Header() {
                           >notifications_active</span>
                           <span className="text-white font-bold text-sm tracking-wide">THÔNG BÁO CỦA BẠN</span>
                         </div>
-                        {notifications.length > 0 && (
+                        {unreadCount > 0 && (
                           <span className="bg-white text-red-600 text-xs font-black px-2 py-0.5 rounded-full">
-                            {notifications.length}
+                            {unreadCount}
                           </span>
                         )}
                       </div>
@@ -184,34 +225,66 @@ export default function Header() {
                           /* Danh sách thông báo - box lồng box */
                           notifications.map((don) => {
                             const style = getStatusStyle(don.trangThai);
+                            const isRead = readIds.has(String(don.maDon));
                             return (
                               <button
                                 key={don.maDon}
-                                onClick={() => navigate(`/xac-nhan-dang-ky/${don.maDon}`)}
-                                className={`w-full text-left rounded-xl border ${style.border} ${style.bg} p-3 hover:brightness-95 transition-all duration-150 active:scale-[0.98]`}
+                                onClick={() => {
+                                  markOneAsRead(don.maDon);
+                                  navigate(`/xac-nhan-dang-ky/${don.maDon}`);
+                                }}
+                                className={`w-full text-left rounded-xl border p-3 transition-all duration-150 active:scale-[0.98] ${
+                                  isRead
+                                    ? 'border-slate-100 bg-slate-50/60 hover:bg-slate-100/70 opacity-60'
+                                    : `${style.border} ${style.bg} hover:brightness-95`
+                                }`}
                               >
-                                {/* Inner box trắng bên trong */}
-                                <div className="bg-white rounded-lg border border-slate-100 shadow-sm p-3 flex items-start gap-3">
-                                  <div className={`w-9 h-9 rounded-full ${style.bg} border ${style.border} flex items-center justify-center shrink-0`}>
+                                {/* Inner box bên trong */}
+                                <div className={`rounded-lg border shadow-sm p-3 flex items-start gap-3 ${
+                                  isRead ? 'bg-white/70 border-slate-100' : 'bg-white border-slate-100'
+                                }`}>
+                                  {/* Chấm chưa đọc */}
+                                  {!isRead && (
+                                    <span className={`absolute mt-1 ml-1 w-2 h-2 rounded-full ${style.dot} shrink-0 self-start`} style={{ position: 'relative', top: '2px', flexShrink: 0 }}></span>
+                                  )}
+                                  <div className={`w-9 h-9 rounded-full border flex items-center justify-center shrink-0 ${
+                                    isRead ? 'bg-slate-100 border-slate-200' : `${style.bg} ${style.border}`
+                                  }`}>
                                     <span
-                                      className={`material-symbols-outlined ${style.color} text-[18px]`}
+                                      className={`material-symbols-outlined text-[18px] ${
+                                        isRead ? 'text-slate-400' : style.color
+                                      }`}
                                       style={{ fontVariationSettings: "'FILL' 1" }}
                                     >{style.icon}</span>
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center justify-between gap-2 mb-1">
-                                      <span className="text-xs font-black text-slate-500 uppercase tracking-wider">{don.maDon}</span>
-                                      <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${style.bg} ${style.color} border ${style.border}`}>
-                                        <span className={`w-1.5 h-1.5 rounded-full ${style.dot} inline-block`}></span>
-                                        {don.trangThai}
-                                      </span>
+                                      <span className={`text-xs uppercase tracking-wider ${
+                                        isRead ? 'font-medium text-slate-400' : 'font-black text-slate-500'
+                                      }`}>{don.maDon}</span>
+                                      <div className="flex items-center gap-1.5">
+                                        {!isRead && (
+                                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block shrink-0"></span>
+                                        )}
+                                        <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                                          isRead
+                                            ? 'bg-slate-100 text-slate-400 border-slate-200'
+                                            : `${style.bg} ${style.color} ${style.border}`
+                                        }`}>
+                                          {don.trangThai}
+                                        </span>
+                                      </div>
                                     </div>
-                                    <p className="text-[13px] font-semibold text-slate-800 leading-snug">
+                                    <p className={`text-[13px] leading-snug ${
+                                      isRead ? 'font-normal text-slate-400' : 'font-semibold text-slate-800'
+                                    }`}>
                                       Đơn đăng ký hiến máu của bạn đã được cập nhật trạng thái.
                                     </p>
-                                    <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+                                    <p className={`text-[11px] mt-1 flex items-center gap-1 ${
+                                      isRead ? 'text-slate-300' : 'text-slate-400'
+                                    }`}>
                                       <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
-                                      Nhấn để xem chi tiết
+                                      {isRead ? 'Đã xem' : 'Nhấn để xem chi tiết'}
                                     </p>
                                   </div>
                                 </div>
