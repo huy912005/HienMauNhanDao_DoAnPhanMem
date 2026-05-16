@@ -1,5 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { donDangKyService } from '../services/donDangKy';
+import { tinhNguyenVienService } from '../services/tinhNguyenVienService';
+
+// Các trạng thái cần lọc ra - chỉ hiện thông báo khi KHÔNG phải những trạng thái này
+const TRANG_THAI_AN = ['Đã đăng ký', 'Chưa hiến', 'Hủy'];
+
+// Hàm lấy màu & icon dựa trên trạng thái
+function getStatusStyle(trangThai) {
+  const tt = (trangThai || '').toLowerCase();
+  if (tt.includes('hiến') || tt.includes('hoàn thành')) {
+    return { color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200', icon: 'favorite', dot: 'bg-green-500' };
+  }
+  if (tt.includes('từ chối') || tt.includes('không đủ')) {
+    return { color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200', icon: 'cancel', dot: 'bg-red-500' };
+  }
+  if (tt.includes('khám') || tt.includes('chờ')) {
+    return { color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200', icon: 'medical_services', dot: 'bg-blue-500' };
+  }
+  return { color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200', icon: 'info', dot: 'bg-amber-500' };
+}
 
 export default function Header() {
   const navigate = useNavigate();
@@ -8,10 +28,36 @@ export default function Header() {
   const userEmail = localStorage.getItem('email');
   const [hasCampaign, setHasCampaign] = useState(false);
 
+  // --- Notification state ---
+  const [notifications, setNotifications] = useState([]);
+  const [notifLoading, setNotifLoading] = useState(false);
+
   useEffect(() => {
     const campaign = localStorage.getItem('selectedCampaign');
     setHasCampaign(!!campaign);
   }, [location]);
+
+  // Fetch thông báo khi đăng nhập
+  useEffect(() => {
+    if (!token || !userEmail) return;
+    const fetchNotifications = async () => {
+      setNotifLoading(true);
+      try {
+        const tnv = await tinhNguyenVienService.getByMaTaiKhoan(userEmail);
+        if (!tnv?.maTNV) return;
+        const data = await donDangKyService.getByMaTNV(tnv.maTNV, 0, 20);
+        const list = Array.isArray(data) ? data : (data?.content || []);
+        // Chỉ giữ đơn có trạng thái đáng thông báo
+        const filtered = list.filter(d => !TRANG_THAI_AN.includes(d.trangThai));
+        setNotifications(filtered);
+      } catch (err) {
+        console.error('Lỗi lấy thông báo:', err);
+      } finally {
+        setNotifLoading(false);
+      }
+    };
+    fetchNotifications();
+  }, [token, userEmail]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -67,10 +113,129 @@ export default function Header() {
           <div className="flex items-center gap-4">
             {token ? (
               <>
-                <button className="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-50 rounded-full relative">
-                  <span className="material-symbols-outlined">notifications</span>
-                  <span className="absolute top-2 right-2 w-2 h-2 bg-red-600 rounded-full"></span>
-                </button>
+                {/* === CHUÔNG THÔNG BÁO - HOVER === */}
+                <div className="relative group/notif" id="notif-bell-wrapper">
+                  {/* Nút chuông */}
+                  <button
+                    id="notif-bell-btn"
+                    className="w-10 h-10 flex items-center justify-center text-slate-600 group-hover/notif:bg-red-50 group-hover/notif:text-primary rounded-full relative transition-colors duration-200"
+                    aria-label="Thông báo"
+                    type="button"
+                  >
+                    <span
+                      className="material-symbols-outlined transition-all duration-200 group-hover/notif:[font-variation-settings:'FILL'_1]"
+                    >notifications</span>
+                    {notifications.length > 0 && (
+                      <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-600 rounded-full ring-2 ring-white animate-pulse"></span>
+                    )}
+                  </button>
+
+                  {/* Dropdown - hiện khi hover vào wrapper */}
+                  <div
+                    id="notif-dropdown"
+                    className="absolute right-0 top-full pt-2 w-[360px] z-[100]
+                               opacity-0 invisible translate-y-2 pointer-events-none
+                               group-hover/notif:opacity-100 group-hover/notif:visible group-hover/notif:translate-y-0 group-hover/notif:pointer-events-auto
+                               transition-all duration-200 ease-out"
+                  >
+                    {/* Outer box */}
+                    <div
+                      className="bg-white rounded-2xl border border-slate-200 overflow-hidden"
+                      style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.15)' }}
+                    >
+                      {/* Header gradient đỏ */}
+                      <div className="px-5 py-4 bg-gradient-to-r from-red-600 to-red-500 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="material-symbols-outlined text-white text-[20px]"
+                            style={{ fontVariationSettings: "'FILL' 1" }}
+                          >notifications_active</span>
+                          <span className="text-white font-bold text-sm tracking-wide">THÔNG BÁO CỦA BẠN</span>
+                        </div>
+                        {notifications.length > 0 && (
+                          <span className="bg-white text-red-600 text-xs font-black px-2 py-0.5 rounded-full">
+                            {notifications.length}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Nội dung */}
+                      <div className="p-3 max-h-[400px] overflow-y-auto space-y-2">
+                        {notifLoading ? (
+                          <div className="flex items-center justify-center py-10 gap-3 text-slate-400">
+                            <span className="w-5 h-5 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></span>
+                            <span className="text-sm font-medium">Đang tải thông báo...</span>
+                          </div>
+                        ) : notifications.length === 0 ? (
+                          /* Chưa có thông báo */
+                          <div className="flex flex-col items-center justify-center py-10 gap-3">
+                            <div className="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center">
+                              <span
+                                className="material-symbols-outlined text-slate-300 text-3xl"
+                                style={{ fontVariationSettings: "'FILL' 1" }}
+                              >notifications_off</span>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-slate-700 font-bold text-sm">Chưa có thông báo nào</p>
+                              <p className="text-slate-400 text-xs mt-1">Thông báo sẽ xuất hiện khi có cập nhật về đơn đăng ký hiến máu của bạn.</p>
+                            </div>
+                          </div>
+                        ) : (
+                          /* Danh sách thông báo - box lồng box */
+                          notifications.map((don) => {
+                            const style = getStatusStyle(don.trangThai);
+                            return (
+                              <button
+                                key={don.maDon}
+                                onClick={() => navigate(`/xac-nhan-dang-ky/${don.maDon}`)}
+                                className={`w-full text-left rounded-xl border ${style.border} ${style.bg} p-3 hover:brightness-95 transition-all duration-150 active:scale-[0.98]`}
+                              >
+                                {/* Inner box trắng bên trong */}
+                                <div className="bg-white rounded-lg border border-slate-100 shadow-sm p-3 flex items-start gap-3">
+                                  <div className={`w-9 h-9 rounded-full ${style.bg} border ${style.border} flex items-center justify-center shrink-0`}>
+                                    <span
+                                      className={`material-symbols-outlined ${style.color} text-[18px]`}
+                                      style={{ fontVariationSettings: "'FILL' 1" }}
+                                    >{style.icon}</span>
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between gap-2 mb-1">
+                                      <span className="text-xs font-black text-slate-500 uppercase tracking-wider">{don.maDon}</span>
+                                      <span className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${style.bg} ${style.color} border ${style.border}`}>
+                                        <span className={`w-1.5 h-1.5 rounded-full ${style.dot} inline-block`}></span>
+                                        {don.trangThai}
+                                      </span>
+                                    </div>
+                                    <p className="text-[13px] font-semibold text-slate-800 leading-snug">
+                                      Đơn đăng ký hiến máu của bạn đã được cập nhật trạng thái.
+                                    </p>
+                                    <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+                                      <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
+                                      Nhấn để xem chi tiết
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            );
+                          })
+                        )}
+                      </div>
+
+                      {/* Footer */}
+                      {notifications.length > 0 && (
+                        <div className="px-4 py-3 border-t border-slate-100 bg-slate-50">
+                          <Link
+                            to="/don-dang-ky"
+                            className="text-xs font-bold text-primary hover:underline flex items-center justify-center gap-1"
+                          >
+                            Xem tất cả đơn đăng ký
+                            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
                 <div className="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer relative group py-2">
                   <div className="text-right hidden md:block">
                     <p className="text-sm font-bold text-slate-900 leading-none mb-1">{userEmail}</p>
