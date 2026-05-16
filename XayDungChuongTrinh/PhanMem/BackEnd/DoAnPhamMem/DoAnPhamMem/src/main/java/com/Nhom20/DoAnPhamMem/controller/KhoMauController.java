@@ -15,4 +15,9 @@ public class KhoMauController {
     public org.springframework.http.ResponseEntity<java.util.List<com.Nhom20.DoAnPhamMem.dto.response.BloodTypeStatDTO>> getInventoryByBloodType() {
         return org.springframework.http.ResponseEntity.ok(khoMauService.getInventoryByBloodType());
     }
+
+    @org.springframework.web.bind.annotation.GetMapping
+    public org.springframework.http.ResponseEntity<java.util.List<com.Nhom20.DoAnPhamMem.dto.response.KhoMauResponse>> getAllKhoMau() {
+        return org.springframework.http.ResponseEntity.ok(khoMauService.getAllKhoMau());
+    }
 }

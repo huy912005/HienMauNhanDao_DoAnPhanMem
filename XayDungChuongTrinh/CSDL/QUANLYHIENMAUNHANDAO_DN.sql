@@ -125,9 +125,11 @@ CREATE TABLE KETQUALAMSANG (
 
 CREATE TABLE KHOMAU (
     maKho CHAR(7) PRIMARY KEY,
+    tenKho NVARCHAR(50),
     nhomMau VARCHAR(10),
     soLuongTon INT DEFAULT 0,
-    nguongAnToan INT DEFAULT 10
+    nguongAnToan INT DEFAULT 10,
+    moTa NVARCHAR(255)
 );
 
 CREATE TABLE TUIMAU (
@@ -582,15 +584,15 @@ INSERT INTO KETQUALAMSANG VALUES
 
 
 -- Phân tách mã kho theo từng nhóm máu chuyên biệt
-INSERT INTO KHOMAU VALUES 
-('KM00001', 'O+', 150, 50), 
-('KM00002', 'A+', 30, 40), 
-('KM00003', 'B+', 60, 30), 
-('KM00004', 'AB+', 10, 15),
-('KM00005', 'O-', 5, 10), 
-('KM00006', 'A-', 5, 10), 
-('KM00007', 'B-', 5, 10), 
-('KM00008', 'AB-', 2, 5);
+INSERT INTO KHOMAU (maKho, tenKho, nhomMau, soLuongTon, nguongAnToan, moTa) VALUES 
+('KM00001', 'Kho Nhóm O+', 'O+', 150, 50, 'Tủ lạnh chuyên dụng A1 - Khu vực Tầng 1'), 
+('KM00002', 'Kho Nhóm A+', 'A+', 30, 40, 'Tủ lạnh chuyên dụng A2 - Khu vực Tầng 1'), 
+('KM00003', 'Kho Nhóm B+', 'B+', 60, 30, 'Tủ lạnh chuyên dụng B1 - Khu vực Tầng 2'), 
+('KM00004', 'Kho Nhóm AB+', 'AB+', 10, 15, 'Tủ lạnh chuyên dụng AB1 - Khu vực Tầng 2'),
+('KM00005', 'Kho Nhóm O-', 'O-', 5, 10, 'Tủ đông hiếm O- - Phòng bảo quản đặc biệt'), 
+('KM00006', 'Kho Nhóm A-', 'A-', 5, 10, 'Tủ đông hiếm A- - Phòng bảo quản đặc biệt'), 
+('KM00007', 'Kho Nhóm B-', 'B-', 5, 10, 'Tủ đông hiếm B- - Phòng bảo quản đặc biệt'), 
+('KM00008', 'Kho Nhóm AB-', 'AB-', 2, 5, 'Tủ đông hiếm AB- - Phòng bảo quản đặc biệt');
 
 -- 47 TÚI MÁU (Túi máu của TNV nhóm nào sẽ được lưu vào kho nhóm đó)
 INSERT INTO TUIMAU VALUES 
