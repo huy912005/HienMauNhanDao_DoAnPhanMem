@@ -131,7 +131,7 @@ export default function HomePage() {
                             <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>bloodtype</span>
                         </div>
                         <h3 className="text-4xl font-black text-slate-900 mb-2">
-                            {bloodStats?.tongTheTich ? bloodStats.tongTheTich.toLocaleString() : '0'}+
+                            {bloodStats?.tongSoTui ? bloodStats.tongSoTui.toLocaleString() : '0'}+
                         </h3>
                         <p className="text-sm text-slate-500 font-bold uppercase tracking-wider">Đơn vị máu tiếp nhận</p>
                     </div>
