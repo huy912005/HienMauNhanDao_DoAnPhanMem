@@ -231,7 +231,14 @@ export default function Header() {
                                 key={don.maDon}
                                 onClick={() => {
                                   markOneAsRead(don.maDon);
-                                  navigate(`/xac-nhan-dang-ky/${don.maDon}`);
+                                  const tt = (don.trangThai || '').toLowerCase();
+                                  if (tt.includes('hiến') && !tt.includes('chưa')) {
+                                    navigate(`/chung-nhan/${don.maDon}`);
+                                  } else if (tt.includes('chứng nhận') || tt.includes('hoàn thành')) {
+                                    navigate(`/chung-nhan/${don.maDon}`);
+                                  } else {
+                                    navigate(`/xac-nhan-dang-ky/${don.maDon}`);
+                                  }
                                 }}
                                 className={`w-full text-left rounded-xl border p-3 transition-all duration-150 active:scale-[0.98] ${
                                   isRead

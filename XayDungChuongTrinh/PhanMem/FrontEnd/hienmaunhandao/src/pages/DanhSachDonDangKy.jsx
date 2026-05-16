@@ -164,6 +164,18 @@ export default function DanhSachDonDangKy() {
                             Hủy đăng ký
                           </button>
                         )}
+                        {['DA_HIEN', 'DA_HIEN_MAU', 'DA_NHAN_CHUNG_NHAN'].includes(registration.trangThai) && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/chung-nhan/${registration.maDon}`);
+                            }}
+                            className="ml-auto px-3 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-lg hover:bg-green-100 transition-colors border border-green-200 flex items-center gap-1"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">card_membership</span>
+                            Giấy chứng nhận
+                          </button>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 mb-4">
