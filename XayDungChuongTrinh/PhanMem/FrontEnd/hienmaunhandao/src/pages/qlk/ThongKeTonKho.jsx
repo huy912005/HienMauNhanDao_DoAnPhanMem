@@ -56,35 +56,38 @@ const ThongKeTonKho = () => {
           http.get("/khomau/charts/pie"),
         ]);
 
-        setStats(statsData);
+        setStats(statsData || { totalBloodUnits: 0, newVolunteers: 0, activeCampaigns: 0, screeningPassRate: 0 });
 
         // Map data cho Bar Chart
         const mappedBarData =
-          barDataRes.length > 0
+          barDataRes && Array.isArray(barDataRes) && barDataRes.length > 0
             ? barDataRes
             : Array.from({ length: 12 }, (_, i) => ({
                 month: `T.${i + 1}`,
-                quantity: 0,
+                totalUnits: 0,
               }));
         setBarData(mappedBarData);
 
-        // Map data cho Pie Chart (Gộp thành 4 nhóm O, A, B, AB)
+        // Map data cho Pie Chart
         const aggregatedPie = {
           "Nhóm O": 0,
           "Nhóm A": 0,
           "Nhóm B": 0,
           "Nhóm AB": 0,
         };
-        pieDataRes.forEach((item) => {
-          if (item.bloodType.startsWith("AB"))
-            aggregatedPie["Nhóm AB"] += item.quantity;
-          else if (item.bloodType.startsWith("A"))
-            aggregatedPie["Nhóm A"] += item.quantity;
-          else if (item.bloodType.startsWith("B"))
-            aggregatedPie["Nhóm B"] += item.quantity;
-          else if (item.bloodType.startsWith("O"))
-            aggregatedPie["Nhóm O"] += item.quantity;
-        });
+        
+        if (pieDataRes && Array.isArray(pieDataRes)) {
+          pieDataRes.forEach((item) => {
+            if (item.bloodType.startsWith("AB"))
+              aggregatedPie["Nhóm AB"] += item.quantity;
+            else if (item.bloodType.startsWith("A"))
+              aggregatedPie["Nhóm A"] += item.quantity;
+            else if (item.bloodType.startsWith("B"))
+              aggregatedPie["Nhóm B"] += item.quantity;
+            else if (item.bloodType.startsWith("O"))
+              aggregatedPie["Nhóm O"] += item.quantity;
+          });
+        }
 
         const mappedPieData = Object.keys(aggregatedPie)
           .map((key) => ({ name: key, value: aggregatedPie[key] }))
@@ -98,17 +101,23 @@ const ThongKeTonKho = () => {
         const today = new Date().toLocaleDateString("vi-VN");
         const NGUONG_AN_TOAN = 10;
 
-        const summaryTable = pieDataRes.map((item) => ({
-          nhomMau: item.bloodType,
-          soLuong: item.quantity,
-          nguongAnToan: NGUONG_AN_TOAN,
-          trangThai: item.quantity >= NGUONG_AN_TOAN ? "An toàn" : "Sắp hết",
-          ngayCapNhat: today,
-        }));
+        const summaryTable = (pieDataRes && Array.isArray(pieDataRes)) 
+          ? pieDataRes.map((item) => ({
+              nhomMau: item.bloodType,
+              soLuong: item.quantity,
+              nguongAnToan: NGUONG_AN_TOAN,
+              trangThai: item.quantity >= NGUONG_AN_TOAN ? "An toàn" : "Sắp hết",
+              ngayCapNhat: today,
+            }))
+          : [];
 
         setBloodUnits({ content: summaryTable });
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu từ Backend:", error);
+        setStats({ totalBloodUnits: 0, newVolunteers: 0, activeCampaigns: 0, screeningPassRate: 0 });
+        setBarData(Array.from({ length: 12 }, (_, i) => ({ month: `T.${i + 1}`, totalUnits: 0 })));
+        setPieData([{ name: "Lỗi kết nối", value: 1 }]);
+        setBloodUnits({ content: [] });
       } finally {
         setLoading(false);
       }

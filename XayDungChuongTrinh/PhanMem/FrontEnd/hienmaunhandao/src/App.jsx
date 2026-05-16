@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import UserLayout from './layouts/UserLayout';
@@ -14,6 +13,8 @@ import ChienDichPage from './pages/ChienDichPage';
 import ThongTinCaNhan from './pages/ThongTinCaNhan';
 import KhaiBaoYTe from './pages/KhaiBaoYTe';
 import XacNhanDangKy from './pages/XacNhanDangKy';
+import GiayChungNhanPage from './pages/GiayChungNhanPage';
+import HoSoCaNhan from './pages/HoSoCaNhan';
 import ThongKeTonKho from './pages/qlk/ThongKeTonKho';
 import QuanLyNhapKho from './pages/qlk/QuanLyNhapKho';
 import QuanLyNhapKhoTheoChienDich from './pages/qlk/QuanLyNhapKhoTheoChienDich';
@@ -29,6 +30,8 @@ import DanhSachChoKham from './pages/bacsi/DanhSachChoKham';
 import KetQuaXetNghiem from './pages/bacsi/KetQuaXetNghiem';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
 import ThuNhanMau from './pages/nvyt/ThuNhanMau'; // Trigger Vite reload
+import NhanYeuCauNhapKho from './pages/qlk/NhanYeuCauNhapKho';
+import QuanLyHanDung from './pages/qlk/QuanLyHanDung';
 
 const queryClient = new QueryClient();
 
@@ -71,6 +74,8 @@ function App() {
             <Route path="khai-bao-y-te" element={<KhaiBaoYTe />} />
             <Route path="xac-nhan-dang-ky" element={<XacNhanDangKy />} />
             <Route path="xac-nhan-dang-ky/:maDon" element={<XacNhanDangKy />} />
+            <Route path="chung-nhan/:maDon" element={<GiayChungNhanPage />} />
+            <Route path="ho-so" element={<HoSoCaNhan />} />
             <Route path="debug-login" element={<DebugLogin />} />
           </Route>
           {/* Quản Lý Kho Routes */}
@@ -78,6 +83,8 @@ function App() {
             <Route path="thong-ke" element={<ThongKeTonKho />} />
             <Route path="nhap-kho" element={<QuanLyNhapKho />} />
             <Route path="nhap-kho-chien-dich" element={<QuanLyNhapKhoTheoChienDich />} />
+            <Route path="nhan-yeu-cau" element={<NhanYeuCauNhapKho />} />
+            <Route path="quan-ly-han-dung" element={<QuanLyHanDung/>} />
           </Route>
 
           {/* ── Trang bác sĩ (maVaiTro = BS trong TAIKHOAN) ── */}

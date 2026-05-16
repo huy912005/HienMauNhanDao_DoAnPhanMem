@@ -6,6 +6,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [matKhau, setMatKhau] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -71,8 +72,25 @@ export default function Login() {
             <div className="space-y-1.5">
               <label className="block text-sm font-semibold text-on-surface-variant">Mật khẩu</label>
               <div className="relative">
-                <input value={matKhau} onChange={(e) => setMatKhau(e.target.value)} required className="w-full h-12 px-4 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all" placeholder="••••••••" type="password" />
-                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer text-xl">visibility</span>
+                <input
+                  value={matKhau}
+                  onChange={(e) => setMatKhau(e.target.value)}
+                  required
+                  className="w-full h-12 px-4 pr-12 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none text-sm transition-all"
+                  placeholder="••••••••"
+                  type={showPassword ? 'text' : 'password'}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(prev => !prev)}
+                  className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-slate-700 transition-colors"
+                  tabIndex={-1}
+                  aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                >
+                  <span className="material-symbols-outlined text-xl">
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
               </div>
             </div>
             <div className="flex items-center justify-between pt-2">

@@ -55,6 +55,14 @@ public class TaiKhoanServiceImpl implements TaiKhoanService {
 
         @Override
         public LoginResponse login(LoginRequest loginRequest) {
+                // Tự động băm mật khẩu nếu trong CSDL đang lưu dưới dạng plaintext (không có tiền tố $2a$)
+                taiKhoanRepository.findByEmail(loginRequest.getEmail()).ifPresent(tk -> {
+                        if (tk.getMatKhau() != null && !tk.getMatKhau().startsWith("$2a$")) {
+                                tk.setMatKhau(passwordEncoder.encode(tk.getMatKhau()));
+                                taiKhoanRepository.save(tk);
+                        }
+                });
+
                 Authentication authentication = authenticationManager.authenticate(
                                 new UsernamePasswordAuthenticationToken(
                                                 loginRequest.getEmail(),
