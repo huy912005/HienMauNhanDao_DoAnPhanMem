@@ -29,6 +29,7 @@ export default function NhanYeuCauNhapKho() {
     try {
       setLoading(true);
       const res = await http.get('/tuimau');
+      console.log('Dữ liệu túi máu đã tải về:', res);
       setBloodUnits(res);
     } catch (err) {
       console.error('Lỗi tải dữ liệu túi máu:', err);
@@ -89,7 +90,6 @@ export default function NhanYeuCauNhapKho() {
     return bloodUnits.filter(tm => tm.nhomMau === nhomMau && tm.trangThai === 'Yêu cầu nhập kho').length;
   };
 
-  // Filter danh sách hiển thị
   // Filter danh sách hiển thị theo nhóm máu của kho được chọn
   const yeuCauList = bloodUnits.filter(tm => tm.nhomMau === selectedKho?.nhomMau && tm.trangThai === 'Yêu cầu nhập kho');
   const daNhapList = bloodUnits.filter(tm => tm.nhomMau === selectedKho?.nhomMau && tm.trangThai === 'Nhập kho');
