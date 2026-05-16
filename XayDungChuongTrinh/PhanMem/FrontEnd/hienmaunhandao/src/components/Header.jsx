@@ -329,8 +329,8 @@ export default function Header() {
                       <Link to="/don-dang-ky" className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
                         <span className="material-symbols-outlined text-[18px]">assignment</span>Đơn đăng ký
                       </Link>
-                      <Link to="#" className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
-                        <span className="material-symbols-outlined text-[18px]">person</span>Hồ sơ & Lịch sử
+                      <Link to="/ho-so" className="flex items-center gap-3 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary transition-colors">
+                        <span className="material-symbols-outlined text-[18px]">person</span>Hồ sơ cá nhân
                       </Link>
                       <div className="h-[1px] bg-slate-100 my-1"></div>
                       <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">

@@ -15,6 +15,7 @@ import ThongTinCaNhan from './pages/ThongTinCaNhan';
 import KhaiBaoYTe from './pages/KhaiBaoYTe';
 import XacNhanDangKy from './pages/XacNhanDangKy';
 import GiayChungNhanPage from './pages/GiayChungNhanPage';
+import HoSoCaNhan from './pages/HoSoCaNhan';
 import ThongKeTonKho from './pages/qlk/ThongKeTonKho';
 import QuanLyNhapKho from './pages/qlk/QuanLyNhapKho';
 import QuanLyNhapKhoTheoChienDich from './pages/qlk/QuanLyNhapKhoTheoChienDich';
@@ -73,6 +74,7 @@ function App() {
             <Route path="xac-nhan-dang-ky" element={<XacNhanDangKy />} />
             <Route path="xac-nhan-dang-ky/:maDon" element={<XacNhanDangKy />} />
             <Route path="chung-nhan/:maDon" element={<GiayChungNhanPage />} />
+            <Route path="ho-so" element={<HoSoCaNhan />} />
             <Route path="debug-login" element={<DebugLogin />} />
           </Route>
           {/* Quản Lý Kho Routes */}
