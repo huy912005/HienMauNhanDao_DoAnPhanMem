@@ -84,14 +84,15 @@ export default function NhanYeuCauNhapKho() {
     }
   };
 
-  // Tính toán số lượng chờ duyệt theo kho (dựa trên maKho của túi máu)
-  const countYeuCau = (maKho) => {
-    return bloodUnits.filter(tm => tm.maKho === maKho && tm.trangThai === 'Yêu cầu nhập kho').length;
+  // Tính toán số lượng chờ duyệt theo nhóm máu
+  const countYeuCau = (nhomMau) => {
+    return bloodUnits.filter(tm => tm.nhomMau === nhomMau && tm.trangThai === 'Yêu cầu nhập kho').length;
   };
 
   // Filter danh sách hiển thị
-  const yeuCauList = bloodUnits.filter(tm => tm.maKho === selectedKho?.maKho && tm.trangThai === 'Yêu cầu nhập kho');
-  const daNhapList = bloodUnits.filter(tm => tm.maKho === selectedKho?.maKho && tm.trangThai === 'Nhập kho');
+  // Filter danh sách hiển thị theo nhóm máu của kho được chọn
+  const yeuCauList = bloodUnits.filter(tm => tm.nhomMau === selectedKho?.nhomMau && tm.trangThai === 'Yêu cầu nhập kho');
+  const daNhapList = bloodUnits.filter(tm => tm.nhomMau === selectedKho?.nhomMau && tm.trangThai === 'Nhập kho');
 
   return (
     <div className="bg-slate-50 min-h-screen p-8 text-slate-800 font-sans">
@@ -117,7 +118,7 @@ export default function NhanYeuCauNhapKho() {
             <div className="grid grid-cols-4 md:grid-cols-8 gap-3">
               {khoList.map(kho => {
                 const isActive = selectedKho?.maKho === kho.maKho;
-                const yeuCauCount = countYeuCau(kho.maKho);
+                const yeuCauCount = countYeuCau(kho.nhomMau);
                 return (
                   <button
                     key={kho.maKho}

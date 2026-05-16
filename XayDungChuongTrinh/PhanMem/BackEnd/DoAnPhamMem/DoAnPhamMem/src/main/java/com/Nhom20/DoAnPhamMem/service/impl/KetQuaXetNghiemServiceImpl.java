@@ -2,13 +2,16 @@ package com.Nhom20.DoAnPhamMem.service.impl;
 
 import com.Nhom20.DoAnPhamMem.dto.request.KetQuaXetNghiemRequest;
 import com.Nhom20.DoAnPhamMem.dto.response.KetQuaXetNghiemResponse;
-import com.Nhom20.DoAnPhamMem.entity.KetQuaXetNghiemEntity;
+import com.Nhom20.DoAnPhamMem.entity.KhoMauEntity;
 import com.Nhom20.DoAnPhamMem.entity.NhanVienEntity;
+import com.Nhom20.DoAnPhamMem.entity.TinhNguyenVienEntity;
 import com.Nhom20.DoAnPhamMem.entity.TuiMauEntity;
 import com.Nhom20.DoAnPhamMem.enums.NhomMau;
 import com.Nhom20.DoAnPhamMem.enums.TrangThaiTuiMau;
 import com.Nhom20.DoAnPhamMem.repository.KetQuaXetNghiemRepository;
+import com.Nhom20.DoAnPhamMem.repository.KhoMauRepository;
 import com.Nhom20.DoAnPhamMem.repository.NhanVienRepository;
+import com.Nhom20.DoAnPhamMem.repository.TinhNguyenVienRepository;
 import com.Nhom20.DoAnPhamMem.repository.TuiMauRepository;
 import com.Nhom20.DoAnPhamMem.service.KetQuaXetNghiemService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,8 @@ public class KetQuaXetNghiemServiceImpl implements KetQuaXetNghiemService {
     private final KetQuaXetNghiemRepository ketQuaXetNghiemRepository;
     private final TuiMauRepository tuiMauRepository;
     private final NhanVienRepository nhanVienRepository;
+    private final KhoMauRepository khoMauRepository;
+    private final TinhNguyenVienRepository tinhNguyenVienRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -77,7 +82,22 @@ public class KetQuaXetNghiemServiceImpl implements KetQuaXetNghiemService {
             // Cập nhật trạng thái túi máu dựa trên kết quả xét nghiệm
             if (entity.getTuiMau() != null) {
                 if (Boolean.TRUE.equals(request.getKetQua())) {
-                    entity.getTuiMau().setTrangThai(TrangThaiTuiMau.YEU_CAU_NHAP_KHO);
+                    TuiMauEntity tuiMau = entity.getTuiMau();
+                    tuiMau.setTrangThai(TrangThaiTuiMau.YEU_CAU_NHAP_KHO);
+                    
+                    // Tự động gán kho và cập nhật nhóm máu cho TNV nếu có nhóm máu trong kết quả
+                    if (entity.getNhomMau() != null) {
+                        // 1. Gán kho cho túi máu
+                        KhoMauEntity kho = khoMauRepository.findByNhomMau(entity.getNhomMau()).orElse(null);
+                        tuiMau.setKhoMau(kho);
+                        
+                        // 2. Cập nhật nhóm máu cho Tình nguyện viên
+                        if (tuiMau.getDonDangKy() != null && tuiMau.getDonDangKy().getTinhNguyenVien() != null) {
+                            TinhNguyenVienEntity tnv = tuiMau.getDonDangKy().getTinhNguyenVien();
+                            tnv.setNhomMau(entity.getNhomMau());
+                            tinhNguyenVienRepository.save(tnv);
+                        }
+                    }
                 } else {
                     entity.getTuiMau().setTrangThai(TrangThaiTuiMau.HUY);
                 }
