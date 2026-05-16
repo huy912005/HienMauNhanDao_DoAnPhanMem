@@ -29,6 +29,7 @@ export default function NhanYeuCauNhapKho() {
     try {
       setLoading(true);
       const res = await http.get('/tuimau');
+      console.log('Dữ liệu túi máu đã tải về:', res);
       setBloodUnits(res);
     } catch (err) {
       console.error('Lỗi tải dữ liệu túi máu:', err);
@@ -86,12 +87,14 @@ export default function NhanYeuCauNhapKho() {
 
   // Tính toán số lượng chờ duyệt theo kho (dựa trên maKho của túi máu)
   const countYeuCau = (maKho) => {
-    return bloodUnits.filter(tm => tm.maKho === maKho && tm.trangThai === 'Yêu cầu nhập kho').length;
+    const object = bloodUnits.filter(tm => tm.maKho === maKho && tm.trangThai === "Yêu cầu nhập kho");
+    console.log(`Kho ${maKho} có ${object.length} yêu cầu nhập kho.`);
+    return bloodUnits.filter(tm => tm.maKho === maKho && tm.trangThai === "Yêu cầu nhập kho").length;
   };
 
   // Filter danh sách hiển thị
-  const yeuCauList = bloodUnits.filter(tm => tm.maKho === selectedKho?.maKho && tm.trangThai === 'Yêu cầu nhập kho');
-  const daNhapList = bloodUnits.filter(tm => tm.maKho === selectedKho?.maKho && tm.trangThai === 'Nhập kho');
+  const yeuCauList = bloodUnits.filter(tm => tm.maKho === selectedKho?.maKho && tm.trangThai === "Yêu cầu nhập kho");
+  const daNhapList = bloodUnits.filter(tm => tm.maKho === selectedKho?.maKho && tm.trangThai === "Nhập kho");
 
   return (
     <div className="bg-slate-50 min-h-screen p-8 text-slate-800 font-sans">

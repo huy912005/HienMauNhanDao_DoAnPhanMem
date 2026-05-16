@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import UserLayout from './layouts/UserLayout';
@@ -29,6 +28,8 @@ import DanhSachChoKham from './pages/bacsi/DanhSachChoKham';
 import KetQuaXetNghiem from './pages/bacsi/KetQuaXetNghiem';
 import CapNhatXetNghiem from './pages/nvyt/CapNhatXetNghiem';
 import ThuNhanMau from './pages/nvyt/ThuNhanMau'; // Trigger Vite reload
+import NhanYeuCauNhapKho from './pages/qlk/NhanYeuCauNhapKho';
+import QuanLyHanDung from './pages/qlk/QuanLyHanDung';
 
 const queryClient = new QueryClient();
 
@@ -78,6 +79,8 @@ function App() {
             <Route path="thong-ke" element={<ThongKeTonKho />} />
             <Route path="nhap-kho" element={<QuanLyNhapKho />} />
             <Route path="nhap-kho-chien-dich" element={<QuanLyNhapKhoTheoChienDich />} />
+            <Route path="nhan-yeu-cau" element={<NhanYeuCauNhapKho />} />
+            <Route path="quan-ly-han-dung" element={<QuanLyHanDung/>} />
           </Route>
 
           {/* ── Trang bác sĩ (maVaiTro = BS trong TAIKHOAN) ── */}

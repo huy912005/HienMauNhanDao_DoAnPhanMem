@@ -62,7 +62,7 @@ public class SecurityConfig {
                                 "/api/hososuckhoe/**", "/api/dondangky", "/api/dondangky/**", "/api/nhanvien",
                                 "/api/nhanvien/**", "/api/ketqualamsang", "/api/ketqualamsang/**", 
                                 "/", "/index.html", "/static/**", "/v3/api-docs/**",
-                                "/swagger-ui/**", "/swagger-ui.html","/api/diadiem")
+                                "/swagger-ui/**", "/swagger-ui.html","/api/diadiem","/api/tuimau","/api/khomau")
                         .permitAll().anyRequest().authenticated());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
