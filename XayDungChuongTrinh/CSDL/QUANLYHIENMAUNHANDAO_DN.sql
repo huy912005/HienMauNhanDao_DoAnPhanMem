@@ -221,7 +221,7 @@ ALTER TABLE TUIMAU ADD CONSTRAINT chk_the_tich CHECK (theTich IN (250, 350, 450)
 ALTER TABLE THONGBAO ADD CONSTRAINT chk_tt_thong_bao CHECK (trangThai IN ('Đã đọc', 'Chưa đọc'));
 ALTER TABLE TINTUC ADD CONSTRAINT chk_tt_tin_tuc CHECK (trangThai IN ('Đã thêm', 'Đã xoá', 'Hết hạn'));
 ALTER TABLE DONDANGKY ADD CONSTRAINT chk_tt_don CHECK (trangThai IN ('Đã đăng ký', 'Đã hiến', 'Đã nhận chứng nhận', 'Chưa hiến'));
-ALTER TABLE TUIMAU ADD CONSTRAINT chk_tt_tui CHECK (trangThai IN ('Chờ xét nghiệm', 'Nhập kho', 'Đã xuất', 'Hủy'));
+ALTER TABLE TUIMAU ADD CONSTRAINT chk_tt_tui CHECK (trangThai IN ('Chờ xét nghiệm', 'Nhập kho', 'Đã xuất', 'Hủy','Yêu cầu nhập kho'));
 ALTER TABLE CHIENDICHHIENMAU ADD CONSTRAINT chk_tt_cd CHECK (trangThai IN ('Đang lập kế hoạch', 'Đã phê duyệt', 'Đang diễn ra', 'Đã kết thúc'));
 ALTER TABLE PHIEUNHAPXUAT ADD CONSTRAINT chk_loai_phieu CHECK (loaiPhieu IN ('Nhập kho', 'Xuất kho'));
 
