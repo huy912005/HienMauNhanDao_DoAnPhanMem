@@ -125,9 +125,11 @@ CREATE TABLE KETQUALAMSANG (
 
 CREATE TABLE KHOMAU (
     maKho CHAR(7) PRIMARY KEY,
+    tenKho NVARCHAR(50),
     nhomMau VARCHAR(10),
     soLuongTon INT DEFAULT 0,
-    nguongAnToan INT DEFAULT 10
+    nguongAnToan INT DEFAULT 10,
+    moTa NVARCHAR(255)
 );
 
 CREATE TABLE TUIMAU (
@@ -221,7 +223,7 @@ ALTER TABLE TUIMAU ADD CONSTRAINT chk_the_tich CHECK (theTich IN (250, 350, 450)
 ALTER TABLE THONGBAO ADD CONSTRAINT chk_tt_thong_bao CHECK (trangThai IN ('Đã đọc', 'Chưa đọc'));
 ALTER TABLE TINTUC ADD CONSTRAINT chk_tt_tin_tuc CHECK (trangThai IN ('Đã thêm', 'Đã xoá', 'Hết hạn'));
 ALTER TABLE DONDANGKY ADD CONSTRAINT chk_tt_don CHECK (trangThai IN ('Đã đăng ký', 'Đã hiến', 'Đã nhận chứng nhận', 'Chưa hiến'));
-ALTER TABLE TUIMAU ADD CONSTRAINT chk_tt_tui CHECK (trangThai IN ('Chờ xét nghiệm', 'Nhập kho', 'Đã xuất', 'Hủy'));
+ALTER TABLE TUIMAU ADD CONSTRAINT chk_tt_tui CHECK (trangThai IN ('Chờ xét nghiệm', 'Nhập kho', 'Đã xuất', 'Hủy','Yêu cầu nhập kho'));
 ALTER TABLE CHIENDICHHIENMAU ADD CONSTRAINT chk_tt_cd CHECK (trangThai IN ('Đang lập kế hoạch', 'Đã phê duyệt', 'Đang diễn ra', 'Đã kết thúc'));
 ALTER TABLE PHIEUNHAPXUAT ADD CONSTRAINT chk_loai_phieu CHECK (loaiPhieu IN ('Nhập kho', 'Xuất kho'));
 
@@ -456,7 +458,33 @@ INSERT INTO DONDANGKY (maDon, maTNV, maChienDich, maNhanVien, maQR, thoiGianDang
 ('DK00032','TN00012','CD00001','NV00004','QR_32','2026-02-10','Đã hiến',450),
 ('DK00033','TN00013','CD00001','NV00003','QR_33','2026-02-10','Đã hiến',250), 
 ('DK00034','TN00014','CD00001','NV00004','QR_34','2026-02-10','Đã hiến',350),
-('DK00035','TN00015','CD00001','NV00003','QR_35','2026-02-10','Chưa hiến',0);
+('DK00035','TN00015','CD00001','NV00003','QR_35','2026-02-10','Chưa hiến',0),
+
+-- ĐƠN ĐĂNG KÝ PHỤC VỤ DỮ LIỆU LỊCH SỬ (2024 - 2025)
+('DK00036','TN00016','CD00001','NV00003','QR_36','2024-10-10','Đã hiến',250),
+('DK00037','TN00017','CD00001','NV00004','QR_37','2024-12-15','Đã hiến',350),
+('DK00038','TN00018','CD00001','NV00003','QR_38','2025-01-01','Đã hiến',450),
+('DK00039','TN00019','CD00001','NV00004','QR_39','2025-02-10','Đã hiến',250),
+('DK00040','TN00020','CD00001','NV00003','QR_40','2025-05-15','Đã hiến',250),
+('DK00041','TN00021','CD00001','NV00004','QR_41','2025-05-18','Đã hiến',350),
+('DK00042','TN00022','CD00001','NV00003','QR_42','2025-05-20','Đã hiến',250),
+('DK00043','TN00023','CD00003','NV00004','QR_43','2026-04-05','Đã hiến',350),
+('DK00044','TN00024','CD00003','NV00003','QR_44','2026-04-25','Đã hiến',450),
+('DK00045','TN00025','CD00003','NV00004','QR_45','2026-05-08','Đã hiến',350),
+
+-- THÊM DỮ LIỆU ĐỂ TEST CẢNH BÁO CHỚP ĐỎ VÀ LÀM MỜ
+('DK00046','TN00001','CD00001','NV00003','QR_46','2025-04-10','Đã hiến',250),
+('DK00047','TN00002','CD00001','NV00003','QR_47','2025-04-15','Đã hiến',350),
+('DK00048','TN00003','CD00001','NV00003','QR_48','2025-04-20','Đã hiến',450),
+('DK00049','TN00004','CD00001','NV00003','QR_49','2025-04-25','Đã hiến',250),
+('DK00050','TN00005','CD00001','NV00003','QR_50','2025-04-26','Đã hiến',350),
+
+-- ĐƠN ĐĂNG KÝ CHO CHIẾN DỊCH CD00002 (TP.HCM - THÁNG 03/2026)
+('DK00051','TN00006','CD00002','NV00003','QR_51','2026-03-05','Đã hiến',350),
+('DK00052','TN00007','CD00002','NV00004','QR_52','2026-03-06','Đã hiến',450),
+('DK00053','TN00008','CD00002','NV00003','QR_53','2026-03-10','Đã hiến',250),
+('DK00054','TN00009','CD00002','NV00004','QR_54','2026-03-15','Đã hiến',350),
+('DK00055','TN00010','CD00002','NV00003','QR_55','2026-03-20','Đã hiến',450);
 
 -- =============================================================
 -- 7. ĐỒNG BỘ 100%: HỒ SƠ SỨC KHỎE & KHÁM LÂM SÀNG
@@ -556,15 +584,15 @@ INSERT INTO KETQUALAMSANG VALUES
 
 
 -- Phân tách mã kho theo từng nhóm máu chuyên biệt
-INSERT INTO KHOMAU VALUES 
-('KM00001', 'O+', 150, 50), 
-('KM00002', 'A+', 30, 40), 
-('KM00003', 'B+', 60, 30), 
-('KM00004', 'AB+', 10, 15),
-('KM00005', 'O-', 5, 10), 
-('KM00006', 'A-', 5, 10), 
-('KM00007', 'B-', 5, 10), 
-('KM00008', 'AB-', 2, 5);
+INSERT INTO KHOMAU (maKho, tenKho, nhomMau, soLuongTon, nguongAnToan, moTa) VALUES 
+('KM00001', 'Kho Nhóm O+', 'O+', 150, 50, 'Tủ lạnh chuyên dụng A1 - Khu vực Tầng 1'), 
+('KM00002', 'Kho Nhóm A+', 'A+', 30, 40, 'Tủ lạnh chuyên dụng A2 - Khu vực Tầng 1'), 
+('KM00003', 'Kho Nhóm B+', 'B+', 60, 30, 'Tủ lạnh chuyên dụng B1 - Khu vực Tầng 2'), 
+('KM00004', 'Kho Nhóm AB+', 'AB+', 10, 15, 'Tủ lạnh chuyên dụng AB1 - Khu vực Tầng 2'),
+('KM00005', 'Kho Nhóm O-', 'O-', 5, 10, 'Tủ đông hiếm O- - Phòng bảo quản đặc biệt'), 
+('KM00006', 'Kho Nhóm A-', 'A-', 5, 10, 'Tủ đông hiếm A- - Phòng bảo quản đặc biệt'), 
+('KM00007', 'Kho Nhóm B-', 'B-', 5, 10, 'Tủ đông hiếm B- - Phòng bảo quản đặc biệt'), 
+('KM00008', 'Kho Nhóm AB-', 'AB-', 2, 5, 'Tủ đông hiếm AB- - Phòng bảo quản đặc biệt');
 
 -- 47 TÚI MÁU (Túi máu của TNV nhóm nào sẽ được lưu vào kho nhóm đó)
 INSERT INTO TUIMAU VALUES 
@@ -608,7 +636,44 @@ INSERT INTO TUIMAU VALUES
 ('TM00030','DK00032','NV00008','KM00003',350,'2026-08-20 08:33','Nhập kho',4.2),
 -- TM00031-TM00032: Tháng 9
 ('TM00031','DK00033','NV00006','KM00001',250,'2026-09-10 08:35','Nhập kho',4.5), 
-('TM00032','DK00034','NV00007','KM00002',350,'2026-09-22 08:38','Nhập kho',4.2);
+('TM00032','DK00034','NV00007','KM00002',350,'2026-09-22 08:38','Nhập kho',4.2),
+
+-- NHÓM 1: QUÁ HẠN NGHIÊM TRỌNG (Đã hóa mờ - Quá 30-60 ngày)
+('TM00033','DK00036','NV00006','KM00001',250,'2025-03-20 08:00','Nhập kho',4.5),
+('TM00034','DK00037','NV00007','KM00001',350,'2025-03-25 09:30','Nhập kho',4.2),
+('TM00035','DK00038','NV00008','KM00003',450,'2025-04-05 10:00','Nhập kho',4.5),
+('TM00045','DK00046','NV00006','KM00001',250,'2025-04-10 08:00','Nhập kho',4.5),
+('TM00046','DK00047','NV00006','KM00001',350,'2025-04-12 09:00','Nhập kho',4.2),
+
+-- NHÓM 2: QUÁ HẠN NGUY HIỂM (20-30 ngày -> Kích hoạt CHỚP ĐỎ thẻ Card)
+('TM00043','DK00049','NV00006','KM00001',250,'2025-04-20 08:00','Nhập kho',4.5),
+('TM00044','DK00050','NV00006','KM00003',350,'2025-04-22 09:00','Nhập kho',4.2),
+('TM00048','DK00041','NV00006','KM00002',250,'2025-04-24 10:00','Nhập kho',4.5),
+
+-- NHÓM 3: QUÁ HẠN THƯỜNG (Badge Đỏ)
+('TM00036','DK00039','NV00006','KM00001',250,'2025-05-05 08:00','Nhập kho',4.5),
+('TM00049','DK00042','NV00006','KM00004',350,'2025-05-10 09:00','Nhập kho',4.2),
+
+-- NHÓM 4: SẮP HẾT HẠN (Badge Cam)
+('TM00037','DK00040','NV00007','KM00004',250,'2025-05-18 08:00','Nhập kho',4.5),
+('TM00038','DK00041','NV00008','KM00005',350,'2025-05-20 09:00','Nhập kho',4.2),
+('TM00039','DK00042','NV00006','KM00001',250,'2025-05-22 10:30','Nhập kho',4.5),
+
+-- NHÓM 5: AN TOÀN (Badge Xanh - Thêm nhiều để test phân trang)
+('TM00040','DK00043','NV00007','KM00006',350,'2026-04-10 08:00','Nhập kho',4.2),
+('TM00041','DK00044','NV00008','KM00003',450,'2026-05-01 09:00','Nhập kho',4.5),
+('TM00042','DK00045','NV00006','KM00001',350,'2026-05-10 10:00','Nhập kho',4.2),
+('TM00050','DK00043','NV00006','KM00001',250,'2026-05-12 08:00','Nhập kho',4.5),
+('TM00051','DK00044','NV00006','KM00002',350,'2026-05-12 09:00','Nhập kho',4.2),
+('TM00052','DK00045','NV00006','KM00003',450,'2026-05-13 10:00','Nhập kho',4.5),
+('TM00053','DK00031','NV00006','KM00004',350,'2026-05-14 11:00','Nhập kho',4.2),
+
+-- TÚI MÁU CHO CHIẾN DỊCH CD00002
+('TM00054','DK00051','NV00006','KM00001',350,'2026-03-05 08:30','Nhập kho',4.5),
+('TM00055','DK00052','NV00006','KM00002',450,'2026-03-06 09:30','Nhập kho',4.2),
+('TM00056','DK00053','NV00006','KM00003',250,'2026-03-10 10:30','Nhập kho',4.5),
+('TM00057','DK00054','NV00006','KM00004',350,'2026-03-15 08:00','Nhập kho',4.2),
+('TM00058','DK00055','NV00006','KM00005',450,'2026-03-20 09:00','Nhập kho',4.5);
 
 INSERT INTO KETQUAXETNGHIEM(maKQ, maTuiMau, maNhanVien, nhomMau, soLanXetNghiem, ketQua, moTa) VALUES
 ('XN00001','TM00001','NV00009','B+',1,true,'Âm tính. Đạt.'),

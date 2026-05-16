@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nhận Yêu Cầu Nhập Kho - Quản lý Kho</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#af101a',
+            'primary-dark': '#8b0d15',
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    
+    /* Vùng màu theo yêu cầu thiết kế */
+    .pink-zone { background-color: #ffe4e6; border-color: #fecdd3; } /* Vùng Hồng - Kho */
+    .green-zone { background-color: #ecfdf5; border-color: #d1fae5; } /* Vùng Xanh lá - Yêu cầu */
+    .blue-zone { background-color: #eff6ff; border-color: #dbeafe; } /* Vùng Xanh dương - Đã nhập */
+    
+    .kho-card { transition: all 0.2s ease; cursor: pointer; }
+    .kho-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    .kho-card.active { border: 2px solid #e11d48; background-color: #fff1f2; }
+    
+    .action-panel { display: none; }
+    .action-panel.show { display: flex; animation: slideDown 0.3s ease-out forwards; }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8 text-slate-800">
+
+<div class="max-w-7xl mx-auto space-y-6">
+  
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-slate-800">Nhận Yêu Cầu Nhập Kho</h1>
+    <p class="text-slate-500 mt-1">Giao diện nguyên mẫu (Template) dựa theo Wireframe mô tả</p>
+  </div>
+
+  <!-- VÙNG MÀU HỒNG: Danh sách Kho máu -->
+  <div class="p-6 rounded-2xl border pink-zone shadow-sm">
+    <h2 class="text-sm font-bold text-rose-800 uppercase mb-4 flex items-center gap-2">
+      <span class="material-symbols-outlined">inventory_2</span>
+      Danh sách Kho Máu (Vùng Màu Hồng)
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4" id="kho-container">
+      
+      <!-- Kho O+ (Active) -->
+      <div class="kho-card active p-4 rounded-xl border bg-white text-left" onclick="selectKho(this, 'O+')">
+        <div class="flex justify-between items-start">
+          <span class="font-bold text-slate-800">Kho O+</span>
+          <span class="px-2 py-1 bg-red-100 rounded-md text-xs font-bold text-red-600">O+</span>
+        </div>
+        <div class="mt-4 text-sm text-slate-500">Tồn: <span class="font-bold text-slate-800">150/200</span></div>
+      </div>
+
+      <!-- Kho A+ -->
+      <div class="kho-card p-4 rounded-xl border border-slate-200 bg-white text-left" onclick="selectKho(this, 'A+')">
+        <div class="flex justify-between items-start">
+          <span class="font-bold text-slate-800">Kho A+</span>
+          <span class="px-2 py-1 bg-red-100 rounded-md text-xs font-bold text-red-600">A+</span>
+        </div>
+        <div class="mt-4 text-sm text-slate-500">Tồn: <span class="font-bold text-slate-800">30/100</span></div>
+      </div>
+
+      <!-- Kho B+ -->
+      <div class="kho-card p-4 rounded-xl border border-slate-200 bg-white text-left" onclick="selectKho(this, 'B+')">
+        <div class="flex justify-between items-start">
+          <span class="font-bold text-slate-800">Kho B+</span>
+          <span class="px-2 py-1 bg-red-100 rounded-md text-xs font-bold text-red-600">B+</span>
+        </div>
+        <div class="mt-4 text-sm text-slate-500">Tồn: <span class="font-bold text-slate-800">60/150</span></div>
+      </div>
+
+      <!-- Kho AB+ -->
+      <div class="kho-card p-4 rounded-xl border border-slate-200 bg-white text-left" onclick="selectKho(this, 'AB+')">
+        <div class="flex justify-between items-start">
+          <span class="font-bold text-slate-800">Kho AB+</span>
+          <span class="px-2 py-1 bg-red-100 rounded-md text-xs font-bold text-red-600">AB+</span>
+        </div>
+        <div class="mt-4 text-sm text-slate-500">Tồn: <span class="font-bold text-slate-800">10/50</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- VÙNG MÀU XANH LÁ: Đơn yêu cầu nhập kho -->
+    <div class="p-6 rounded-2xl border green-zone shadow-sm">
+      <div class="flex justify-between items-center mb-6 border-b border-emerald-200 pb-4">
+        <h2 class="text-lg font-bold text-emerald-800 flex items-center gap-2">
+          <span class="material-symbols-outlined">inbox</span>
+          Yêu cầu Nhập kho (Vùng Xanh Lá)
+        </h2>
+        
+        <!-- Thanh trạng thái màu tím theo mô tả -->
+        <span class="px-3 py-1.5 bg-purple-100 text-purple-700 border border-purple-200 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-sm">
+          <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse"></span>
+          Đang chờ nhập kho
+        </span>
+      </div>
+      
+      <div class="space-y-4" id="yeucau-container">
+        <!-- Item 1 -->
+        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm transition-all hover:border-emerald-300 cursor-pointer" onclick="toggleAction(this)">
+          <div class="flex justify-between items-center">
+            <div class="flex gap-4 items-center">
+              <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center font-black text-lg">
+                O+
+              </div>
+              <div>
+                <div class="font-bold text-slate-800 text-lg">TM00101</div>
+                <div class="text-sm text-slate-500 mt-1">Người hiến: Nguyễn Văn A • 250ml</div>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 chevron-icon">expand_more</span>
+          </div>
+
+          <!-- Nút Options (Sẽ hiển thị khi click vào thẻ) -->
+          <div class="action-panel mt-4 pt-4 border-t border-slate-100 gap-3">
+            <button class="flex-1 py-2.5 bg-white border-2 border-red-200 text-red-600 rounded-lg font-bold text-sm hover:bg-red-50 flex items-center justify-center gap-2 transition-colors" onclick="handleTuChoi(event, this)">
+              <span class="material-symbols-outlined text-base">warning</span>
+              Yêu cầu kiểm tra lại
+            </button>
+            <button class="flex-1 py-2.5 bg-emerald-500 text-white rounded-lg font-bold text-sm hover:bg-emerald-600 flex items-center justify-center gap-2 shadow-md transition-colors" onclick="handleChapNhan(event, this, 'TM00101', 'Nguyễn Văn A', 'O+', '250ml')">
+              <span class="material-symbols-outlined text-base">check_circle</span>
+              Chấp nhận nhập kho
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm transition-all hover:border-emerald-300 cursor-pointer" onclick="toggleAction(this)">
+          <div class="flex justify-between items-center">
+            <div class="flex gap-4 items-center">
+              <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center font-black text-lg">
+                O+
+              </div>
+              <div>
+                <div class="font-bold text-slate-800 text-lg">TM00102</div>
+                <div class="text-sm text-slate-500 mt-1">Người hiến: Trần Thị B • 350ml</div>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 chevron-icon">expand_more</span>
+          </div>
+
+          <!-- Nút Options -->
+          <div class="action-panel mt-4 pt-4 border-t border-slate-100 gap-3">
+            <button class="flex-1 py-2.5 bg-white border-2 border-red-200 text-red-600 rounded-lg font-bold text-sm hover:bg-red-50 flex items-center justify-center gap-2 transition-colors" onclick="handleTuChoi(event, this)">
+              <span class="material-symbols-outlined text-base">warning</span>
+              Yêu cầu kiểm tra lại
+            </button>
+            <button class="flex-1 py-2.5 bg-emerald-500 text-white rounded-lg font-bold text-sm hover:bg-emerald-600 flex items-center justify-center gap-2 shadow-md transition-colors" onclick="handleChapNhan(event, this, 'TM00102', 'Trần Thị B', 'O+', '350ml')">
+              <span class="material-symbols-outlined text-base">check_circle</span>
+              Chấp nhận nhập kho
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VÙNG MÀU XANH DƯƠNG: Đã nhập kho -->
+    <div class="p-6 rounded-2xl border blue-zone shadow-sm h-fit">
+      <div class="border-b border-blue-200 pb-4 mb-6">
+        <h2 class="text-lg font-bold text-blue-800 flex items-center gap-2">
+          <span class="material-symbols-outlined">inventory</span>
+          Túi máu đang tồn kho (Vùng Xanh Dương)
+        </h2>
+      </div>
+      
+      <div class="space-y-3" id="danap-container">
+        <!-- Item đã nhập (Dummy) -->
+        <div class="bg-white p-3 rounded-xl border border-blue-100 flex items-center justify-between shadow-sm">
+          <div class="flex gap-4 items-center">
+            <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-sm">
+              O+
+            </div>
+            <div>
+              <div class="font-bold text-slate-700">TM00050</div>
+              <div class="text-xs text-slate-500 mt-0.5">Lê Văn C • Nhập: 10/05/2026</div>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-md text-xs font-bold">
+            Đã nhập kho
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Chuyển đổi trạng thái đóng/mở panel hành động
+  function toggleAction(card) {
+    // Đóng các thẻ khác trước
+    document.querySelectorAll('.action-panel.show').forEach(panel => {
+      if (panel !== card.querySelector('.action-panel')) {
+        panel.classList.remove('show');
+        panel.parentElement.querySelector('.chevron-icon').textContent = 'expand_more';
+        panel.parentElement.classList.remove('ring-2', 'ring-purple-200', 'border-purple-300');
+      }
+    });
+
+    const panel = card.querySelector('.action-panel');
+    const icon = card.querySelector('.chevron-icon');
+    
+    if (panel.classList.contains('show')) {
+      panel.classList.remove('show');
+      icon.textContent = 'expand_more';
+      card.classList.remove('ring-2', 'ring-purple-200', 'border-purple-300');
+    } else {
+      panel.classList.add('show');
+      icon.textContent = 'expand_less';
+      card.classList.add('ring-2', 'ring-purple-200', 'border-purple-300');
+    }
+  }
+
+  // Chọn kho (Vùng Hồng)
+  function selectKho(btn, nhomMau) {
+    document.querySelectorAll('.kho-card').forEach(el => {
+      el.classList.remove('active');
+      el.style.border = "";
+    });
+    btn.classList.add('active');
+    
+    // Cập nhật tiêu đề dựa theo nhóm máu để demo
+    document.querySelector('.green-zone h2').innerHTML = `<span class="material-symbols-outlined">inbox</span>Yêu cầu Nhập kho (${nhomMau})`;
+  }
+
+  // Hành động: Chấp nhận nhập kho
+  function handleChapNhan(event, btn, maTui, nguoiHien, nhomMau, theTich) {
+    event.stopPropagation(); // Ngăn sự kiện toggle card
+    const card = btn.closest('.bg-white'); // Card hiện tại
+    
+    // Xóa khỏi danh sách xanh lá (animate fade out)
+    card.style.opacity = '0';
+    setTimeout(() => {
+      card.remove();
+      
+      // Thêm vào danh sách xanh dương
+      const daNhapContainer = document.getElementById('danap-container');
+      const html = `
+        <div class="bg-white p-3 rounded-xl border border-blue-100 flex items-center justify-between shadow-sm animate-[slideDown_0.3s_ease-out]">
+          <div class="flex gap-4 items-center">
+            <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center font-bold text-sm">
+              ${nhomMau}
+            </div>
+            <div>
+              <div class="font-bold text-slate-700">${maTui}</div>
+              <div class="text-xs text-slate-500 mt-0.5">${nguoiHien} • Nhập: Vừa xong</div>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 bg-blue-100 text-blue-700 border border-blue-200 rounded-md text-xs font-bold">
+            Đã nhập kho
+          </span>
+        </div>
+      `;
+      daNhapContainer.insertAdjacentHTML('afterbegin', html);
+    }, 300);
+  }
+
+  // Hành động: Yêu cầu kiểm tra lại
+  function handleTuChoi(event, btn) {
+    event.stopPropagation();
+    const card = btn.closest('.bg-white');
+    
+    // Đổi style thành màu đỏ báo trả về
+    card.classList.remove('border-purple-300', 'ring-purple-200');
+    card.classList.add('border-red-400', 'bg-red-50');
+    
+    setTimeout(() => {
+      alert("Đã trả túi máu về cho Nhân viên y tế (Hoặc Bác sĩ) để kiểm tra lại.");
+      card.style.opacity = '0';
+      setTimeout(() => card.remove(), 300);
+    }, 100);
+  }
+</script>
+
+</body>
+</html>

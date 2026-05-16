@@ -153,9 +153,10 @@ export default function ChienDichPage() {
     const getProgressPercentage = (campaign) => {
         if (campaign.soLuongDuKien === 0) 
             return 0;
-        if(campaign.luongMauDaThu * campaign.soLuongDuKien / 100 < campaign.luongMauDaThu / campaign.soLuongDuKien * 100)
-            return (campaign.luongMauDaThu / campaign.soLuongDuKien * 100).toFixed(1);
-        return (campaign.luongMauDaThu / campaign.soLuongDuKien * 100);
+        const percent = (campaign.luongMauDaThu / campaign.soLuongDuKien) * 100;
+        if (Number.isInteger(percent)) 
+            return percent;
+        return Number(percent.toFixed(1));
     };
     
     // Pagination

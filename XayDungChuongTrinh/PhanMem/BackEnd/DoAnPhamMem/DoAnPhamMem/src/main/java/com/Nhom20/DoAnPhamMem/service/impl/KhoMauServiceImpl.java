@@ -12,4 +12,14 @@ public class KhoMauServiceImpl implements KhoMauService {
     public java.util.List<com.Nhom20.DoAnPhamMem.dto.response.BloodTypeStatDTO> getInventoryByBloodType() {
         return khoMauRepository.getInventoryByBloodType();
     }
+
+    @Override
+    public java.util.List<com.Nhom20.DoAnPhamMem.dto.response.KhoMauResponse> getAllKhoMau() {
+        return khoMauRepository.findAll().stream().map(kho -> com.Nhom20.DoAnPhamMem.dto.response.KhoMauResponse.builder()
+                .maKho(kho.getMaKho())
+                .nhomMau(kho.getNhomMau() != null ? kho.getNhomMau().getDbValue() : null)
+                .soLuongTon(kho.getSoLuongTon())
+                .nguongAnToan(kho.getNguongAnToan())
+                .build()).collect(java.util.stream.Collectors.toList());
+    }
 }

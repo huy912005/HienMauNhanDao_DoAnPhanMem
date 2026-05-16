@@ -40,7 +40,7 @@ public class TuiMauServiceImpl implements TuiMauService {
     @Override
     public DashboardStatsDTO getDashboardStats() {
         DashboardStatsDTO stats = new DashboardStatsDTO();
-        stats.setTotalBloodUnits((int) tuiMauRepository.countByTrangThai(TrangThaiTuiMau.NHAP_KHO));
+        stats.setTotalBloodUnits((int) tuiMauRepository.countAvailableUnits());
         stats.setNewVolunteers((int) tinhNguyenVienRepository.count());
         stats.setActiveCampaigns((int) chienDichRepository.count());
 
@@ -169,19 +169,15 @@ public class TuiMauServiceImpl implements TuiMauService {
 
     @Override
     public void updateStatus(String maTuiMau, String status) {
-        System.out.println("DEBUG: Dang cap nhat trang thai tui mau [" + maTuiMau + "] sang [" + status + "]");
         tuiMauRepository.findById(maTuiMau).ifPresentOrElse(tuiMau -> {
             try {
                 TrangThaiTuiMau newTrangThai = TrangThaiTuiMau.fromDbValue(status);
                 tuiMau.setTrangThai(newTrangThai);
                 tuiMauRepository.save(tuiMau);
-                System.out.println("DEBUG: Cap nhat thanh cong tui mau [" + maTuiMau + "]");
             } catch (Exception e) {
-                System.err.println("DEBUG: Loi khi tim trang thai enum cho [" + status + "]: " + e.getMessage());
                 throw e;
             }
         }, () -> {
-            System.err.println("DEBUG: Khong tim thay tui mau [" + maTuiMau + "]");
             throw new RuntimeException("Không tìm thấy túi máu: " + maTuiMau);
         });
     }
@@ -267,5 +263,93 @@ public class TuiMauServiceImpl implements TuiMauService {
         donDangKyRepository.save(don);
 
         return nextMaTuiMau;
+    }
+
+    @Override
+    public List<BloodExpiryDTO> getExpiryManagementData(String viewMode, String search) {
+        List<TuiMauEntity> units = tuiMauRepository.findAllAvailableUnits();
+        LocalDateTime now = LocalDateTime.now();
+
+        return units.stream()
+                .map(t -> {
+                    BloodExpiryDTO dto = new BloodExpiryDTO();
+                    dto.setMaTuiMau(t.getMaTuiMau());
+                    dto.setMaChienDich(t.getDonDangKy() != null && t.getDonDangKy().getChienDich() != null
+                            ? t.getDonDangKy().getChienDich().getMaChienDich()
+                            : "N/A");
+                    dto.setNhomMau(t.getKhoMau() != null && t.getKhoMau().getNhomMau() != null
+                            ? t.getKhoMau().getNhomMau().getDbValue()
+                            : "Chưa rõ");
+                    dto.setTheTich(t.getTheTich() != null ? t.getTheTich().getMl() : 0);
+                    dto.setThoiGianLayMau(t.getThoiGianLayMau());
+
+                    if (t.getThoiGianLayMau() != null) {
+                        LocalDateTime hetHan = t.getThoiGianLayMau().plusDays(365); // 365 ngày theo yêu cầu
+                        dto.setNgayHetHan(hetHan);
+                        long daysRemaining = ChronoUnit.DAYS.between(now, hetHan);
+                        dto.setDaysRemaining(daysRemaining);
+
+                        if (daysRemaining < -30) {
+                            dto.setTrangThaiHan("ARCHIVED_EXPIRED"); // Quá hạn trên 30 ngày -> Làm mờ
+                        } else if (daysRemaining <= -20) {
+                            dto.setTrangThaiHan("WARNING_EXPIRED"); // Quá hạn 20-30 ngày -> Chớp đỏ
+                        } else if (daysRemaining < 0) {
+                            dto.setTrangThaiHan("EXPIRED");
+                        } else if (daysRemaining <= 7) {
+                            dto.setTrangThaiHan("NEAR_EXPIRY");
+                        } else {
+                            dto.setTrangThaiHan("SAFE");
+                        }
+                    }
+                    return dto;
+                })
+                .filter(dto -> {
+                    // Filter by search
+                    if (search != null && !search.isEmpty()) {
+                        return dto.getMaTuiMau().toLowerCase().contains(search.toLowerCase());
+                    }
+                    return true;
+                })
+                .filter(dto -> {
+                    // Filter by viewMode
+                    if ("expired".equalsIgnoreCase(viewMode)) {
+                        return "EXPIRED".equals(dto.getTrangThaiHan()) 
+                            || "WARNING_EXPIRED".equals(dto.getTrangThaiHan())
+                            || "ARCHIVED_EXPIRED".equals(dto.getTrangThaiHan());
+                    }
+                    if ("near".equalsIgnoreCase(viewMode)) return "NEAR_EXPIRY".equals(dto.getTrangThaiHan());
+                    if ("safe".equalsIgnoreCase(viewMode)) return "SAFE".equals(dto.getTrangThaiHan());
+                    return true;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ExpiryStatsDTO getExpiryStats() {
+        List<BloodExpiryDTO> allData = getExpiryManagementData("all", null);
+        ExpiryStatsDTO stats = new ExpiryStatsDTO();
+        stats.setExpiredCount(allData.stream().filter(d -> 
+            "EXPIRED".equals(d.getTrangThaiHan()) 
+            || "WARNING_EXPIRED".equals(d.getTrangThaiHan())
+            || "ARCHIVED_EXPIRED".equals(d.getTrangThaiHan())
+        ).count());
+        stats.setNearExpiryCount(allData.stream().filter(d -> "NEAR_EXPIRY".equals(d.getTrangThaiHan())).count());
+        stats.setSafeCount(allData.stream().filter(d -> "SAFE".equals(d.getTrangThaiHan())).count());
+        
+        // Kiểm tra xem toàn hệ thống có túi nào đang ở mức cảnh báo 20-30 ngày không
+        boolean hasCritical = allData.stream().anyMatch(d -> "WARNING_EXPIRED".equals(d.getTrangThaiHan()));
+        stats.setHasCritical(hasCritical);
+        
+        return stats;
+    }
+
+    @Override
+    @Transactional
+    public void deleteExpiredUnits() {
+        List<BloodExpiryDTO> expired = getExpiryManagementData("expired", null);
+        List<String> ids = expired.stream().map(BloodExpiryDTO::getMaTuiMau).collect(Collectors.toList());
+        if (!ids.isEmpty()) {
+            tuiMauRepository.deleteByMaTuiMauIn(ids);
+        }
     }
 }

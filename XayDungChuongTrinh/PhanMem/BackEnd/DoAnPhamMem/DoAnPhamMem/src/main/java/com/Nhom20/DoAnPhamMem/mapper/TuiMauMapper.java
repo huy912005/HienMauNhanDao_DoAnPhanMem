@@ -16,6 +16,7 @@ public interface TuiMauMapper {
     @Mapping(target = "tenChienDich", source = "donDangKy.chienDich.tenChienDich")
     @Mapping(target = "tenBacSi", expression = "java(entity.getDonDangKy().getKetQuaLamSangList() != null && !entity.getDonDangKy().getKetQuaLamSangList().isEmpty() ? entity.getDonDangKy().getKetQuaLamSangList().get(0).getBacSiKham().getHoTen() : null)")
     @Mapping(target = "maBacSi", expression = "java(entity.getDonDangKy().getKetQuaLamSangList() != null && !entity.getDonDangKy().getKetQuaLamSangList().isEmpty() ? entity.getDonDangKy().getKetQuaLamSangList().get(0).getBacSiKham().getMaNhanVien() : null)")
+    @Mapping(target = "maKho", source = "khoMau.maKho")
     TuiMauResponse toResponse(TuiMauEntity entity);
 
     @Mapping(target = "nhomMau", source = "khoMau.nhomMau.dbValue")
@@ -25,5 +26,6 @@ public interface TuiMauMapper {
     @Mapping(target = "trangThai", source = "trangThai.dbValue")
     @Mapping(target = "ngayHetHan", ignore = true) // Sẽ tính toán trong Service
     @Mapping(target = "tinhTrangHSD", ignore = true) // Sẽ tính toán trong Service
+    @Mapping(target = "maChienDich", source = "donDangKy.chienDich.maChienDich")
     com.Nhom20.DoAnPhamMem.dto.response.BloodUnitDTO toBloodUnitDTO(TuiMauEntity entity);
 }

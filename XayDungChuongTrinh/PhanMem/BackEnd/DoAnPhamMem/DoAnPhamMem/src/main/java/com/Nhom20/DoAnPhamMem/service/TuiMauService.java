@@ -11,8 +11,12 @@ public interface TuiMauService {
     List<MonthlyCollectionStatDTO> getBloodCollectionByMonth(int year);
 
     Page<BloodUnitDTO> getBloodUnits(int page, int size, String search, String bloodType, String maChienDich);
-
     void deleteBloodUnit(String maTuiMau);
+    
+    // Quản lý hạn dùng
+    java.util.List<com.Nhom20.DoAnPhamMem.dto.response.BloodExpiryDTO> getExpiryManagementData(String viewMode, String search);
+    com.Nhom20.DoAnPhamMem.dto.response.ExpiryStatsDTO getExpiryStats();
+    void deleteExpiredUnits();
 
     BloodUnitDTO scanBloodUnit(String maTuiMau);
 

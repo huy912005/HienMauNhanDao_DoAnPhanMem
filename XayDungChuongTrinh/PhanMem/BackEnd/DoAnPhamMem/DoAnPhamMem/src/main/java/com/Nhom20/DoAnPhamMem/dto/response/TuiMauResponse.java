@@ -19,4 +19,5 @@ public class TuiMauResponse {
     private String tenChienDich;
     private String tenBacSi;
     private String maBacSi;
+    private String maKho;
 }
